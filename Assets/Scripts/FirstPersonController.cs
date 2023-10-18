@@ -2,7 +2,7 @@
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 #endif
-
+using System.Collections;
 namespace StarterAssets
 {
 	[RequireComponent(typeof(CharacterController))]
@@ -63,8 +63,16 @@ namespace StarterAssets
 		// timeout deltatime
 		private float _jumpTimeoutDelta;
 		private float _fallTimeoutDelta;
+		public int _jumpCount = 0;
+		public bool _canDoubleJump = true;
+		bool isJumping = false;
 
-	
+		[Header("Dashing")]
+		public float dashDistance = 5.0f;
+		public float dashDuration = 0.2f;
+
+		private bool isDashing = false;
+
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 		private PlayerInput _playerInput;
 #endif
@@ -114,6 +122,7 @@ namespace StarterAssets
 		{
 			JumpAndGravity();
 			GroundedCheck();
+			Dashing();
 			Move();
 		}
 
@@ -127,8 +136,42 @@ namespace StarterAssets
 			// set sphere position, with offset
 			Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
 			Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
+			isJumping = !Grounded;
 		}
 
+		private void Dashing()
+        {
+			if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing)
+			{
+				StartCoroutine(Dash());
+			}
+		}
+		IEnumerator Dash()
+		{
+			isDashing = true;
+
+			// Get the camera's forward and right vectors
+			Vector3 cameraForward = Camera.main.transform.forward;
+			Vector3 cameraRight = Camera.main.transform.right;
+
+			// Ignore the y component for calculations
+			cameraForward.y = 0;
+			cameraRight.y = 0;
+
+			// Calculate the dash direction based on the camera perspective
+			Vector3 dashDirection = (cameraForward.normalized * Input.GetAxis("Vertical")) + (cameraRight.normalized * Input.GetAxis("Horizontal"));
+
+			float elapsedTime = 0;
+
+			while (elapsedTime < dashDuration)
+			{
+				transform.position += dashDirection * (dashDistance / dashDuration) * Time.deltaTime;
+				elapsedTime += Time.deltaTime;
+				yield return null;
+			}
+
+			isDashing = false;
+		}
 		private void CameraRotation()
 		{
 			// if there is an input
@@ -200,8 +243,11 @@ namespace StarterAssets
 
 		private void JumpAndGravity()
 		{
-			if (Grounded)
+			if (Grounded && !isJumping)
 			{
+				_jumpCount = 0; // Reset jump count when grounded
+				_canDoubleJump = true; // Reset double jump ability when grounded
+
 				// reset the fall timeout timer
 				_fallTimeoutDelta = FallTimeout;
 
@@ -210,33 +256,35 @@ namespace StarterAssets
 				{
 					_verticalVelocity = -2f;
 				}
+			}
 
-				// Jump
-				if (_input.jump && _jumpTimeoutDelta <= 0.0f)
+			// Jump
+			if (Input.GetKeyDown(KeyCode.Space))
+			{
+				if (_jumpCount == 0 || (_jumpCount == 1 && _canDoubleJump)) // Check if we can jump or double jump
 				{
+					isJumping = true;
 					// the square root of H * -2 * G = how much velocity needed to reach desired height
 					_verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
-				}
+					_jumpCount++;
 
-				// jump timeout
-				if (_jumpTimeoutDelta >= 0.0f)
-				{
-					_jumpTimeoutDelta -= Time.deltaTime;
+					if (_jumpCount == 2) // Disable double jump after second jump
+					{
+						_canDoubleJump = false;
+					}
 				}
 			}
-			else
+
+			// jump timeout
+			if (_jumpTimeoutDelta >= 0.0f)
 			{
-				// reset the jump timeout timer
-				_jumpTimeoutDelta = JumpTimeout;
+				_jumpTimeoutDelta -= Time.deltaTime;
+			}
 
-				// fall timeout
-				if (_fallTimeoutDelta >= 0.0f)
-				{
-					_fallTimeoutDelta -= Time.deltaTime;
-				}
-
-				// if we are not grounded, do not jump
-				_input.jump = false;
+			// fall timeout
+			if (_fallTimeoutDelta >= 0.0f)
+			{
+				_fallTimeoutDelta -= Time.deltaTime;
 			}
 
 			// apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
