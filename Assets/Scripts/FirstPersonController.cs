@@ -14,12 +14,10 @@ namespace StarterAssets
 		[Header("Player")]
 		[Tooltip("Move speed of the character in m/s")]
 		public float MoveSpeed = 4.0f;
-		[Tooltip("Sprint speed of the character in m/s")]
-		public float SprintSpeed = 6.0f;
 		[Tooltip("Rotation speed of the character")]
 		public float RotationSpeed = 1.0f;
-		[Tooltip("Acceleration and deceleration")]
-		public float SpeedChangeRate = 10.0f;
+		//[Tooltip("Acceleration and deceleration")]
+		//public float SpeedChangeRate = 10.0f;
 
 		[Space(10)]
 		[Tooltip("The height the player can jump")]
@@ -70,7 +68,8 @@ namespace StarterAssets
 		[Header("Dashing")]
 		public float dashDistance = 5.0f;
 		public float dashDuration = 0.2f;
-
+		public float dashCooldown = 0.0f;
+		public float addToDashCooldown = 5.0f;
 		private bool isDashing = false;
 
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
@@ -124,11 +123,16 @@ namespace StarterAssets
 			GroundedCheck();
 			Dashing();
 			Move();
+			CameraRotation();
+			if (dashCooldown > 0)
+            {
+				dashCooldown -= Time.deltaTime;
+            }
 		}
 
 		private void LateUpdate()
 		{
-			CameraRotation();
+		
 		}
 
 		private void GroundedCheck()
@@ -141,7 +145,7 @@ namespace StarterAssets
 
 		private void Dashing()
         {
-			if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing)
+			if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing && dashCooldown <= 0)
 			{
 				StartCoroutine(Dash());
 			}
@@ -153,7 +157,7 @@ namespace StarterAssets
 			// Get the camera's forward and right vectors
 			Vector3 cameraForward = Camera.main.transform.forward;
 			Vector3 cameraRight = Camera.main.transform.right;
-
+			dashCooldown = addToDashCooldown;
 			// Ignore the y component for calculations
 			cameraForward.y = 0;
 			cameraRight.y = 0;
@@ -197,7 +201,7 @@ namespace StarterAssets
 		private void Move()
 		{
 			// set target speed based on move speed, sprint speed and if sprint is pressed
-			float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+			float targetSpeed = MoveSpeed;
 
 			// a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
@@ -211,20 +215,20 @@ namespace StarterAssets
 			float speedOffset = 0.1f;
 			float inputMagnitude = _input.analogMovement ? _input.move.magnitude : 1f;
 
-			// accelerate or decelerate to target speed
-			if (currentHorizontalSpeed < targetSpeed - speedOffset || currentHorizontalSpeed > targetSpeed + speedOffset)
-			{
-				// creates curved result rather than a linear one giving a more organic speed change
-				// note T in Lerp is clamped, so we don't need to clamp our speed
-				_speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude, Time.deltaTime * SpeedChangeRate);
+			//// accelerate or decelerate to target speed
+			//if (currentHorizontalSpeed < targetSpeed - speedOffset || currentHorizontalSpeed > targetSpeed + speedOffset)
+			//{
+			//	// creates curved result rather than a linear one giving a more organic speed change
+			//	// note T in Lerp is clamped, so we don't need to clamp our speed
+			//	_speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude, Time.deltaTime * SpeedChangeRate);
 
-				// round speed to 3 decimal places
-				_speed = Mathf.Round(_speed * 1000f) / 1000f;
-			}
-			else
-			{
+			//	// round speed to 3 decimal places
+			//	_speed = Mathf.Round(_speed * 1000f) / 1000f;
+			//}
+			//else
+			//{
 				_speed = targetSpeed;
-			}
+			//}
 
 			// normalise input direction
 			Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
