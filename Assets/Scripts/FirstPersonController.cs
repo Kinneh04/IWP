@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Runtime.CompilerServices;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 #endif
@@ -49,10 +50,6 @@ using System.Collections;
 		public float BottomClamp = -90.0f;
 		public CameraBob cameraBob;
 
-		[Header("Bobbing")]
-		public float bobbingAmount = 0.1f; // Adjust this value to control the intensity of the bobbing effect
-		public float bobbingSpeed = 0.18f; // Adjust this value to control the speed of the bobbing effect
-
 		private float originalY;
 		// cinemachine
 		private float _cinemachineTargetPitch;
@@ -86,6 +83,8 @@ using System.Collections;
 
 		private const float _threshold = 0.01f;
 
+
+	
 		private bool IsCurrentDeviceMouse
 		{
 			get
@@ -100,6 +99,7 @@ using System.Collections;
 
 		private void Awake()
 		{
+		Application.targetFrameRate = 60;
 			// get a reference to our main camera
 			if (_mainCamera == null)
 			{
@@ -134,8 +134,6 @@ using System.Collections;
             {
 				dashCooldown -= Time.deltaTime;
             }
-			float newY = originalY + Mathf.Sin(Time.time * bobbingSpeed) * bobbingAmount;
-			transform.localPosition = new Vector3(transform.localPosition.x, newY, transform.localPosition.z);
 		}
 
 		private void LateUpdate()
@@ -169,9 +167,16 @@ using System.Collections;
 			// Ignore the y component for calculations
 			cameraForward.y = 0;
 			cameraRight.y = 0;
+			Vector3 dashDirection = transform.forward;
+            // Calculate the dash direction based on the camera perspective
+            if (Input.GetAxis("Vertical") == 0 && Input.GetAxis("Horizontal") == 0)
+			{
 
-			// Calculate the dash direction based on the camera perspective
-			Vector3 dashDirection = (cameraForward.normalized * Input.GetAxis("Vertical")) + (cameraRight.normalized * Input.GetAxis("Horizontal"));
+			}
+			else
+			{
+				dashDirection = (cameraForward.normalized * Input.GetAxis("Vertical")) + (cameraRight.normalized * Input.GetAxis("Horizontal"));
+			}
 
 			float elapsedTime = 0;
 
@@ -204,7 +209,7 @@ using System.Collections;
 				transform.Rotate(Vector3.up * _rotationVelocity);
 			}
 		CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0.0f, cameraBob.Finaltilt.z * cameraBob.tiltAmount);
-		Debug.Log(cameraBob.Finaltilt.z);
+		//Debug.Log(cameraBob.Finaltilt.z);
 
 
 	}
