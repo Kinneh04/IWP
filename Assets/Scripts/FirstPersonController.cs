@@ -3,8 +3,7 @@
 using UnityEngine.InputSystem;
 #endif
 using System.Collections;
-namespace StarterAssets
-{
+
 	[RequireComponent(typeof(CharacterController))]
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 	[RequireComponent(typeof(PlayerInput))]
@@ -48,7 +47,13 @@ namespace StarterAssets
 		public float TopClamp = 90.0f;
 		[Tooltip("How far in degrees can you move the camera down")]
 		public float BottomClamp = -90.0f;
+		public CameraBob cameraBob;
 
+		[Header("Bobbing")]
+		public float bobbingAmount = 0.1f; // Adjust this value to control the intensity of the bobbing effect
+		public float bobbingSpeed = 0.18f; // Adjust this value to control the speed of the bobbing effect
+
+		private float originalY;
 		// cinemachine
 		private float _cinemachineTargetPitch;
 
@@ -104,6 +109,7 @@ namespace StarterAssets
 
 		private void Start()
 		{
+			originalY = transform.localPosition.y;
 			_controller = GetComponent<CharacterController>();
 			_input = GetComponent<StarterAssetsInputs>();
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
@@ -128,6 +134,8 @@ namespace StarterAssets
             {
 				dashCooldown -= Time.deltaTime;
             }
+			float newY = originalY + Mathf.Sin(Time.time * bobbingSpeed) * bobbingAmount;
+			transform.localPosition = new Vector3(transform.localPosition.x, newY, transform.localPosition.z);
 		}
 
 		private void LateUpdate()
@@ -191,12 +199,15 @@ namespace StarterAssets
 				_cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
 
 				// Update Cinemachine camera target pitch
-				CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0.0f, 0.0f);
-
+				
 				// rotate the player left and right
 				transform.Rotate(Vector3.up * _rotationVelocity);
 			}
-		}
+		CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0.0f, cameraBob.Finaltilt.z * cameraBob.tiltAmount);
+		Debug.Log(cameraBob.Finaltilt.z);
+
+
+	}
 
 		private void Move()
 		{
@@ -317,4 +328,3 @@ namespace StarterAssets
 			Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z), GroundedRadius);
 		}
 	}
-}
