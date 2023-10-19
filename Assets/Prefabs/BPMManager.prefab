@@ -54,6 +54,8 @@ MonoBehaviour:
   CrosshairFadeGO: {fileID: 3921569213468790984, guid: 35c20416156b1c34ca6dcb8abb82f069,
     type: 3}
   CrosshairFadeParent: {fileID: 0}
+  ShootLeeway: 0
+  playerRating: {fileID: 0}
 --- !u!114 &8390568870500087829
 MonoBehaviour:
   m_ObjectHideFlags: 0

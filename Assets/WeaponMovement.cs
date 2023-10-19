@@ -71,7 +71,7 @@ public class WeaponMovement : MonoBehaviour
             transform.localPosition = Vector3.Lerp(transform.localPosition, targetPosition + sway, Time.deltaTime * smoothTime);
         }
 
-        if (Input.GetMouseButton(0) && musicController.canFire) StartCoroutine(ShootVisualRecoil());
+       // if (Input.GetMouseButton(0) && musicController.canFire) StartCoroutine(ShootVisualRecoil());
         //if (vertical == 0)
         //{
         //    // Tilt Logic
@@ -89,6 +89,11 @@ public class WeaponMovement : MonoBehaviour
         //}
     
     // transform.localRotation = Quaternion.Lerp(transform.rotation, Quaternion.identity, Time.deltaTime);
+    }
+
+    public void TryShootVisual()
+    {
+        StartCoroutine(ShootVisualRecoil());
     }
     public IEnumerator  ShootVisualRecoil()
     {
