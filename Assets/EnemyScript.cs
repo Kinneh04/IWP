@@ -8,6 +8,7 @@ public class EnemyScript : MonoBehaviour
 
     [Header("ForMediumAndBoss")]
     public int Health = 100;
+    public Rigidbody RB;
     public enum EnemyType
     {
         Small, Medium, Boss
@@ -38,6 +39,7 @@ public class EnemyScript : MonoBehaviour
     {
         currentState = EnemyState.Charge;
         player = GameObject.FindGameObjectWithTag("Player").transform;
+        RB = GetComponent<Rigidbody>();
     }
 
     void Update()
@@ -56,13 +58,9 @@ public class EnemyScript : MonoBehaviour
     void ChargeBehavior()
     {
         transform.LookAt(player.transform);
-        transform.Translate(Vector3.forward * chargeSpeed * Time.deltaTime, Space.Self);
+        RB.AddForce(transform.forward * chargeSpeed);
 
         // If the player is looking at the enemy, switch to Flank behavior
-        if (IsPlayerLookingAt())
-        {
-            currentState = EnemyState.Flank;
-        }
     }
 
     void FlankBehavior()
