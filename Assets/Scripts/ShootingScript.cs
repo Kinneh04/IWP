@@ -8,8 +8,12 @@ public class ShootingScript : MonoBehaviour
     public WeaponMovement weaponMovement;
     public PlayerRatingController playerRatingController;
     public bool Holdfire;
-
     public int SetDamage = 25;
+    [Header("Tracer")]
+    public float tracerMoveSpeed;
+    public Transform GunShootFrom;
+    public GameObject Tracer;
+    public GameObject MuzzleFlash;
     private void Update()
     {
         //If user taps to the beat
@@ -51,7 +55,10 @@ public class ShootingScript : MonoBehaviour
                 Debug.Log("HitEnemy!");
                 playerRatingController.AddRating(10, "Enemy Hit!");
             }
+            SpawnTracer(hit.point);
         }
+        GameObject GO =Instantiate(MuzzleFlash, GunShootFrom.transform.position, Quaternion.identity);
+        GO.transform.SetParent(GunShootFrom.transform);
     }
     bool RaycastFromCameraCenter(out RaycastHit hit)
     {
@@ -61,5 +68,21 @@ public class ShootingScript : MonoBehaviour
         Vector3 rayDirection = mainCamera.transform.forward;
 
         return Physics.Raycast(rayOrigin, rayDirection, out hit);
+    }
+
+    public void SpawnTracer(Vector3 Destination)
+    {
+        GameObject NewTracer = Instantiate(Tracer, GunShootFrom.transform.position, Quaternion.identity);
+        StartCoroutine(MoveTracer(NewTracer, Destination));
+    }
+
+    public IEnumerator MoveTracer(GameObject GO, Vector3 Destination)
+    {
+        while(Vector3.Distance(GO.transform.position, Destination) > 0.1f)
+        {
+            GO.transform.position = Vector3.Lerp(GO.transform.position, Destination, tracerMoveSpeed * Time.deltaTime);
+            yield return null;
+
+        }
     }
 }

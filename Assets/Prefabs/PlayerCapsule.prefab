@@ -212,6 +212,7 @@ MonoBehaviour:
   CinemachineCameraTarget: {fileID: 4135013735270702863}
   TopClamp: 89
   BottomClamp: -89
+  cameraBob: {fileID: 0}
   _jumpCount: 0
   _canDoubleJump: 1
   dashDistance: 6

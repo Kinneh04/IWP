@@ -22,6 +22,7 @@ public class PlayerRatingController : MonoBehaviour
     public GameObject KillFeedPrefab;
     private Vector3 Minscale, MaxScale;
     public float MaxScaleMultiplier;
+    public GameObject Tracer;
 
     private void Start()
     {
