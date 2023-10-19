@@ -208,7 +208,7 @@ PrefabInstance:
     - target: {fileID: 8390568870500087827, guid: 5df4b59e8e7496b4f8cfb3ce0f562744,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8390568870500087827, guid: 5df4b59e8e7496b4f8cfb3ce0f562744,
         type: 3}
@@ -282,6 +282,11 @@ PrefabInstance:
       objectReference: {fileID: 1615958593}
     - target: {fileID: 8390568870500087828, guid: 5df4b59e8e7496b4f8cfb3ce0f562744,
         type: 3}
+      propertyPath: ShootLeeway
+      value: 0.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 8390568870500087828, guid: 5df4b59e8e7496b4f8cfb3ce0f562744,
+        type: 3}
       propertyPath: playerRating
       value: 
       objectReference: {fileID: 105746225}
@@ -303,6 +308,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 372429407}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &372429410 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8390568870500087828, guid: 5df4b59e8e7496b4f8cfb3ce0f562744,
+    type: 3}
+  m_PrefabInstance: {fileID: 372429407}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 641214c9271e7334592e8de5405b13f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &746329221
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -393,6 +410,66 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1818253702}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1008143949
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1008143950}
+  - component: {fileID: 1008143951}
+  m_Layer: 0
+  m_Name: WeaponRoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1008143950
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1008143949}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.1465, y: -0.19, z: 0.174}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 187552785424559357}
+  m_Father: {fileID: 8338988565591873055}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1008143951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1008143949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47326f707b0c02c4d80b59fa00c3dc63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  swayAmount: 0.003
+  maxSwayAmount: 1
+  smoothTime: 3
+  bobbingAmount: 0.1
+  bobbingSpeed: 0.18
+  bobbingStepAmount: 0.03
+  tiltAmount: 5
+  jumpTiltAmount: 15
+  targetRotation: {x: 0, y: 0, z: 0, w: 0}
+  VisualRecoilTiltAmount: -35
+  recoilResetDuration: 8
+  canShoot: 1
+  targetPosition: {x: 0, y: 0, z: 0}
+  Shootforce: {x: 0, y: 0.1, z: -0.1}
+  musicController: {fileID: 372429410}
 --- !u!1 &1010531059
 GameObject:
   m_ObjectHideFlags: 0
@@ -1398,8 +1475,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 707490580110636615}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.164, y: -0.143, z: 0.493}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.017499998, y: 0.04699999, z: 0.319}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1409,7 +1486,7 @@ Transform:
   - {fileID: 988821187573568254}
   - {fileID: 7126453825355736997}
   - {fileID: 8639638565882272093}
-  m_Father: {fileID: 8338988565591873055}
+  m_Father: {fileID: 1008143950}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &707490580110636615
@@ -1422,7 +1499,7 @@ GameObject:
   m_Component:
   - component: {fileID: 187552785424559357}
   m_Layer: 0
-  m_Name: Sketchfab
+  m_Name: Weapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
