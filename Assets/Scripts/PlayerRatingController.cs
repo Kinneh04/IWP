@@ -43,7 +43,7 @@ public class PlayerRatingController : MonoBehaviour
             GameObject GO = Instantiate(KillFeedPrefab);
             GO.transform.SetParent(KillfeedParent, true);
             TMP_Text text = GO.GetComponent<TMP_Text>();
-            text.text = ShowString;
+            text.text = ShowString + " +" + rating.ToString();
         }
         PumpScale(1.15f);
 

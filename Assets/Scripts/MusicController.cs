@@ -17,6 +17,7 @@ public class MusicController : MonoBehaviour
     public float ShootLeeway;
     float currentShootLeeway;
     public PlayerRatingController playerRating;
+    float shotTime;
     //public WeaponMovement weaponMovement;
     float StartTime;
     private void Start()
@@ -50,12 +51,26 @@ public class MusicController : MonoBehaviour
 
         if(canFire)
         {
+            shotTime += Time.deltaTime;
             currentShootLeeway -= Time.deltaTime;
-            if (currentShootLeeway <= 0) canFire = false;
+            if (currentShootLeeway <= 0)
+            {
+                canFire = false;
+                shotTime = 0;
+            }
         }
     }
     public void Pulse()
     {
         Crosshair.localScale = OriginalScaleTransform * 1.5f;
+    }
+
+    public bool isLate()
+    {
+        if(shotTime > BPM / BPM_Divider + ShootLeeway / 4)
+        {
+            return true;
+        }
+        return false;
     }
 }

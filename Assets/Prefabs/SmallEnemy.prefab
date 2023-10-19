@@ -1370,6 +1370,8 @@ MonoBehaviour:
     type: 3}
   Health: 100
   enemyType: 0
+  chargeSpeed: 5
+  flankSpeed: 3
 --- !u!95 &8934527016483769251
 Animator:
   serializedVersion: 5

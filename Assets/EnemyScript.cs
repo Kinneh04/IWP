@@ -69,7 +69,7 @@ public class EnemyScript : MonoBehaviour
     {
         // Calculate the direction to circle around the player
         Vector3 circleDirection = (player.position - transform.position).normalized;
-
+        transform.LookAt(circleDirection);
         // Rotate around the player at flankSpeed
         transform.RotateAround(player.position, Vector3.up, flankSpeed * Time.deltaTime);
 

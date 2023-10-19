@@ -6,6 +6,7 @@ public class ShootingScript : MonoBehaviour
 {
     public MusicController musicController;
     public WeaponMovement weaponMovement;
+    public PlayerRatingController playerRatingController;
     public bool Holdfire;
 
     public int SetDamage = 25;
@@ -19,7 +20,15 @@ public class ShootingScript : MonoBehaviour
             musicController.canFire = false;
             FireRaycast();
 
-           
+            if (musicController.isLate())
+            {
+                Debug.Log("Late!");
+                playerRatingController.AddRating(5, "Late Beat!");
+            }
+            else
+            {
+                playerRatingController.AddRating(10, "On Beat!");
+            }
         }
         //If user presses and holds, grant less score for kill.
         else if(Input.GetMouseButton(0) && musicController.canFire)
@@ -40,6 +49,7 @@ public class ShootingScript : MonoBehaviour
             {
                 hit.collider.GetComponent<EnemyScript>().TakeDamage(SetDamage);
                 Debug.Log("HitEnemy!");
+                playerRatingController.AddRating(10, "Enemy Hit!");
             }
         }
     }
