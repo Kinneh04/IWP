@@ -7,7 +7,7 @@ public class EnemySpawner : MonoBehaviour
     public GameObject objectToSpawn; // The prefab you want to spawn
     public GameObject targetObject; // The target GameObject
     public float minInterval, maxInterval;
-
+    public float minDistance;
 
     void SpawnWaveOfEnemies(int noToSpawn)
     {
@@ -24,17 +24,19 @@ public class EnemySpawner : MonoBehaviour
 
     void SpawnRandomObject()
     {
-        if (objectToSpawn != null && targetObject != null)
-        {
-            Vector3 randomPosition = Random.insideUnitSphere * 10f; // Generate a random position within a 10 unit sphere
-            randomPosition += targetObject.transform.position; // Offset by the target position
-            randomPosition.y = 0; // Ensure the object spawns at the same Y level as the target
+        // Spawn your object (assuming it has a Rigidbody component)
+        GameObject spawnedObject = Instantiate(gameObject, transform.position, transform.rotation);
 
-            Instantiate(objectToSpawn, randomPosition, Quaternion.identity);
-        }
-        else
+        // Check the distance between spawnedObject and targetObject
+        float distance = Vector3.Distance(spawnedObject.transform.position, targetObject.transform.position);
+
+        if (distance < minDistance)
         {
-            Debug.LogError("Please assign the object to spawn and target object in the inspector.");
+            // Calculate a new position that is at least minDistance away from the targetObject
+            Vector3 newPosition = targetObject.transform.position + (spawnedObject.transform.position - targetObject.transform.position).normalized * minDistance;
+
+            // Set the new position for the spawnedObject
+            spawnedObject.transform.position = newPosition;
         }
     }
 }
