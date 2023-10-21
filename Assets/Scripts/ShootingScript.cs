@@ -20,6 +20,22 @@ public class ShootingScript : MonoBehaviour
     public float gatlingGunCooldown;
     public float AddToGatlingGunCooldown = 0.1f;
     public GameObject[] GatlingGunMuzzleFlashPoints;
+
+    public GameObject Minigun, Revolver;
+
+    public void StartFrenzyMode()
+    {
+        Revolver.SetActive(false);
+        Minigun.SetActive(true);
+        FrenzyMode = true;
+    }
+
+    public void EndFrenzyMode()
+    {
+        Revolver.SetActive(true);
+        Minigun.SetActive(false);
+        FrenzyMode = false;
+    }
     private void Update()
     {
         if (!FrenzyMode)

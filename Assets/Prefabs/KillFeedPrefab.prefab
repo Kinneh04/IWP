@@ -70,8 +70,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 20 KILL
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: bbea3e9d5f7a4b44e9678150465a3d36, type: 2}
-  m_sharedMaterial: {fileID: 1944843401025106323, guid: bbea3e9d5f7a4b44e9678150465a3d36,
+  m_fontAsset: {fileID: 11400000, guid: 85378d8bb70331f4a8d3296263819046, type: 2}
+  m_sharedMaterial: {fileID: 4275569761461716857, guid: 85378d8bb70331f4a8d3296263819046,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
