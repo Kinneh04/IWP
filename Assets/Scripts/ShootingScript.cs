@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ShootingScript : MonoBehaviour
@@ -14,33 +15,60 @@ public class ShootingScript : MonoBehaviour
     public Transform GunShootFrom;
     public GameObject Tracer;
     public GameObject MuzzleFlash;
+    [Header("Frenzy mode and gatling gun")]
+    public bool FrenzyMode = false;
+    public float gatlingGunCooldown;
+    public float AddToGatlingGunCooldown = 0.1f;
+    public GameObject[] GatlingGunMuzzleFlashPoints;
     private void Update()
     {
-        //If user taps to the beat
-        if(Input.GetMouseButtonDown(0) && musicController.canFire)
+        if (!FrenzyMode)
         {
-            Holdfire = false;
-            weaponMovement.TryShootVisual();
-            musicController.canFire = false;
-            FireRaycast();
+            //If user taps to the beat
+            if (Input.GetMouseButtonDown(0) && musicController.canFire)
+            {
+                Holdfire = false;
+                weaponMovement.TryShootVisual();
+                musicController.canFire = false;
+                FireRaycast();
 
-            if (musicController.isLate())
-            {
-                Debug.Log("Late!");
-                playerRatingController.AddRating(5, "Late Beat!");
+                if (musicController.isLate())
+                {
+                    Debug.Log("Late!");
+                    playerRatingController.AddRating(5, "Late Beat!");
+                }
+                else
+                {
+                    playerRatingController.AddRating(10, "On Beat!");
+                }
+                GameObject GO = Instantiate(MuzzleFlash, GunShootFrom.transform.position, Quaternion.identity);
+                GO.transform.SetParent(GunShootFrom.transform);
             }
-            else
+            //If user presses and holds, grant less score for kill.
+            else if (Input.GetMouseButton(0) && musicController.canFire)
             {
-                playerRatingController.AddRating(10, "On Beat!");
+                Holdfire = true;
+                weaponMovement.TryShootVisual();
+                musicController.canFire = false;
+                FireRaycast();
+                GameObject GO = Instantiate(MuzzleFlash, GunShootFrom.transform.position, Quaternion.identity);
+                GO.transform.SetParent(GunShootFrom.transform);
             }
         }
-        //If user presses and holds, grant less score for kill.
-        else if(Input.GetMouseButton(0) && musicController.canFire)
+        else
         {
-            Holdfire = true;
-            weaponMovement.TryShootVisual();
-            musicController.canFire = false;
-            FireRaycast();
+            if (Input.GetMouseButton(0) && gatlingGunCooldown <= 0)
+            {
+                FireRaycast();
+                gatlingGunCooldown = AddToGatlingGunCooldown;
+                foreach (GameObject GO in GatlingGunMuzzleFlashPoints)
+                {
+                    GameObject MFGO = Instantiate(MuzzleFlash, GO.transform.position, Quaternion.identity);
+                    MFGO.transform.SetParent(GO.transform);
+                }
+            }
+            else if (gatlingGunCooldown > 0) gatlingGunCooldown -= Time.deltaTime;
+            
         }
     }
 
@@ -55,10 +83,8 @@ public class ShootingScript : MonoBehaviour
                 Debug.Log("HitEnemy!");
                 playerRatingController.AddRating(10, "Enemy Hit!");
             }
-            SpawnTracer(hit.point);
         }
-        GameObject GO =Instantiate(MuzzleFlash, GunShootFrom.transform.position, Quaternion.identity);
-        GO.transform.SetParent(GunShootFrom.transform);
+        
     }
     bool RaycastFromCameraCenter(out RaycastHit hit)
     {
@@ -68,6 +94,15 @@ public class ShootingScript : MonoBehaviour
         Vector3 rayDirection = mainCamera.transform.forward;
 
         return Physics.Raycast(rayOrigin, rayDirection, out hit);
+    }
+
+    public void SpawnGatlingGunTracer(Vector3 Destination)
+    {
+        foreach (GameObject GO in GatlingGunMuzzleFlashPoints)
+        {
+            GameObject NewTracer = Instantiate(Tracer, GO.transform.position, Quaternion.identity);
+            StartCoroutine(MoveTracer(NewTracer, Destination));
+        }
     }
 
     public void SpawnTracer(Vector3 Destination)
@@ -84,5 +119,6 @@ public class ShootingScript : MonoBehaviour
             yield return null;
 
         }
+        //Destroy(GO);
     }
 }

@@ -9,6 +9,7 @@ public class EnemyScript : MonoBehaviour
     [Header("ForMediumAndBoss")]
     public int Health = 100;
     public Rigidbody RB;
+    public GameObject DeathParticles;
     public enum EnemyType
     {
         Small, Medium, Boss
@@ -99,6 +100,7 @@ public class EnemyScript : MonoBehaviour
     public void Die()
     {
         Instantiate(BloodspurtFX,transform.position,Quaternion.identity);
+        Instantiate(DeathParticles, transform.position,Quaternion.identity);
         Destroy(gameObject);
     }
 }
