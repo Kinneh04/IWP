@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 using System.Runtime.CompilerServices;
+using UnityEngine.UI;
+using TMPro;
+using Unity.VisualScripting;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 #endif
@@ -74,6 +77,15 @@ using System.Collections;
 		public float addToDashCooldown = 5.0f;
 		private bool isDashing = false;
 
+	[Header("UI elements for abilities")]
+	public TMP_Text AbilityCountdownTMPText;
+    public TMP_Text DashCountdownTMPText;
+		public Image AbilityImage, DashImage;
+	private Color OriginalColor;
+	[Header("Set Ability")]
+	bool OnAbilityCooldown = false;
+	public Ability CurrentAbility;
+
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 		private PlayerInput _playerInput;
 #endif
@@ -99,11 +111,29 @@ using System.Collections;
 		private void Awake()
 		{
 		Application.targetFrameRate = 60;
+		OriginalColor = AbilityImage.color;
 			// get a reference to our main camera
 			if (_mainCamera == null)
 			{
 				_mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
 			}
+		}
+
+		public void UpdateAbilityCooldownText(float num)
+		{
+		if (num > 0)
+		{
+            OnAbilityCooldown = true;
+            AbilityCountdownTMPText.gameObject.SetActive(true);
+			AbilityCountdownTMPText.text = ((int)num).ToString();
+			AbilityImage.color = new Color(OriginalColor.r, OriginalColor.g, OriginalColor.b, 0.2f);
+        }
+		else
+		{
+            OnAbilityCooldown = false;
+            AbilityCountdownTMPText.gameObject.SetActive(false);
+			AbilityImage.color = OriginalColor;
+        }
 		}
 
 		private void Start()
@@ -130,9 +160,19 @@ using System.Collections;
 			Move();
 			CameraRotation();
 			if (dashCooldown > 0)
-            {
+			{
+			
 				dashCooldown -= Time.deltaTime;
-            }
+				DashCountdownTMPText.text = ((int)dashCooldown).ToString();
+			}
+			else
+			{
+				DashCountdownTMPText.gameObject.SetActive(false);
+				DashImage.color = OriginalColor;
+			}
+
+		if (!CurrentAbility) CurrentAbility = GameObject.FindAnyObjectByType<Ability>();
+
 		}
 
 		private void LateUpdate()
@@ -154,7 +194,11 @@ using System.Collections;
 			{
 				StartCoroutine(Dash());
 			}
-		}
+        if (Input.GetKeyDown(KeyCode.E) && !OnAbilityCooldown)
+        {
+			CurrentAbility.UseAbility();
+        }
+    }
 		IEnumerator Dash()
 		{
 			isDashing = true;
@@ -185,6 +229,11 @@ using System.Collections;
 				elapsedTime += Time.deltaTime;
 				yield return null;
 			}
+
+		//UI
+		DashImage.color = new Color(OriginalColor.r, OriginalColor.g, OriginalColor.b, 0.2f);
+		DashCountdownTMPText.gameObject.SetActive(true);
+		//End UI
 
 			isDashing = false;
 		}

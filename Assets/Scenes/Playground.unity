@@ -1246,6 +1246,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1010531060}
   - component: {fileID: 1010531061}
+  - component: {fileID: 1010531062}
   m_Layer: 0
   m_Name: Events and Managers
   m_TagString: Untagged
@@ -1290,6 +1291,20 @@ MonoBehaviour:
   Text_Color_Inactive: {r: 0, g: 0, b: 0, a: 1}
   TextStyle_Inactive: 0
   Background_Color_Inactive: {r: 0.306, g: 0.396, b: 0.612, a: 1}
+--- !u!114 &1010531062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1010531059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4c56d926bdaee241b950ef636da74ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  addToCooldown: 12
+  firstPersonController: {fileID: 135756641613574987}
 --- !u!1 &1074210143
 GameObject:
   m_ObjectHideFlags: 0
@@ -2534,7 +2549,7 @@ GameObject:
   - component: {fileID: 1621049220}
   - component: {fileID: 1621049219}
   m_Layer: 5
-  m_Name: AbilityButton
+  m_Name: DashButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3969,6 +3984,18 @@ MonoBehaviour:
   Text_Color_Inactive: {r: 0, g: 0, b: 0, a: 1}
   TextStyle_Inactive: 0
   Background_Color_Inactive: {r: 0.306, g: 0.396, b: 0.612, a: 1}
+--- !u!114 &135756641613574987 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47,
+    type: 3}
+  m_PrefabInstance: {fileID: 5393215579111688471}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1255326899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55919ac34a26952479f3fc91f777b2fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &187552785424559357
 Transform:
   m_ObjectHideFlags: 0
@@ -5762,14 +5789,34 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47,
         type: 3}
+      propertyPath: DashImage
+      value: 
+      objectReference: {fileID: 344486003}
+    - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47,
+        type: 3}
       propertyPath: cameraBob
       value: 
       objectReference: {fileID: 8338988565591873056}
     - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47,
         type: 3}
+      propertyPath: AbilityImage
+      value: 
+      objectReference: {fileID: 621840826}
+    - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47,
+        type: 3}
       propertyPath: dashDistance
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47,
+        type: 3}
+      propertyPath: DashCountdownTMPText
+      value: 
+      objectReference: {fileID: 931732279}
+    - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47,
+        type: 3}
+      propertyPath: AbilityCountdownTMPText
+      value: 
+      objectReference: {fileID: 1074210145}
     - target: {fileID: 8616685848737228372, guid: c5efc39a8aaf6e64ea40e9ad573e9b47,
         type: 3}
       propertyPath: m_Name

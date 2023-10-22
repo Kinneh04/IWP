@@ -156,7 +156,7 @@ public class PlayerRatingController : MonoBehaviour
             DecreaseFrenzy(FrenzyDecreaseAmount * Time.deltaTime);
         }
 
-        if(Input.GetKeyDown(KeyCode.Space) && frenzyAvailable)
+        if(Input.GetKeyDown(KeyCode.F) && frenzyAvailable)
         {
             shootingScript.StartFrenzyMode();
             frenzyAvailable = false;
