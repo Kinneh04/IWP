@@ -85,6 +85,7 @@ using System.Collections;
 	[Header("Set Ability")]
 	bool OnAbilityCooldown = false;
 	public Ability CurrentAbility;
+	public Transform SpawnAbilitySpawnablesFrom;
 
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 		private PlayerInput _playerInput;

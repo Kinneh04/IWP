@@ -93,11 +93,15 @@ public class ShootingScript : MonoBehaviour
         RaycastHit hit;
         if (RaycastFromCameraCenter(out hit))
         {
-            if(hit.collider.CompareTag("Enemy"))
+            if (hit.collider.CompareTag("Enemy"))
             {
                 hit.collider.GetComponent<EnemyScript>().TakeDamage(SetDamage);
                 Debug.Log("HitEnemy!");
                 playerRatingController.AddRating(10, "Enemy Hit!");
+            }
+            else if (hit.collider.CompareTag("Coin"))
+            {
+                hit.collider.GetComponent<CoinScript>().Ricochet();
             }
         }
         

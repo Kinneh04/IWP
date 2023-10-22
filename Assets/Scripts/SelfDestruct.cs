@@ -5,9 +5,17 @@ using UnityEngine;
 public class SelfDestruct : MonoBehaviour
 {
     public float SelfDestructAfterSeconds;
-
+    public GameObject ParticleEffects;
     private void Awake()
     {
-        Destroy(gameObject, SelfDestructAfterSeconds);
+        if (ParticleEffects) StartCoroutine(SelfD());
+        else Destroy(gameObject, SelfDestructAfterSeconds);
+    }
+
+    IEnumerator SelfD()
+    {
+        yield return new WaitForSeconds(SelfDestructAfterSeconds);
+        if (ParticleEffects) Instantiate(ParticleEffects, transform.position, Quaternion.identity);
+        Destroy(gameObject);
     }
 }
