@@ -76,6 +76,7 @@ using System.Collections;
 		public float dashCooldown = 0.0f;
 		public float addToDashCooldown = 5.0f;
 		private bool isDashing = false;
+	public float currentRecoil;
 
 	[Header("UI elements for abilities")]
 	public TMP_Text AbilityCountdownTMPText;
@@ -257,7 +258,7 @@ using System.Collections;
 				// rotate the player left and right
 				transform.Rotate(Vector3.up * _rotationVelocity);
 			}
-		CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0.0f, cameraBob.Finaltilt.z * cameraBob.tiltAmount);
+		CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch +currentRecoil, 0.0f, cameraBob.Finaltilt.z * cameraBob.tiltAmount);
 		//Debug.Log(cameraBob.Finaltilt.z);
 
 

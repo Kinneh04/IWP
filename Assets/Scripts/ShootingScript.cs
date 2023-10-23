@@ -10,6 +10,10 @@ public class ShootingScript : MonoBehaviour
     public PlayerRatingController playerRatingController;
     public bool Holdfire;
     public int SetDamage = 25;
+
+    [Header("Animations")]
+    public Animator PistolAnimator;
+    public AnimationClip PistolFireAnimClip, PistolReloadAnimClip;
     [Header("Tracer")]
     public float tracerMoveSpeed;
     public Transform GunShootFrom;
@@ -47,7 +51,7 @@ public class ShootingScript : MonoBehaviour
                 weaponMovement.TryShootVisual();
                 musicController.canFire = false;
                 FireRaycast();
-
+                PistolAnimator.Play(PistolFireAnimClip.name);
                 if (musicController.isLate())
                 {
                     Debug.Log("Late!");
@@ -64,12 +68,14 @@ public class ShootingScript : MonoBehaviour
             else if (Input.GetMouseButton(0) && musicController.canFire)
             {
                 Holdfire = true;
+                PistolAnimator.Play(PistolFireAnimClip.name);
                 weaponMovement.TryShootVisual();
                 musicController.canFire = false;
                 FireRaycast();
                 GameObject GO = Instantiate(MuzzleFlash, GunShootFrom.transform.position, Quaternion.identity);
                 GO.transform.SetParent(GunShootFrom.transform);
             }
+            else if (Input.GetMouseButtonUp(0)) Holdfire = false;
         }
         else
         {

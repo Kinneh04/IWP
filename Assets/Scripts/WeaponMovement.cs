@@ -22,6 +22,9 @@ public class WeaponMovement : MonoBehaviour
     public Vector3 targetPosition;
     public Vector3 Shootforce;
     public MusicController musicController;
+    public float CameraRecoil;
+    public float CurrentRecoil;
+    public FirstPersonController firstPersonController;
 
     void Start()
     {
@@ -97,9 +100,11 @@ public class WeaponMovement : MonoBehaviour
     }
     public IEnumerator  ShootVisualRecoil()
     {
+
         musicController.canFire = false;
         Vector3 returnPos = initialPosition;
         initialPosition -= Shootforce;
+        CurrentRecoil = CameraRecoil;
 
         transform.localRotation = Quaternion.Euler(VisualRecoilTiltAmount, transform.localRotation.y, transform.localRotation.z);
         float i = Time.deltaTime * recoilResetDuration * 2;
@@ -108,10 +113,13 @@ public class WeaponMovement : MonoBehaviour
             transform.localRotation = Quaternion.Lerp(transform.localRotation, Quaternion.identity, Time.deltaTime * 10);
             i -= Time.deltaTime;
             initialPosition = Vector3.Lerp(initialPosition, returnPos, Time.deltaTime * recoilResetDuration);
+            firstPersonController.currentRecoil = CurrentRecoil;
+            CurrentRecoil = Mathf.Lerp(CurrentRecoil, 0, Time.deltaTime * recoilResetDuration);
             yield return null;
         }
         initialPosition = returnPos;
         transform.localRotation = Quaternion.identity;
+       
 
     }
 }

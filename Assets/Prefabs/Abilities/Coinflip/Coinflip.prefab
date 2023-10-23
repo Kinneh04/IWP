@@ -48,6 +48,6 @@ MonoBehaviour:
   firstPersonController: {fileID: 0}
   Coinobject: {fileID: 8571999251770446268, guid: 9c682319ea3d54a43a1bad2bf4e592be,
     type: 3}
-  tossForce: 5
+  tossForce: 8
   airTime: 1
   coinSlowdownTime: 10
