@@ -10,6 +10,8 @@ public class EnemyScript : MonoBehaviour
     public int Health = 100;
     public Rigidbody RB;
     public GameObject DeathParticles;
+    public Material EnemyMat;
+    private Color OGMatColor;
     public enum EnemyType
     {
         Small, Medium, Boss
@@ -38,6 +40,7 @@ public class EnemyScript : MonoBehaviour
 
     void Start()
     {
+        OGMatColor = EnemyMat.color;
         currentState = EnemyState.Charge;
         player = GameObject.FindGameObjectWithTag("Player").transform;
         RB = GetComponent<Rigidbody>();
@@ -95,6 +98,31 @@ public class EnemyScript : MonoBehaviour
         {
             Die();
         }
+        else if(enemyType == EnemyType.Medium)
+        {
+            Health -= damage;
+            if (EnemyMat)
+            {
+                StartCoroutine(FlashDamage());
+            }
+            if (BloodspurtFX) Instantiate(BloodspurtFX, transform.position, Quaternion.identity);
+            if (Health <= 0) Die();
+        }
+    }
+
+    public IEnumerator FlashDamage()
+    {
+        if (EnemyMat)
+        {
+            EnemyMat.color = Color.red;
+            yield return new WaitForSeconds(0.2f);
+            EnemyMat.color = OGMatColor;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if(EnemyMat) EnemyMat.color = OGMatColor;
     }
 
     public void Die()
