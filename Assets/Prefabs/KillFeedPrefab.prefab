@@ -29,7 +29,7 @@ RectTransform:
   m_GameObject: {fileID: 7309385279985841852}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.8975258, y: 0.8422831, z: 1.0366561}
+  m_LocalScale: {x: 0.6198672, y: 0.5817144, z: 0.71595615}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -151,6 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SelfDestructAfterSeconds: 4
+  ParticleEffects: {fileID: 0}
 --- !u!95 &4415600929572328220
 Animator:
   serializedVersion: 5

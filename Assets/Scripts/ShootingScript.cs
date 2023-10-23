@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
+using UnityEditor.TerrainTools;
 using UnityEngine;
 
 public class ShootingScript : MonoBehaviour
@@ -27,6 +29,40 @@ public class ShootingScript : MonoBehaviour
 
     public GameObject Minigun, Revolver;
 
+    [Header("Ammo")]
+    public int maxAmmo;
+    public int CurrentAmmo;
+    public bool isReloading;
+    public AnimationClip ReloadAnimClip;
+    public float reloadTime;
+    public TMP_Text AmmoCountText;
+
+    private void Start()
+    {
+        CurrentAmmo = maxAmmo;
+        AmmoCountText.text = CurrentAmmo.ToString() + "/" + maxAmmo.ToString();
+    }
+
+    void DispenseAmmo()
+    {
+        CurrentAmmo -= 1;
+        AmmoCountText.text = CurrentAmmo.ToString() + "/" + maxAmmo.ToString();
+    }
+
+    public IEnumerator StartReload()
+    {
+        if (!isReloading)
+        {
+            isReloading = true;
+            PistolAnimator.Play(ReloadAnimClip.name);
+            yield return new WaitForSeconds(reloadTime);
+            if (CurrentAmmo > 0) CurrentAmmo = maxAmmo + 1;
+            else CurrentAmmo = maxAmmo;
+            AmmoCountText.text = CurrentAmmo.ToString() + "/" + maxAmmo.ToString();
+            isReloading = false;
+        }
+    }
+
     public void StartFrenzyMode()
     {
         Revolver.SetActive(false);
@@ -44,38 +80,54 @@ public class ShootingScript : MonoBehaviour
     {
         if (!FrenzyMode)
         {
-            //If user taps to the beat
-            if (Input.GetMouseButtonDown(0) && musicController.canFire)
+            if(!isReloading && Input.GetKeyDown(KeyCode.R))
             {
-                Holdfire = false;
-                weaponMovement.TryShootVisual();
-                musicController.canFire = false;
-                FireRaycast();
-                PistolAnimator.Play(PistolFireAnimClip.name);
-                if (musicController.isLate())
-                {
-                    Debug.Log("Late!");
-                    playerRatingController.AddRating(5, "Late Beat!");
-                }
-                else
-                {
-                    playerRatingController.AddRating(10, "On Beat!");
-                }
-                GameObject GO = Instantiate(MuzzleFlash, GunShootFrom.transform.position, Quaternion.identity);
-                GO.transform.SetParent(GunShootFrom.transform);
+                StartCoroutine(StartReload());
             }
-            //If user presses and holds, grant less score for kill.
-            else if (Input.GetMouseButton(0) && musicController.canFire)
+            if (CurrentAmmo > 0 && !isReloading)
             {
-                Holdfire = true;
-                PistolAnimator.Play(PistolFireAnimClip.name);
-                weaponMovement.TryShootVisual();
-                musicController.canFire = false;
-                FireRaycast();
-                GameObject GO = Instantiate(MuzzleFlash, GunShootFrom.transform.position, Quaternion.identity);
-                GO.transform.SetParent(GunShootFrom.transform);
+                //If user taps to the beat
+                if (Input.GetMouseButtonDown(0) && musicController.canFire && !isReloading)
+                {
+                    Holdfire = false;
+                    weaponMovement.TryShootVisual();
+                    musicController.canFire = false;
+                    FireRaycast();
+                    DispenseAmmo();
+                    PistolAnimator.Play(PistolFireAnimClip.name);
+                    if (musicController.isLate())
+                    {
+                        Debug.Log("Late!");
+                        playerRatingController.AddRating(5, "Late Beat!");
+                    }
+                    else
+                    {
+                        playerRatingController.AddRating(10, "On Beat!");
+                    }
+                    GameObject GO = Instantiate(MuzzleFlash, GunShootFrom.transform.position, Quaternion.identity);
+                    GO.transform.SetParent(GunShootFrom.transform);
+                }
+                //If user presses and holds, grant less score for kill.
+                else if (Input.GetMouseButton(0) && musicController.canFire && !isReloading)
+                {
+                    Holdfire = true;
+                    PistolAnimator.Play(PistolFireAnimClip.name);
+                    weaponMovement.TryShootVisual();
+                    DispenseAmmo();
+                    musicController.canFire = false;
+                    FireRaycast();
+                    GameObject GO = Instantiate(MuzzleFlash, GunShootFrom.transform.position, Quaternion.identity);
+                    GO.transform.SetParent(GunShootFrom.transform);
+                }
+                else if (Input.GetMouseButtonUp(0)) Holdfire = false;
             }
-            else if (Input.GetMouseButtonUp(0)) Holdfire = false;
+            else
+            {
+                if(Input.GetMouseButton(0) && musicController.canFire)
+                {
+                    StartCoroutine(StartReload());
+                }
+            }
         }
         else
         {

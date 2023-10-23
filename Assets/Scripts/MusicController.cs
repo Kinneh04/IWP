@@ -18,10 +18,12 @@ public class MusicController : MonoBehaviour
     float currentShootLeeway;
     public PlayerRatingController playerRating;
     float shotTime;
+    public BPMPulse[] Pulses;
     //public WeaponMovement weaponMovement;
     float StartTime;
     private void Start()
     {
+        Pulses = GameObject.FindObjectsOfType<BPMPulse>();
         OriginalScaleTransform = Crosshair.localScale;
     }
 
@@ -34,11 +36,12 @@ public class MusicController : MonoBehaviour
 
     private void Update()
     {
-        StartTime += Time.deltaTime;
+        StartTime += Time.unscaledDeltaTime;
         if (StartTime > BPM/ BPM_Divider)
         {
             StartTime = 0;
             Pulse();
+            foreach (BPMPulse BPMP in Pulses) BPMP.Pulse();
             SpawnFadeCrosshair();
             playerRating.PumpScale(1.1f);
             canFire = true;

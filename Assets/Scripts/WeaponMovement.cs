@@ -14,6 +14,7 @@ public class WeaponMovement : MonoBehaviour
     public float tiltAmount = 5.0f;
     public float jumpTiltAmount = 15.0f;
     private Vector3 initialPosition;
+    private Vector3 FixedInitialPos;
     private float timer = 0.0f;
     public Quaternion targetRotation;
     public float VisualRecoilTiltAmount;
@@ -29,6 +30,7 @@ public class WeaponMovement : MonoBehaviour
     void Start()
     {
         initialPosition = transform.localPosition;
+        FixedInitialPos = initialPosition;
     }
 
     void Update()
@@ -96,6 +98,7 @@ public class WeaponMovement : MonoBehaviour
 
     public void TryShootVisual()
     {
+        initialPosition = FixedInitialPos;
         StartCoroutine(ShootVisualRecoil());
     }
     public IEnumerator  ShootVisualRecoil()
