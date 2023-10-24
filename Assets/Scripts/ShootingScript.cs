@@ -100,7 +100,7 @@ public class ShootingScript : MonoBehaviour
                     float currentTime = Time.time;
 
                     // If it's been more than 1 second since the last click, reset the click count
-                    if (currentTime - lastClickTime > 0.3f)
+                    if (currentTime - lastClickTime > 0.20f)
                     {
                         clickCount = 1;
                     }
@@ -151,7 +151,7 @@ public class ShootingScript : MonoBehaviour
                 else if (Input.GetMouseButton(0) && musicController.canFire && !isReloading)
                 {
                     clickCount--;
-                    if (clickCount < 4)
+                    if (clickCount < 5)
                     {
                         isSpamming = false;
                         AntiSpamGO.SetActive(false);
@@ -179,7 +179,7 @@ public class ShootingScript : MonoBehaviour
         {
             if (Input.GetMouseButton(0) && gatlingGunCooldown <= 0)
             {
-                FireRaycast();
+                FireRaycast(false);
                 gatlingGunCooldown = AddToGatlingGunCooldown;
                 foreach (GameObject GO in GatlingGunMuzzleFlashPoints)
                 {
@@ -192,7 +192,7 @@ public class ShootingScript : MonoBehaviour
         }
     }
 
-    public void FireRaycast()
+    public void FireRaycast(bool AddToAcc = true)
     {
         RaycastHit hit;
         if (RaycastFromCameraCenter(out hit))

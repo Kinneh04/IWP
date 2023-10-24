@@ -46,7 +46,7 @@ public class PlayerRatingController : MonoBehaviour
 
     public void TargetAndRecalculateAcc()
     {
-        TargetAcc = ShotsHit / ShotsFired;
+        TargetAcc = (float)ShotsHit / (float)ShotsFired * 100;
     }
 
     public void AddMissedShot()
@@ -181,12 +181,12 @@ public class PlayerRatingController : MonoBehaviour
 
         if(currentAcc != TargetAcc)
         {
-            currentAcc = Mathf.Lerp(currentAcc, TargetAcc, Time.deltaTime);
+            currentAcc = Mathf.Lerp(currentAcc, TargetAcc, Time.deltaTime * 3);
             AccuracyTMP_Text.text = currentAcc.ToString("F2") + "%";
         }
         if(currentScore != Targetscore)
         {
-            currentScore = (int)Mathf.Lerp(currentScore, Targetscore, Time.deltaTime);
+            currentScore = (int)Mathf.Lerp(currentScore, Targetscore, Time.deltaTime * 2);
             ScoreTMP_Text.text = currentScore.ToString("000000");
         }
 

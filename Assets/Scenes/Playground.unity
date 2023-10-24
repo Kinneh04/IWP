@@ -817,6 +817,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8390568870500087828, guid: 5df4b59e8e7496b4f8cfb3ce0f562744,
         type: 3}
+      propertyPath: BPM
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 8390568870500087828, guid: 5df4b59e8e7496b4f8cfb3ce0f562744,
+        type: 3}
       propertyPath: BeatClip
       value: 
       objectReference: {fileID: 8300000, guid: 534ffb16fe5664c4a8a75f7d0b7266d4, type: 3}
@@ -902,6 +907,7 @@ GameObject:
   - component: {fileID: 421249932}
   - component: {fileID: 421249934}
   - component: {fileID: 421249933}
+  - component: {fileID: 421249935}
   m_Layer: 5
   m_Name: ScoreText
   m_TagString: Untagged
@@ -926,7 +932,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 728.1, y: 478.4}
+  m_AnchoredPosition: {x: 705.3, y: 478.4}
   m_SizeDelta: {x: 383.9249, y: 96.4756}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &421249933
@@ -1027,6 +1033,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 421249931}
   m_CullTransparentMesh: 1
+--- !u!114 &421249935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 421249931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3bde1fac3acb7641b9b0b4faecdebac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OriginalScaleTransform: {x: 0, y: 0, z: 0}
+  DecreaseTime: 1
 --- !u!1 &463645777
 GameObject:
   m_ObjectHideFlags: 0
@@ -2025,6 +2045,7 @@ GameObject:
   - component: {fileID: 654738130}
   - component: {fileID: 654738132}
   - component: {fileID: 654738131}
+  - component: {fileID: 654738133}
   m_Layer: 5
   m_Name: AmmoCount
   m_TagString: Untagged
@@ -2150,6 +2171,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 654738129}
   m_CullTransparentMesh: 1
+--- !u!114 &654738133
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 654738129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3bde1fac3acb7641b9b0b4faecdebac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OriginalScaleTransform: {x: 0, y: 0, z: 0}
+  DecreaseTime: 0.5
 --- !u!1 &668110305
 GameObject:
   m_ObjectHideFlags: 0
@@ -3201,6 +3236,7 @@ GameObject:
   - component: {fileID: 1105968723}
   - component: {fileID: 1105968725}
   - component: {fileID: 1105968724}
+  - component: {fileID: 1105968726}
   m_Layer: 5
   m_Name: AmmoIcon
   m_TagString: Untagged
@@ -3267,6 +3303,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1105968722}
   m_CullTransparentMesh: 1
+--- !u!114 &1105968726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1105968722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3bde1fac3acb7641b9b0b4faecdebac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OriginalScaleTransform: {x: 0, y: 0, z: 0}
+  DecreaseTime: 0.5
 --- !u!1 &1177170505
 GameObject:
   m_ObjectHideFlags: 0
@@ -4120,10 +4170,10 @@ MonoBehaviour:
   prefabToSpawn: {fileID: 8934527016483769248, guid: 0a4d8ab7523c56f4f93a8e50ff6e1842,
     type: 3}
   minDistance: 15
-  minSpawnInterval: 1
-  maxSpawnInterval: 5
+  minSpawnInterval: 3
+  maxSpawnInterval: 6
   groupSpacing: 1
-  difficulty: 4
+  difficulty: 1
 --- !u!1 &1445312451
 GameObject:
   m_ObjectHideFlags: 0
