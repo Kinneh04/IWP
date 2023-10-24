@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Transactions;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MusicController : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class MusicController : MonoBehaviour
     public float BPM_Divider;
     public float DecreaseTime;
     public bool canFire;
+    public bool canFireButEarly;
     [Header("GameObject components")]
     public Transform Crosshair;
     public Vector3 OriginalScaleTransform;
@@ -21,10 +23,20 @@ public class MusicController : MonoBehaviour
     public BPMPulse[] Pulses;
     //public WeaponMovement weaponMovement;
     float StartTime;
+    public AudioSource MusicAudioSource, ExtraBeatAudioSource;
+    public AudioClip BeatClip, SnareClip;
+    public Slider MusicProgressionSlider;
+    int BeatCount;
+
+    public void StartMusic()
+    {
+        MusicAudioSource.PlayScheduled(0);
+    }
     private void Start()
     {
         Pulses = GameObject.FindObjectsOfType<BPMPulse>();
         OriginalScaleTransform = Crosshair.localScale;
+        StartMusic();
     }
 
     public void SpawnFadeCrosshair()
@@ -34,20 +46,47 @@ public class MusicController : MonoBehaviour
         GO.GetComponent<CrosshairFadeBPM>().Speed = 1 / (BPM / BPM_Divider);
     }
 
+    private void PlayBeatAudio()
+    {
+        ExtraBeatAudioSource.PlayOneShot(BeatClip);
+    }
+    private void PlaySnareAudio()
+    {
+        ExtraBeatAudioSource.PlayOneShot(SnareClip);
+    }
     private void Update()
     {
-        StartTime += Time.unscaledDeltaTime;
-        if (StartTime > BPM/ BPM_Divider)
+        if (MusicAudioSource.isPlaying)
         {
+            float currentTime = MusicAudioSource.time;
+            float totalTime = MusicAudioSource.clip.length;
+
+            MusicProgressionSlider.value = currentTime / totalTime;
+        }
+        StartTime += Time.fixedUnscaledDeltaTime;
+       if (StartTime > BPM / BPM_Divider)
+        {
+            canFireButEarly = false;
             StartTime = 0;
             Pulse();
+            BeatCount++;
+            PlayBeatAudio();
+            if (BeatCount == 2)
+            {
+                BeatCount = 0;
+                PlaySnareAudio();
+            }
             foreach (BPMPulse BPMP in Pulses) BPMP.Pulse();
             SpawnFadeCrosshair();
             playerRating.PumpScale(1.1f);
             canFire = true;
             currentShootLeeway = ShootLeeway;
         }
-        if(Crosshair.localScale != OriginalScaleTransform)
+        else if (StartTime > BPM / BPM_Divider - currentShootLeeway * BPM / BPM_Divider)
+        {
+            canFireButEarly = true;
+        }
+        if (Crosshair.localScale != OriginalScaleTransform)
         {
             Crosshair.localScale = Vector3.Lerp(Crosshair.localScale, OriginalScaleTransform, DecreaseTime * Time.deltaTime);
         }

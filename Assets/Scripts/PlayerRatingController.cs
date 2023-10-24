@@ -33,8 +33,35 @@ public class PlayerRatingController : MonoBehaviour
     bool frenzyAvailable = false;
     public GameObject SpaceToActivateGO;
 
+    [Header("ScoreAndAccuracy")]
+    public int ShotsFired;
+    public int ShotsHit;
+    public int Targetscore;
+    public int currentScore;
+    public float currentAcc, TargetAcc;
+    public TMP_Text ScoreTMP_Text, AccuracyTMP_Text;
+
     [Header("Components")]
     public ShootingScript shootingScript;
+
+    public void TargetAndRecalculateAcc()
+    {
+        TargetAcc = ShotsHit / ShotsFired;
+    }
+
+    public void AddMissedShot()
+    {
+        ShotsFired++;
+        TargetAndRecalculateAcc();
+    }
+
+    public void AddHitShot()
+    {
+        ShotsFired++; ShotsHit++;
+        TargetAndRecalculateAcc();
+    }
+
+
 
 
     public void AddToFrenzy(float rating)
@@ -85,13 +112,20 @@ public class PlayerRatingController : MonoBehaviour
     public void AddRating(float rating, string ShowString = null)
     {
         Rating += rating;
-        RatingSlider.value = Rating;
+        if(rating > 0) RatingSlider.value = Rating;
+        Targetscore += (int)rating;
 
         if(ShowString != "" && ShowString != null)
         {
             GameObject GO = Instantiate(KillFeedPrefab);
             GO.transform.SetParent(KillfeedParent, true);
             TMP_Text text = GO.GetComponent<TMP_Text>();
+            if(rating < 0)
+            {
+                text.text = ShowString + rating.ToString();
+                text.color = Color.red;
+            }
+            else
             text.text = ShowString + " +" + rating.ToString();
         }
         PumpScale(1.15f);
@@ -144,6 +178,18 @@ public class PlayerRatingController : MonoBehaviour
 
     private void Update()
     {
+
+        if(currentAcc != TargetAcc)
+        {
+            currentAcc = Mathf.Lerp(currentAcc, TargetAcc, Time.deltaTime);
+            AccuracyTMP_Text.text = currentAcc.ToString("F2") + "%";
+        }
+        if(currentScore != Targetscore)
+        {
+            currentScore = (int)Mathf.Lerp(currentScore, Targetscore, Time.deltaTime);
+            ScoreTMP_Text.text = currentScore.ToString("000000");
+        }
+
         RemoveRating(0.1f * (currentRatingIndex + 1));
         if (RatingImage.transform.localScale.x > Minscale.x) RatingImage.transform.localScale *= 0.995f;
 

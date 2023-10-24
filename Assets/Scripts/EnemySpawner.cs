@@ -11,7 +11,7 @@ public class EnemySpawner : MonoBehaviour
     public float maxSpawnInterval = 5.0f;
     public float groupSpacing = 1.0f; // Spacing between enemies in a group
     public int difficulty = 1; // Adjust difficulty level
-    void SpawnEnemyGroup(int numEnemies, Vector3 SpawnPosition)
+    IEnumerator SpawnEnemyGroup(int numEnemies, Vector3 SpawnPosition)
     {
         float angleStep = 360f / numEnemies;
         float radius = 2f; // Adjust the radius as needed
@@ -23,6 +23,7 @@ public class EnemySpawner : MonoBehaviour
 
             Vector3 spawnPosition = SpawnPosition + new Vector3(Mathf.Cos(radians) * radius, 0, Mathf.Sin(radians) * radius);
             Instantiate(prefabToSpawn, spawnPosition, Quaternion.identity);
+            yield return new WaitForSeconds(0.2f);
         }
     }
     void Start()
@@ -44,7 +45,7 @@ public class EnemySpawner : MonoBehaviour
             if (Random.Range(0, 10) < difficulty)
             {
                 int numEnemiesInGroup = Random.Range(3, 2 * difficulty); // Adjust the range as needed
-                SpawnEnemyGroup(numEnemiesInGroup, spawnPosition);
+                StartCoroutine(SpawnEnemyGroup(numEnemiesInGroup, spawnPosition));
             }
             else Instantiate(prefabToSpawn, spawnPosition, Quaternion.identity);
             float randomInterval = Random.Range(minSpawnInterval, maxSpawnInterval);

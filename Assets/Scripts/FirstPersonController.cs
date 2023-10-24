@@ -119,7 +119,8 @@ using System.Collections;
 			{
 				_mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
 			}
-		}
+        if (!CurrentAbility) CurrentAbility = GameObject.FindAnyObjectByType<Ability>();
+    }
 
 		public void UpdateAbilityCooldownText(float num)
 		{
@@ -173,15 +174,8 @@ using System.Collections;
 				DashImage.color = OriginalColor;
 			}
 
-		if (!CurrentAbility) CurrentAbility = GameObject.FindAnyObjectByType<Ability>();
 
 		}
-
-		private void LateUpdate()
-		{
-		
-		}
-
 		private void GroundedCheck()
 		{
 			// set sphere position, with offset
@@ -311,60 +305,38 @@ using System.Collections;
 			_controller.Move(inputDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
 		}
 
-		private void JumpAndGravity()
-		{
-			if (Grounded && !isJumping)
-			{
-				_jumpCount = 0; // Reset jump count when grounded
-				_canDoubleJump = true; // Reset double jump ability when grounded
+    private void JumpAndGravity()
+    {
+        if (Grounded && !isJumping)
+        {
+            _jumpCount = 0;
+            _canDoubleJump = true;
+            _fallTimeoutDelta = FallTimeout;
+            _verticalVelocity = (_verticalVelocity < 0.0f) ? -2f : _verticalVelocity;
+        }
 
-				// reset the fall timeout timer
-				_fallTimeoutDelta = FallTimeout;
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (_jumpCount == 0 || (_jumpCount == 1 && _canDoubleJump))
+            {
+                isJumping = true;
+                _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
+                _jumpCount++;
+                if (_jumpCount == 2) _canDoubleJump = false;
+            }
+        }
 
-				// stop our velocity dropping infinitely when grounded
-				if (_verticalVelocity < 0.0f)
-				{
-					_verticalVelocity = -2f;
-				}
-			}
+        _jumpTimeoutDelta -= Time.deltaTime;
+        _fallTimeoutDelta -= Time.deltaTime;
 
-			// Jump
-			if (Input.GetKeyDown(KeyCode.Space))
-			{
-				if (_jumpCount == 0 || (_jumpCount == 1 && _canDoubleJump)) // Check if we can jump or double jump
-				{
-					isJumping = true;
-					// the square root of H * -2 * G = how much velocity needed to reach desired height
-					_verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
-					_jumpCount++;
+        if (_verticalVelocity < _terminalVelocity)
+        {
+            _verticalVelocity += Gravity * Time.deltaTime;
+        }
+    }
 
-					if (_jumpCount == 2) // Disable double jump after second jump
-					{
-						_canDoubleJump = false;
-					}
-				}
-			}
 
-			// jump timeout
-			if (_jumpTimeoutDelta >= 0.0f)
-			{
-				_jumpTimeoutDelta -= Time.deltaTime;
-			}
-
-			// fall timeout
-			if (_fallTimeoutDelta >= 0.0f)
-			{
-				_fallTimeoutDelta -= Time.deltaTime;
-			}
-
-			// apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
-			if (_verticalVelocity < _terminalVelocity)
-			{
-				_verticalVelocity += Gravity * Time.deltaTime;
-			}
-		}
-
-		private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
+    private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
 		{
 			if (lfAngle < -360f) lfAngle += 360f;
 			if (lfAngle > 360f) lfAngle -= 360f;

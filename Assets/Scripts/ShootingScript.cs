@@ -4,6 +4,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEditor.TerrainTools;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class ShootingScript : MonoBehaviour
 {
@@ -36,6 +37,12 @@ public class ShootingScript : MonoBehaviour
     public AnimationClip ReloadAnimClip;
     public float reloadTime;
     public TMP_Text AmmoCountText;
+
+    [Header("antiSpam")]
+    public bool isSpamming = false;
+    private float clickCount = 0;
+    private float lastClickTime = 0;
+    public GameObject AntiSpamGO;
 
     private void Start()
     {
@@ -87,29 +94,68 @@ public class ShootingScript : MonoBehaviour
             if (CurrentAmmo > 0 && !isReloading)
             {
                 //If user taps to the beat
-                if (Input.GetMouseButtonDown(0) && musicController.canFire && !isReloading)
+                if (Input.GetMouseButtonDown(0)&& !isReloading)
                 {
-                    Holdfire = false;
-                    weaponMovement.TryShootVisual();
-                    musicController.canFire = false;
-                    FireRaycast();
-                    DispenseAmmo();
-                    PistolAnimator.Play(PistolFireAnimClip.name);
-                    if (musicController.isLate())
+
+                    float currentTime = Time.time;
+
+                    // If it's been more than 1 second since the last click, reset the click count
+                    if (currentTime - lastClickTime > 0.3f)
                     {
-                        Debug.Log("Late!");
-                        playerRatingController.AddRating(5, "Late Beat!");
+                        clickCount = 1;
                     }
                     else
                     {
-                        playerRatingController.AddRating(10, "On Beat!");
+                        clickCount++;
                     }
+
+                    lastClickTime = currentTime;
+
+                    // Check if the click count is over 4
+                    if (clickCount > 6)
+                    {
+                        clickCount = 6;
+                        isSpamming = true;
+                        playerRatingController.AddRating(-5, "Spam Detected!");
+                        AntiSpamGO.SetActive(true);
+                    }
+                    else
+                    {
+                        isSpamming = false;
+                        AntiSpamGO.SetActive(false);
+                    }
+                    if(!isSpamming)
+                    {
+                        playerRatingController.AddRating(5, "On Beat!");
+                    }
+                    Holdfire = false;
+                    weaponMovement.TryShootVisual();
+                    FireRaycast();
+                    DispenseAmmo();
+                    PistolAnimator.Play(PistolFireAnimClip.name);
+                    //if (musicController.isLate())
+                    //{
+                    //    Debug.Log("Late!");
+                    //    playerRatingController.AddRating(5, "Late Beat!");
+                    //}
+                    //else
+                    //{
+                    //    playerRatingController.AddRating(10, "On Beat!");
+                    //}
                     GameObject GO = Instantiate(MuzzleFlash, GunShootFrom.transform.position, Quaternion.identity);
                     GO.transform.SetParent(GunShootFrom.transform);
+                    musicController.canFire = false;
+                    musicController.canFireButEarly = false;
                 }
                 //If user presses and holds, grant less score for kill.
                 else if (Input.GetMouseButton(0) && musicController.canFire && !isReloading)
                 {
+                    clickCount--;
+                    if (clickCount < 4)
+                    {
+                        isSpamming = false;
+                        AntiSpamGO.SetActive(false);
+                    }
                     Holdfire = true;
                     PistolAnimator.Play(PistolFireAnimClip.name);
                     weaponMovement.TryShootVisual();
@@ -156,10 +202,16 @@ public class ShootingScript : MonoBehaviour
                 hit.collider.GetComponent<EnemyScript>().TakeDamage(SetDamage);
                 Debug.Log("HitEnemy!");
                 playerRatingController.AddRating(10, "Enemy Hit!");
+                playerRatingController.AddHitShot();
             }
             else if (hit.collider.CompareTag("Coin"))
             {
                 hit.collider.GetComponent<CoinScript>().Ricochet();
+                playerRatingController.AddHitShot();
+            }
+            else
+            {
+                playerRatingController.AddMissedShot();
             }
         }
         

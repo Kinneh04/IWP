@@ -48,49 +48,13 @@ public class EnemyScript : MonoBehaviour
 
     void Update()
     {
-        switch (currentState)
-        {
-            case EnemyState.Charge:
-                ChargeBehavior();
-                break;
-            case EnemyState.Flank:
-                FlankBehavior();
-                break;
-        }
+        ChargeBehavior();
     }
 
     void ChargeBehavior()
     {
         transform.LookAt(player.transform);
         RB.AddForce(transform.forward * chargeSpeed);
-
-        // If the player is looking at the enemy, switch to Flank behavior
-    }
-
-    void FlankBehavior()
-    {
-        // Calculate the direction to circle around the player
-        Vector3 circleDirection = (player.position - transform.position).normalized;
-        transform.LookAt(circleDirection);
-        // Rotate around the player at flankSpeed
-        transform.RotateAround(player.position, Vector3.up, flankSpeed * Time.deltaTime);
-
-        // If the enemy is behind the player, charge straight towards him
-        Vector3 directionToPlayer = (player.position - transform.position).normalized;
-        float dotProduct = Vector3.Dot(transform.forward, directionToPlayer);
-
-        if (dotProduct > 0.5f) // Adjust the threshold as needed
-        {
-            currentState = EnemyState.Charge;
-        }
-    }
-
-    bool IsPlayerLookingAt()
-    {
-        Vector3 directionToPlayer = (player.position - transform.position).normalized;
-        float dotProduct = Vector3.Dot(transform.forward, directionToPlayer);
-
-        return dotProduct > 0.5f; // Adjust the threshold as needed
     }
     public void TakeDamage(int damage)
     {
