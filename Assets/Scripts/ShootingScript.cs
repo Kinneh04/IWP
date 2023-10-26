@@ -17,11 +17,13 @@ public class ShootingScript : MonoBehaviour
     [Header("Animations")]
     public Animator PistolAnimator;
     public AnimationClip PistolFireAnimClip, PistolReloadAnimClip;
+
     [Header("Tracer")]
     public float tracerMoveSpeed;
     public Transform GunShootFrom;
     public GameObject Tracer;
     public GameObject MuzzleFlash;
+
     [Header("Frenzy mode and gatling gun")]
     public bool FrenzyMode = false;
     public float gatlingGunCooldown;
@@ -43,6 +45,24 @@ public class ShootingScript : MonoBehaviour
     private float clickCount = 0;
     private float lastClickTime = 0;
     public GameObject AntiSpamGO;
+
+    [Header("LateEarlyRating")]
+    public TMP_Text LateEarlyRatingText;
+   
+    public void ShowTimingRating()
+    {
+        StopCoroutine(ShowTimingRatingCoroutine());
+        StartCoroutine(ShowTimingRatingCoroutine());
+    }
+
+    IEnumerator ShowTimingRatingCoroutine()
+    {
+        LateEarlyRatingText.text = musicController.timing.ToString();
+        LateEarlyRatingText.gameObject.SetActive(false);
+        LateEarlyRatingText.gameObject.SetActive(true);
+        yield return new WaitForSeconds(0.3f);
+        LateEarlyRatingText.gameObject.SetActive(false);
+    }
 
     private void Start()
     {
@@ -132,6 +152,7 @@ public class ShootingScript : MonoBehaviour
                     weaponMovement.TryShootVisual();
                     FireRaycast();
                     DispenseAmmo();
+                    ShowTimingRating();
                     PistolAnimator.Play(PistolFireAnimClip.name);
                     //if (musicController.isLate())
                     //{

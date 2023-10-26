@@ -29,7 +29,12 @@ public class MusicController : MonoBehaviour
     public Slider MusicProgressionSlider;
     int BeatCount;
     bool firedOnce = false;
+    public enum Timing
+    {
+        Early, Perfect, Late
+    }
 
+    public Timing timing;
     [Header("Crosshair")]
     public GameObject LeftTarget;
     public GameObject RightTarget;
@@ -89,6 +94,7 @@ public class MusicController : MonoBehaviour
       
         if (StartTime > BPM / BPM_Divider)
         {
+            timing = Timing.Perfect;
             StartTime = 0;
             Pulse();
             BeatCount++;
@@ -116,7 +122,9 @@ public class MusicController : MonoBehaviour
         {
             canFire = true;
             firedOnce = true;
+            timing = Timing.Early;
         }
+        else 
         if (Crosshair.localScale != OriginalScaleTransform)
         {
             Crosshair.localScale = Vector3.Lerp(Crosshair.localScale, OriginalScaleTransform, DecreaseTime * Time.deltaTime);
@@ -128,9 +136,12 @@ public class MusicController : MonoBehaviour
             currentShootLeeway -= Time.deltaTime;
             if (currentShootLeeway <= 0)
             {
-
                 canFire = false;
                 shotTime = 0;
+            }
+            else if (currentShootLeeway <= ShootLeeway / 2)
+            {
+                timing = Timing.Late;
             }
         }
     }
