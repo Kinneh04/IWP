@@ -154,3 +154,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SelfDestructAfterSeconds: 1
+  ParticleEffects: {fileID: 0}

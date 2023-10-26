@@ -64,6 +64,8 @@ public class SplashscreenManager : MonoBehaviour
             BackgroundImage.color = new Color(1, 1, 1, t);
         }
         BackgroundImage.gameObject.SetActive(false);
+        yield return new WaitForSeconds(1f);
+        Destroy(this);
     }
 
     public void DROPSplashscreen()

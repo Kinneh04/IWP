@@ -219,6 +219,13 @@ MonoBehaviour:
   dashDuration: 0.12
   dashCooldown: 0
   addToDashCooldown: 5
+  currentRecoil: 0
+  AbilityCountdownTMPText: {fileID: 0}
+  DashCountdownTMPText: {fileID: 0}
+  AbilityImage: {fileID: 0}
+  DashImage: {fileID: 0}
+  CurrentAbility: {fileID: 0}
+  SpawnAbilitySpawnablesFrom: {fileID: 0}
 --- !u!114 &1978471637655604388
 MonoBehaviour:
   m_ObjectHideFlags: 0
