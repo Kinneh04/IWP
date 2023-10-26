@@ -53,7 +53,7 @@ public class AudioVisualizer : MonoBehaviour
             average += spectrumData[i];
         }
         average /= spectrumData.Length;
-        Debug.Log(average);
+       // Debug.Log(average);
         float newScale = average * scaleMultiplier;
         newScale = Mathf.Clamp(newScale, originalScale.x * minScale, originalScale.x * maxScale);
         newScale = Mathf.Lerp(circleRectTransform.localScale.x, newScale, Time.deltaTime * 5f);
