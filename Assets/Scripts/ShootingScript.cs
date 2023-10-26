@@ -126,7 +126,7 @@ public class ShootingScript : MonoBehaviour
                     }
                     if(!isSpamming)
                     {
-                        playerRatingController.AddRating(5, "On Beat!");
+                        playerRatingController.AddRating(1);
                     }
                     Holdfire = false;
                     weaponMovement.TryShootVisual();

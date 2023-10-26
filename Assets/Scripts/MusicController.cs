@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Transactions;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 public class MusicController : MonoBehaviour
@@ -28,6 +29,26 @@ public class MusicController : MonoBehaviour
     public Slider MusicProgressionSlider;
     int BeatCount;
     bool firedOnce = false;
+
+    [Header("Crosshair")]
+    public GameObject LeftTarget;
+    public GameObject RightTarget;
+    public GameObject CrosshairL, CrosshairR, CrosshairSmallL, CrosshairSmallR;
+    public float DistanceFromMiddle = 200;
+    public Canvas canvas;
+    public Transform LTarget, RTarget;
+    public void SpawnLargeCrosshair(GameObject CL, GameObject CR)
+    {
+        GameObject LGO = Instantiate(CL, LeftTarget.transform.position, Quaternion.identity);
+        GameObject RGO = Instantiate(CR, RightTarget.transform.position, Quaternion.identity);
+        LGO.transform.SetParent(canvas.transform, true);
+        LGO.transform.rotation = Quaternion.Euler(new Vector3(0, 0, -180));
+        RGO.transform.SetParent(canvas.transform, true);
+        CrosshairLerp CHL = LGO.GetComponent<CrosshairLerp>();
+        CrosshairLerp CHR = RGO.GetComponent<CrosshairLerp>();
+        CHL.target = LTarget.transform; CHR.target = RTarget.transform;
+        CHL.speed = 1 / (BPM / BPM_Divider); CHR.speed = 1 / (BPM / BPM_Divider);
+    }
 
     public void StartMusic()
     {
@@ -72,13 +93,19 @@ public class MusicController : MonoBehaviour
             Pulse();
             BeatCount++;
             PlayBeatAudio();
+          
             if (BeatCount == 2)
             {
                 BeatCount = 0;
                 PlaySnareAudio();
+                SpawnLargeCrosshair(CrosshairSmallL, CrosshairSmallR);
+            }
+            else
+            {
+                SpawnLargeCrosshair(CrosshairL, CrosshairR);
             }
             foreach (BPMPulse BPMP in Pulses) BPMP.Pulse();
-            SpawnFadeCrosshair();
+           //SpawnFadeCrosshair();
             playerRating.PumpScale(1.1f);
 
             currentShootLeeway = ShootLeeway;
