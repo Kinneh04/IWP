@@ -53,13 +53,13 @@ public class AudioVisualizer : MonoBehaviour
             average += spectrumData[i];
         }
         average /= spectrumData.Length;
-
+        Debug.Log(average);
         float newScale = average * scaleMultiplier;
         newScale = Mathf.Clamp(newScale, originalScale.x * minScale, originalScale.x * maxScale);
         newScale = Mathf.Lerp(circleRectTransform.localScale.x, newScale, Time.deltaTime * 5f);
         circleRectTransform.localScale = new Vector3(newScale, newScale, 1f);
         StartTime += Time.fixedUnscaledDeltaTime;
-        if (StartTime > BPM / BPM_Divider)
+        if (StartTime > BPM / BPM_Divider && average > 0.011f)
         {
             StartTime = 0;
             BCount++;
