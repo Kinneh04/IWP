@@ -19,7 +19,7 @@ public class MusicController : MonoBehaviour
     public float ShootLeeway;
     float currentShootLeeway;
     public PlayerRatingController playerRating;
-    float shotTime;
+    public float shotTime;
     public BPMPulse[] Pulses;
     //public WeaponMovement weaponMovement;
     float StartTime;
@@ -27,6 +27,7 @@ public class MusicController : MonoBehaviour
     public AudioClip BeatClip, SnareClip;
     public Slider MusicProgressionSlider;
     int BeatCount;
+    bool firedOnce = false;
 
     public void StartMusic()
     {
@@ -64,9 +65,9 @@ public class MusicController : MonoBehaviour
             MusicProgressionSlider.value = currentTime / totalTime;
         }
         StartTime += Time.fixedUnscaledDeltaTime;
-       if (StartTime > BPM / BPM_Divider)
+      
+        if (StartTime > BPM / BPM_Divider)
         {
-            canFireButEarly = false;
             StartTime = 0;
             Pulse();
             BeatCount++;
@@ -79,12 +80,15 @@ public class MusicController : MonoBehaviour
             foreach (BPMPulse BPMP in Pulses) BPMP.Pulse();
             SpawnFadeCrosshair();
             playerRating.PumpScale(1.1f);
-            canFire = true;
+
             currentShootLeeway = ShootLeeway;
+            firedOnce = false;
+
         }
-        else if (StartTime > BPM / BPM_Divider - currentShootLeeway * BPM / BPM_Divider)
+        else if (StartTime > BPM / BPM_Divider - ShootLeeway && !canFire && !firedOnce)
         {
-            canFireButEarly = true;
+            canFire = true;
+            firedOnce = true;
         }
         if (Crosshair.localScale != OriginalScaleTransform)
         {
@@ -97,6 +101,7 @@ public class MusicController : MonoBehaviour
             currentShootLeeway -= Time.deltaTime;
             if (currentShootLeeway <= 0)
             {
+
                 canFire = false;
                 shotTime = 0;
             }

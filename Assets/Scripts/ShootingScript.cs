@@ -91,7 +91,7 @@ public class ShootingScript : MonoBehaviour
             {
                 StartCoroutine(StartReload());
             }
-            if (CurrentAmmo > 0 && !isReloading)
+            if (CurrentAmmo > 0 && !isReloading && musicController.canFire)
             {
                 //If user taps to the beat
                 if (Input.GetMouseButtonDown(0)&& !isReloading)
@@ -148,23 +148,23 @@ public class ShootingScript : MonoBehaviour
                     musicController.canFireButEarly = false;
                 }
                 //If user presses and holds, grant less score for kill.
-                else if (Input.GetMouseButton(0) && musicController.canFire && !isReloading)
-                {
-                    clickCount--;
-                    if (clickCount < 5)
-                    {
-                        isSpamming = false;
-                        AntiSpamGO.SetActive(false);
-                    }
-                    Holdfire = true;
-                    PistolAnimator.Play(PistolFireAnimClip.name);
-                    weaponMovement.TryShootVisual();
-                    DispenseAmmo();
-                    musicController.canFire = false;
-                    FireRaycast();
-                    GameObject GO = Instantiate(MuzzleFlash, GunShootFrom.transform.position, Quaternion.identity);
-                    GO.transform.SetParent(GunShootFrom.transform);
-                }
+                //else if (Input.GetMouseButton(0) && musicController.canFire && !isReloading)
+                //{
+                //    clickCount--;
+                //    if (clickCount < 5)
+                //    {
+                //        isSpamming = false;
+                //        AntiSpamGO.SetActive(false);
+                //    }
+                //    Holdfire = true;
+                //    PistolAnimator.Play(PistolFireAnimClip.name);
+                //    weaponMovement.TryShootVisual();
+                //    DispenseAmmo();
+                //    musicController.canFire = false;
+                //    FireRaycast();
+                //    GameObject GO = Instantiate(MuzzleFlash, GunShootFrom.transform.position, Quaternion.identity);
+                //    GO.transform.SetParent(GunShootFrom.transform);
+                //}
                 else if (Input.GetMouseButtonUp(0)) Holdfire = false;
             }
             else
