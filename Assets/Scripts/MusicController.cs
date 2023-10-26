@@ -40,15 +40,15 @@ public class MusicController : MonoBehaviour
     public GameObject RightTarget;
     public GameObject CrosshairL, CrosshairR, CrosshairSmallL, CrosshairSmallR;
     public float DistanceFromMiddle = 200;
-    public Canvas canvas;
+    public GameObject CrosshairParent;
     public Transform LTarget, RTarget;
     public void SpawnLargeCrosshair(GameObject CL, GameObject CR)
     {
         GameObject LGO = Instantiate(CL, LeftTarget.transform.position, Quaternion.identity);
         GameObject RGO = Instantiate(CR, RightTarget.transform.position, Quaternion.identity);
-        LGO.transform.SetParent(canvas.transform, true);
+        LGO.transform.SetParent(CrosshairParent.transform, true);
         LGO.transform.rotation = Quaternion.Euler(new Vector3(0, 0, -180));
-        RGO.transform.SetParent(canvas.transform, true);
+        RGO.transform.SetParent(CrosshairParent.transform, true);
         CrosshairLerp CHL = LGO.GetComponent<CrosshairLerp>();
         CrosshairLerp CHR = RGO.GetComponent<CrosshairLerp>();
         CHL.target = LTarget.transform; CHR.target = RTarget.transform;

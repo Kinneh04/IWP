@@ -45,7 +45,6 @@ public class ShootingScript : MonoBehaviour
     private float clickCount = 0;
     private float lastClickTime = 0;
     public GameObject AntiSpamGO;
-
     [Header("LateEarlyRating")]
     public TMP_Text LateEarlyRatingText;
    
