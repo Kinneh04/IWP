@@ -8,7 +8,7 @@ public class AudioVisualizer : MonoBehaviour
     private Vector3 originalScale;
     public float minScale = 0.9f;
     public float maxScale = 1.1f;
-
+    public bool spawnCrosshairs = true;
     public float BPM, BPM_Divider;
     int BCount;
     [Header("Crosshair")]
@@ -36,7 +36,8 @@ public class AudioVisualizer : MonoBehaviour
 
     void Start()
     {
-        audioSource.Play();
+        if(!audioSource.isPlaying)
+            audioSource.Play();
         originalScale = circleRectTransform.localScale;
     }
     public RectTransform circleRectTransform;
@@ -58,17 +59,20 @@ public class AudioVisualizer : MonoBehaviour
         newScale = Mathf.Clamp(newScale, originalScale.x * minScale, originalScale.x * maxScale);
         newScale = Mathf.Lerp(circleRectTransform.localScale.x, newScale, Time.deltaTime * 5f);
         circleRectTransform.localScale = new Vector3(newScale, newScale, 1f);
-        StartTime += Time.fixedUnscaledDeltaTime;
-        if (StartTime > BPM / BPM_Divider && average > 0.011f)
+        if (spawnCrosshairs)
         {
-            StartTime = 0;
-            BCount++;
-            if (BCount > 1)
+            StartTime += Time.fixedUnscaledDeltaTime;
+            if (StartTime > BPM / BPM_Divider && average > 0.011f)
             {
-                SpawnLargeCrosshair(CrosshairSmallL, CrosshairSmallR);
-                BCount = 0;
+                StartTime = 0;
+                BCount++;
+                if (BCount > 1)
+                {
+                    SpawnLargeCrosshair(CrosshairSmallL, CrosshairSmallR);
+                    BCount = 0;
+                }
+                else SpawnLargeCrosshair(CrosshairL, CrosshairR);
             }
-            else SpawnLargeCrosshair(CrosshairL, CrosshairR);
         }
     }
 }
