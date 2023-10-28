@@ -321,6 +321,7 @@ MonoBehaviour:
   BeatClip: {fileID: 8300000, guid: 534ffb16fe5664c4a8a75f7d0b7266d4, type: 3}
   SnareClip: {fileID: 8300000, guid: 2227fa30a332af34580a159c62e8a8a3, type: 3}
   MusicProgressionSlider: {fileID: 0}
+  beatAlreadyHit: 0
   timing: 0
   LeftTarget: {fileID: 0}
   RightTarget: {fileID: 0}

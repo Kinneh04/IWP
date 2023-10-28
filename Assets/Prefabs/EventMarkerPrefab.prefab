@@ -431,6 +431,7 @@ MonoBehaviour:
   TimeText: {fileID: 6794053544889973637}
   eventType: 0
   EventIndicator: {fileID: 7112337617227992893}
+  activateAtTime: 0
 --- !u!1 &8954937159696397932
 GameObject:
   m_ObjectHideFlags: 0

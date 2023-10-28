@@ -54,6 +54,9 @@ public class SongEditorManager : MonoBehaviour
     public EventMarker CurrentlySelectedMarker;
     public Button AddEventButton;
     public TMP_Dropdown EventTypeDropdown;
+    public int maxEvents;
+    public TMP_Text EventsLimitText;
+    bool maxEventsReached = false;
     public enum EventTypes
     {
         Nothing, BPMChange, DifficultyChange, EnemySpawn, BossSpawn
@@ -101,9 +104,11 @@ public class SongEditorManager : MonoBehaviour
         Destroy(CurrentlySelectedMarker.gameObject);
         CurrentlySelectedMarker = null;
         EventMarkerWindow.SetActive(false);
+        RecalculateEvents();
     }
     public void AddEventInTime()
     {
+        if (maxEventsReached) return;
         GameObject GO = Instantiate(EventMarkerPrefab, SliderHandleTransform.position, Quaternion.identity);
         GO.transform.SetParent(eventMarkerPrefabParent);
         EventMarkerWindow.SetActive(true);
@@ -111,8 +116,36 @@ public class SongEditorManager : MonoBehaviour
         EM.button.onClick.AddListener(delegate { SelectMarker(EM); });
         EM.SEM = this;
         EM.TimeText.text = FormatTime(CustomAudioSource.time);
-        eventMarkers.Add(EM);
+        EM.activateAtTime = CustomAudioSource.time;
+       
         CurrentlySelectedMarker = EM;
+        foreach(EventMarker RecordedEM in eventMarkers)
+        {
+            if(RecordedEM.activateAtTime == EM.activateAtTime)
+            {
+                Vector3 newPos = RecordedEM.transform.position;
+                newPos.y += 80f;
+                EM.transform.position = newPos;
+            }
+        }
+        eventMarkers.Add(EM);
+        RecalculateEvents();
+    }
+
+    public void RecalculateEvents()
+    {
+        int currentevents = eventMarkers.Count;
+        EventsLimitText.text = currentevents.ToString() + "/" + maxEvents.ToString();
+        if (currentevents >= maxEvents)
+        {
+            maxEventsReached = true;
+            EventsLimitText.color = Color.red;
+        }
+        else
+        {
+            maxEventsReached = false;
+            EventsLimitText.color = Color.white;
+        }
     }
 
     public void OnChangeDifficultySlider()
