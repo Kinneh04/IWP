@@ -1,10 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
-using UnityEditor.TerrainTools;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
+
 
 public class ShootingScript : MonoBehaviour
 {
@@ -153,6 +151,7 @@ public class ShootingScript : MonoBehaviour
                     DispenseAmmo();
                     ShowTimingRating();
                     PistolAnimator.Play(PistolFireAnimClip.name);
+                    musicController.beatAlreadyHit = true;
                     //if (musicController.isLate())
                     //{
                     //    Debug.Log("Late!");

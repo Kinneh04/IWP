@@ -28,7 +28,7 @@ public class MusicController : MonoBehaviour
     public AudioClip BeatClip, SnareClip;
     public Slider MusicProgressionSlider;
     int BeatCount;
-    bool firedOnce = false;
+    public bool beatAlreadyHit = false;
     public enum Timing
     {
         Early, Perfect, Late
@@ -90,41 +90,54 @@ public class MusicController : MonoBehaviour
 
             MusicProgressionSlider.value = currentTime / totalTime;
         }
-        StartTime += Time.fixedUnscaledDeltaTime;
-      
-        if (StartTime > BPM / BPM_Divider)
+        StartTime += Time.deltaTime;
+
+        if (StartTime >= BPM / BPM_Divider)
         {
             timing = Timing.Perfect;
             StartTime = 0;
             Pulse();
             BeatCount++;
             PlayBeatAudio();
-          
+
             if (BeatCount == 2)
             {
                 BeatCount = 0;
                 PlaySnareAudio();
                 SpawnLargeCrosshair(CrosshairSmallL, CrosshairSmallR);
+                foreach (BPMPulse BPMP in Pulses) BPMP.Pulse();
             }
             else
             {
                 SpawnLargeCrosshair(CrosshairL, CrosshairR);
             }
-            foreach (BPMPulse BPMP in Pulses) BPMP.Pulse();
-           //SpawnFadeCrosshair();
+
+            //SpawnFadeCrosshair();
             playerRating.PumpScale(1.1f);
 
             currentShootLeeway = ShootLeeway;
-            firedOnce = false;
+
+            // Set canFire to true for 50ms after the beat
+            if (!beatAlreadyHit)
+                canFire = true;
+            StartCoroutine(ResetCanFire());
 
         }
-        else if (StartTime > BPM / BPM_Divider - ShootLeeway && !canFire && !firedOnce)
+        else if (StartTime >= (BPM / BPM_Divider) - 0.1f)
         {
+            if(!beatAlreadyHit)
             canFire = true;
-            firedOnce = true;
+
             timing = Timing.Early;
         }
-        else 
+
+        // Define a coroutine to reset canFire after the leeway period
+        IEnumerator ResetCanFire()
+        {
+            yield return new WaitForSeconds(ShootLeeway);
+            canFire = false;
+            beatAlreadyHit = false;
+        }
         if (Crosshair.localScale != OriginalScaleTransform)
         {
             Crosshair.localScale = Vector3.Lerp(Crosshair.localScale, OriginalScaleTransform, DecreaseTime * Time.deltaTime);
@@ -150,12 +163,4 @@ public class MusicController : MonoBehaviour
         Crosshair.localScale = OriginalScaleTransform * 1.5f;
     }
 
-    public bool isLate()
-    {
-        if(shotTime > BPM / BPM_Divider + ShootLeeway / 4)
-        {
-            return true;
-        }
-        return false;
-    }
 }
