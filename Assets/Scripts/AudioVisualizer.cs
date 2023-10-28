@@ -61,7 +61,7 @@ public class AudioVisualizer : MonoBehaviour
         circleRectTransform.localScale = new Vector3(newScale, newScale, 1f);
         if (spawnCrosshairs)
         {
-            StartTime += Time.fixedUnscaledDeltaTime;
+            StartTime += Time.deltaTime;
             if (StartTime > BPM / BPM_Divider && average > 0.011f)
             {
                 StartTime = 0;
