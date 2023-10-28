@@ -36,6 +36,16 @@ public class SongEditorManager : MonoBehaviour
     public GameObject ColorPalette;
     public Image CurrentlySelectedImage;
     public Image PreviewImage;
+
+    [Header("MapDetails")]
+    public Slider DifficultyOverrideSlider;
+    public TMP_Text DifficultyInt;
+
+    public void OnChangeDifficultySlider()
+    {
+        DifficultyInt.text = DifficultyOverrideSlider.value.ToString();
+        CustomSong.DifficultyOverride = (int)DifficultyOverrideSlider.value;
+    }
     public void OpenColorPalette(Image i)
     {
         ColorPalette.SetActive(true);
