@@ -429,6 +429,8 @@ MonoBehaviour:
   SEM: {fileID: 0}
   button: {fileID: 6036633265655742150}
   TimeText: {fileID: 6794053544889973637}
+  eventType: 0
+  EventIndicator: {fileID: 7112337617227992893}
 --- !u!1 &8954937159696397932
 GameObject:
   m_ObjectHideFlags: 0
@@ -495,7 +497,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: E
+  m_text: N
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 85378d8bb70331f4a8d3296263819046, type: 2}
   m_sharedMaterial: {fileID: 4275569761461716857, guid: 85378d8bb70331f4a8d3296263819046,

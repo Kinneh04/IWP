@@ -9458,7 +9458,7 @@ GameObject:
   - component: {fileID: 796715220}
   - component: {fileID: 796715219}
   m_Layer: 5
-  m_Name: EventType
+  m_Name: EventTypeDropdown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9485,8 +9485,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 165}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 0, y: 164}
+  m_SizeDelta: {x: 213.2172, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &796715219
 MonoBehaviour:
@@ -9542,7 +9542,7 @@ MonoBehaviour:
       m_Image: {fileID: 0}
     - m_Text: BPM Change
       m_Image: {fileID: 0}
-    - m_Text: Pulse
+    - m_Text: Difficulty Change
       m_Image: {fileID: 0}
     - m_Text: Enemy spawn
       m_Image: {fileID: 0}
@@ -9550,7 +9550,19 @@ MonoBehaviour:
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1510382126}
+        m_TargetAssemblyTypeName: SongEditorManager, Assembly-CSharp
+        m_MethodName: ChangeEventType
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_AlphaFadeSpeed: 0.15
 --- !u!114 &796715220
 MonoBehaviour:
@@ -9780,8 +9792,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.53571427}
   m_AnchorMax: {x: 1, y: 0.53571427}
-  m_AnchoredPosition: {x: 0, y: -1}
-  m_SizeDelta: {x: 0, y: 20}
+  m_AnchoredPosition: {x: 0, y: -1.7}
+  m_SizeDelta: {x: 0, y: 29.1549}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &828083594
 MonoBehaviour:
@@ -12513,8 +12525,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.8676, y: -0.1085}
-  m_SizeDelta: {x: 219.6013, y: 37.6209}
+  m_AnchoredPosition: {x: 0.2469, y: -0.1085}
+  m_SizeDelta: {x: 290.1829, y: 37.6209}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1148914909
 MonoBehaviour:
@@ -14573,7 +14585,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 5, y: -0.5}
+  m_AnchoredPosition: {x: 5, y: -0.49999905}
   m_SizeDelta: {x: -30, y: -3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1333604700
@@ -16206,6 +16218,7 @@ MonoBehaviour:
   EventMarkerWindow: {fileID: 1731345280}
   CurrentlySelectedMarker: {fileID: 0}
   AddEventButton: {fileID: 2119941804}
+  EventTypeDropdown: {fileID: 796715219}
 --- !u!114 &1510382127
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20747,8 +20760,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000014633, y: -0.22952}
-  m_SizeDelta: {x: 155.7526, y: 25.541}
+  m_AnchoredPosition: {x: 0.0000082254, y: -0.00000025332}
+  m_SizeDelta: {x: 205.4279, y: 25.541}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2029714798
 MonoBehaviour:

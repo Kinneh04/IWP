@@ -53,11 +53,46 @@ public class SongEditorManager : MonoBehaviour
     public GameObject EventMarkerWindow;
     public EventMarker CurrentlySelectedMarker;
     public Button AddEventButton;
+    public TMP_Dropdown EventTypeDropdown;
+    public enum EventTypes
+    {
+        Nothing, BPMChange, DifficultyChange, EnemySpawn, BossSpawn
+    }
 
     public void SelectMarker(EventMarker EM)
     {
         CurrentlySelectedMarker = EM;
         EventMarkerWindow.SetActive(true);
+    }
+
+    public void ChangeEventType()
+    {
+        int v = EventTypeDropdown.value;
+        switch(v)
+        {
+            case 0:
+                CurrentlySelectedMarker.eventType = EventTypes.Nothing;
+                CurrentlySelectedMarker.EventIndicator.text = "N";
+                break;
+            case 1:
+                CurrentlySelectedMarker.eventType = EventTypes.BPMChange;
+                CurrentlySelectedMarker.EventIndicator.text = "C";
+                break;
+            case 2:
+                CurrentlySelectedMarker.eventType = EventTypes.DifficultyChange;
+                CurrentlySelectedMarker.EventIndicator.text = "D";
+                break;
+            case 3:
+                CurrentlySelectedMarker.eventType = EventTypes.EnemySpawn;
+                CurrentlySelectedMarker.EventIndicator.text = "E";
+                break;
+            case 4:
+                CurrentlySelectedMarker.eventType = EventTypes.BossSpawn;
+                CurrentlySelectedMarker.EventIndicator.text = "B";
+                break;
+            default:
+                return;
+        }
     }
 
     public void DeleteEvent()

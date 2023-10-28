@@ -8,4 +8,6 @@ public class EventMarker : MonoBehaviour
     public SongEditorManager SEM;
     public Button button;
     public TMP_Text TimeText;
+    public SongEditorManager.EventTypes eventType;
+    public TMP_Text EventIndicator;
 }
