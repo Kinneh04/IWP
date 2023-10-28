@@ -19,6 +19,6 @@ public class CrosshairLerp : MonoBehaviour
     }
     private void Update()
     {
-        transform.position = Vector3.LerpUnclamped(transform.position, target.position, speed * Time.fixedUnscaledDeltaTime);
+        transform.position = Vector3.LerpUnclamped(transform.position, target.position, speed * Time.deltaTime);
     }
 }
