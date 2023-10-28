@@ -5,6 +5,9 @@ using AnotherFileBrowser.Windows;
 using UnityEngine.Networking;
 using TMPro;
 using UnityEngine.UI;
+using Unity.VisualScripting;
+using System.Xml;
+
 public class SongEditorManager : MonoBehaviour
 {
     public AudioSource CustomAudioSource;
@@ -14,11 +17,63 @@ public class SongEditorManager : MonoBehaviour
     public GameObject EditSoundtrackMenu;
     public GameObject ChooseSongMenu;
 
+    [Header("CustomSongEventTimeline")]
+    public SongScript CustomSong = new SongScript();
+
     [Header("Scrubber")]
     public Slider audioSlider;
     public TMP_Text currentTimeText;
     private float currentPlayheadTime = 0f;
     public TMP_Text EndTime;
+
+    [Header("SongDetails")]
+    public TMP_InputField BPMInput;
+    public GameObject BPMWarning;
+    public GameObject SongDetailWarning;
+
+    [Header("ColourPalette")]
+    public List<Image> ColorPaletteImages = new List<Image>();
+    public GameObject ColorPalette;
+    public Image CurrentlySelectedImage;
+    public Image PreviewImage;
+    public void OpenColorPalette(Image i)
+    {
+        ColorPalette.SetActive(true);
+        CurrentlySelectedImage = i;
+    }
+
+    public void ChangeSongColors()
+    {
+     for(int i = 0; i < ColorPaletteImages.Count; i++)
+        {
+            CustomSong.colors[i] = ColorPaletteImages[i].color;
+        }
+    }
+
+    public void AcceptColorPalette()
+    {
+        ColorPalette.SetActive(false);
+        CurrentlySelectedImage.color = PreviewImage.color;
+        CurrentlySelectedImage = null;
+        ChangeSongColors();
+    }
+
+
+    public void SetBPM()
+    {
+        int bpm = int.Parse(BPMInput.text);
+        if (bpm > 240 || bpm < 1)
+        {
+            BPMWarning.SetActive(true);
+            SongDetailWarning.SetActive(true);
+        }
+        else
+        {
+            BPMWarning.SetActive(false);
+            CustomSong.BPM = int.Parse(BPMInput.text);
+            SongDetailWarning.SetActive(false);
+        }
+    }
     void Update()
     {
         if (!CustomAudioSource.clip) return;
