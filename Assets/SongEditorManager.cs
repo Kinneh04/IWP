@@ -41,6 +41,45 @@ public class SongEditorManager : MonoBehaviour
     public Slider DifficultyOverrideSlider;
     public TMP_Text DifficultyInt;
 
+    [Header("EnableDrums")]
+    public AudioClip Drums;
+      public AudioClip Snare;
+
+    [Header("Events")]
+    public Transform SliderHandleTransform;
+    public List<EventMarker> eventMarkers = new List<EventMarker>();
+    public GameObject EventMarkerPrefab;
+    public Transform eventMarkerPrefabParent;
+    public GameObject EventMarkerWindow;
+    public EventMarker CurrentlySelectedMarker;
+    public Button AddEventButton;
+
+    public void SelectMarker(EventMarker EM)
+    {
+        CurrentlySelectedMarker = EM;
+        EventMarkerWindow.SetActive(true);
+    }
+
+    public void DeleteEvent()
+    {
+        eventMarkers.Remove(CurrentlySelectedMarker);
+        Destroy(CurrentlySelectedMarker.gameObject);
+        CurrentlySelectedMarker = null;
+        EventMarkerWindow.SetActive(false);
+    }
+    public void AddEventInTime()
+    {
+        GameObject GO = Instantiate(EventMarkerPrefab, SliderHandleTransform.position, Quaternion.identity);
+        GO.transform.SetParent(eventMarkerPrefabParent);
+        EventMarkerWindow.SetActive(true);
+        EventMarker EM = GO.GetComponent<EventMarker>();
+        EM.button.onClick.AddListener(delegate { SelectMarker(EM); });
+        EM.SEM = this;
+        EM.TimeText.text = FormatTime(CustomAudioSource.time);
+        eventMarkers.Add(EM);
+        CurrentlySelectedMarker = EM;
+    }
+
     public void OnChangeDifficultySlider()
     {
         DifficultyInt.text = DifficultyOverrideSlider.value.ToString();
@@ -113,9 +152,11 @@ public class SongEditorManager : MonoBehaviour
         // Update the slider value based on the audio playback time
         if (CustomAudioSource.isPlaying)
         {
+            AddEventButton.interactable = false;
             audioSlider.value = CustomAudioSource.time;
             currentPlayheadTime = CustomAudioSource.time;
         }
+        else AddEventButton.interactable = true;
     }
     private string FormatTime(float timeInSeconds)
     {
