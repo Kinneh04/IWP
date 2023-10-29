@@ -703,7 +703,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1510382126}
         m_TargetAssemblyTypeName: SongEditorManager, Assembly-CSharp
-        m_MethodName: OnChangeDifficultySlider
+        m_MethodName: EnterNewDifficultyForEvent
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

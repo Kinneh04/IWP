@@ -98,10 +98,13 @@ public class SongEditorManager : MonoBehaviour
 
 
 
-                BPMChangeInput.text = CurrentlySelectedMarker.currentEvent.GetType().newBPM.ToString();
+                BPMChangeInput.text = ((BPMChangeSongEvent)CurrentlySelectedMarker.currentEvent).newBPM.ToString();
                 break;
             case 2:
                 DifficultyChangerMenu.SetActive(true);
+                DifficultyChangeSongEvent DCSM = ((DifficultyChangeSongEvent)CurrentlySelectedMarker.currentEvent);
+                CurrentDifficultyText.text = DCSM.newDifficulty.ToString();
+                ChangeDifficultySlider.value = DCSM.newDifficulty;
                 break;
             case 3:
                 break;
@@ -110,6 +113,7 @@ public class SongEditorManager : MonoBehaviour
             default:
                 return;
         }
+        EventTypeDropdown.value = v;
     }
 
     public void RemoveMarkerEvent()
@@ -129,9 +133,16 @@ public class SongEditorManager : MonoBehaviour
         else
         {
             Warning.SetActive(false);
-            BPMChangeSongEvent BPMChange = CurrentlySelectedMarker.currentEvent.GetComponent<BPMChangeSongEvent>();
+            BPMChangeSongEvent BPMChange = ((BPMChangeSongEvent)CurrentlySelectedMarker.currentEvent);
             BPMChange.newBPM = newBPM;
         }
+    }
+
+    public void EnterNewDifficultyForEvent()
+    {
+        DifficultyChangeSongEvent DCSM = ((DifficultyChangeSongEvent)CurrentlySelectedMarker.currentEvent);
+        DCSM.newDifficulty = (int)ChangeDifficultySlider.value;
+        CurrentDifficultyText.text = DCSM.newDifficulty.ToString();
     }
 
     public void ChangeEventType()
@@ -205,8 +216,10 @@ public class SongEditorManager : MonoBehaviour
                 EM.transform.position = newPos;
             }
         }
+        EM.value = 0;
         eventMarkers.Add(EM);
         RecalculateEvents();
+        DisplayAppropriateEventMenu(EM.value);
     }
 
     public void RecalculateEvents()
