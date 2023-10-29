@@ -19,7 +19,43 @@ public class MainMenuManager : MonoBehaviour
     public GameObject EditorScreen;
     public AudioSource CustomEditorAudioSource;
     public GameObject SongPickerScreen;
+    private static MainMenuManager _instance;
 
+    // This property provides global access to the instance
+    public static MainMenuManager Instance
+    {
+        get
+        {
+            // If the instance doesn't exist, find it in the scene
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<MainMenuManager>();
+
+                // If it still doesn't exist, create a new instance
+                if (_instance == null)
+                {
+                    GameObject singletonObject = new GameObject("MainMenuManager");
+                    _instance = singletonObject.AddComponent<MainMenuManager>();
+                }
+            }
+
+            return _instance;
+        }
+    }
+
+    // Optional: Add any other methods or properties you need for your MainMenuManager
+
+    private void Awake()
+    {
+        // Ensure there's only one instance of this object
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+
+        _instance = this;
+    }
     public IEnumerator FadeOutAudioSource(AudioSource AS)
     {
         while(AS.volume > 0)

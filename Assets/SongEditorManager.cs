@@ -5,8 +5,8 @@ using AnotherFileBrowser.Windows;
 using UnityEngine.Networking;
 using TMPro;
 using UnityEngine.UI;
-using Unity.VisualScripting;
-using System.Xml;
+using System;
+using System.IO;
 
 public class SongEditorManager : MonoBehaviour
 {
@@ -27,6 +27,7 @@ public class SongEditorManager : MonoBehaviour
     public TMP_Text EndTime;
 
     [Header("SongDetails")]
+   
     public TMP_InputField BPMInput;
     public GameObject BPMWarning;
     public GameObject SongDetailWarning;
@@ -38,12 +39,14 @@ public class SongEditorManager : MonoBehaviour
     public Image PreviewImage;
 
     [Header("MapDetails")]
+    public TMP_InputField MapNameInputField;
+
     public Slider DifficultyOverrideSlider;
     public TMP_Text DifficultyInt;
 
     [Header("EnableDrums")]
-    public AudioClip Drums;
-      public AudioClip Snare;
+    public bool drumsEnabled;
+    public Toggle enableDrumsToggle;
 
     [Header("Events")]
     public Transform SliderHandleTransform;
@@ -67,15 +70,80 @@ public class SongEditorManager : MonoBehaviour
     public TMP_Text CurrentDifficultyText;
     public Slider ChangeDifficultySlider;
 
+    public TMP_Dropdown BossDropdown;
+    public GameObject BossSpawnMenu;
+
+    [Header("SaveAndPlay")]
+    public Button SaveButton, PlayButton;
+    public GameObject SavingBlocker;
+    public TMP_Text SavingText;
+    public GameObject OkButton;
+    public GameObject CustomSongPrefab;
+    public GameObject CustomSongPrefabParent;
+
+    public void RenameMapName()
+    {
+        CustomSong.SongName = MapNameInputField.text;
+    }
+    public IEnumerator SaveSongCoroutine()
+    {
+        OkButton.SetActive(false);
+        SavingBlocker.SetActive(true);
+        SavingText.text = "Saving level. This may take some time...";
+        MainMenuManager.Instance.LoadingScreen.SetActive(true);
+        yield return new WaitForSeconds(1);
+        try
+        {
+            //Saving custom level code here
+            CompileEvents();
+            SavingText.text = "Level Saved successfully!";
+            //End
+        }
+        catch(Exception e)
+        {
+            SavingText.text = "Error with saving level.";
+        }
+
+        MainMenuManager.Instance.LoadingScreen.SetActive(false);
+        OkButton.SetActive(true);
+    }
+
+    public void CompileEvents()
+    {
+        drumsEnabled = enableDrumsToggle.isOn;
+        CustomSong.Events.Clear();
+        foreach(EventMarker EM in eventMarkers)
+        {
+            if(EM.currentEvent)
+            {
+                SongEvent newSE = new SongEvent();
+                newSE = EM.currentEvent;
+                CustomSong.Events.Add(newSE);
+            }
+        }
+    }
+
+    public void SaveSong()
+    {
+        StartCoroutine(SaveSongCoroutine());
+    }
+
+    public void ChangeBossTypeForEvent()
+    {
+        SpawnBossSongEvent SBSE = ((SpawnBossSongEvent)CurrentlySelectedMarker.currentEvent);
+        SBSE.bossName = BossDropdown.options[BossDropdown.value].text;
+        }
+
     public void RidAllEventSubmenus()
     {
         DifficultyChangerMenu.SetActive(false);
         BPMChangerMenu.SetActive(false);
+        BossSpawnMenu.SetActive(false);
     }
 
     public enum EventTypes
     {
-        Nothing, BPMChange, DifficultyChange, EnemySpawn, BossSpawn
+        Nothing, BPMChange, DifficultyChange, BossSpawn
     }
 
     public void SelectMarker(EventMarker EM)
@@ -95,9 +163,6 @@ public class SongEditorManager : MonoBehaviour
                 break;
             case 1:
                 BPMChangerMenu.SetActive(true);
-
-
-
                 BPMChangeInput.text = ((BPMChangeSongEvent)CurrentlySelectedMarker.currentEvent).newBPM.ToString();
                 break;
             case 2:
@@ -107,8 +172,6 @@ public class SongEditorManager : MonoBehaviour
                 ChangeDifficultySlider.value = DCSM.newDifficulty;
                 break;
             case 3:
-                break;
-            case 4:
                 break;
             default:
                 return;
@@ -161,23 +224,21 @@ public class SongEditorManager : MonoBehaviour
             case 1:
                 CurrentlySelectedMarker.eventType = EventTypes.BPMChange;
                 CurrentlySelectedMarker.EventIndicator.text = "C";
-                CurrentlySelectedMarker.currentEvent = gameObject.AddComponent<BPMChangeSongEvent>();
+                CurrentlySelectedMarker.currentEvent = CustomSong.gameObject.AddComponent<BPMChangeSongEvent>();
                 
                 BPMChangerMenu.SetActive(true);
                 break;
             case 2:
                 CurrentlySelectedMarker.eventType = EventTypes.DifficultyChange;
                 CurrentlySelectedMarker.EventIndicator.text = "D";
-                CurrentlySelectedMarker.currentEvent = gameObject.AddComponent<DifficultyChangeSongEvent>();
+                CurrentlySelectedMarker.currentEvent = CustomSong.gameObject.AddComponent<DifficultyChangeSongEvent>();
                 DifficultyChangerMenu.SetActive(true);
                 break;
             case 3:
-                CurrentlySelectedMarker.eventType = EventTypes.EnemySpawn;
-                CurrentlySelectedMarker.EventIndicator.text = "E";
-                break;
-            case 4:
                 CurrentlySelectedMarker.eventType = EventTypes.BossSpawn;
                 CurrentlySelectedMarker.EventIndicator.text = "B";
+                CurrentlySelectedMarker.currentEvent = CustomSong.gameObject.AddComponent<SpawnBossSongEvent>();
+                BossSpawnMenu.SetActive(true);
                 break;
             default:
                 return;
@@ -188,6 +249,7 @@ public class SongEditorManager : MonoBehaviour
 
     public void DeleteEvent()
     {
+        RemoveMarkerEvent();
         eventMarkers.Remove(CurrentlySelectedMarker);
         Destroy(CurrentlySelectedMarker.gameObject);
         CurrentlySelectedMarker = null;
@@ -299,9 +361,17 @@ public class SongEditorManager : MonoBehaviour
         {
             // Toggle between playing and pausing the audio
             if (CustomAudioSource.isPlaying)
+            {
                 CustomAudioSource.Pause();
+                PlayButton.interactable = true;
+                SaveButton.interactable = true;
+            }
             else
+            {
                 CustomAudioSource.Play();
+                PlayButton.interactable = false;
+                SaveButton.interactable = false;
+            }
         }
         UpdateSliderValue();
     }
@@ -368,7 +438,13 @@ public class SongEditorManager : MonoBehaviour
                 NewAudioClip.name = SelectedAudioSource.name;
                 CustomAudioSource.clip = NewAudioClip;
                 ChooseSongMenu.SetActive(false);
+                GameObject GO = Instantiate(CustomSongPrefab);
+                GO.transform.SetParent(CustomSongPrefabParent.transform);
+                CustomSong = GO.GetComponent<SongScript>();
                 EditSoundtrackMenu.SetActive(true);
+                //CustomSong.audioData = WavUtility.FromAudioClip(SelectedAudioSource);
+
+                CustomSong.currentSongAudioClip = SelectedAudioSource;
             }
         }
     }

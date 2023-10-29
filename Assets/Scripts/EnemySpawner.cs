@@ -85,4 +85,9 @@ public class EnemySpawner : MonoBehaviour
 
         return false; // Didn't hit anything
     }
+
+    public void SpawnBossByName(string name)
+    {
+        // Conduct boss spawning behaviour here;
+    }
 }
