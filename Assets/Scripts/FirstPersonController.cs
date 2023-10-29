@@ -83,6 +83,7 @@ using System.Collections;
     public TMP_Text DashCountdownTMPText;
 		public Image AbilityImage, DashImage;
 	private Color OriginalColor;
+	public Slider AbilityCooldownSlider, DashCooldownSlider;
 	[Header("Set Ability")]
 	bool OnAbilityCooldown = false;
 	public Ability CurrentAbility;
@@ -124,6 +125,8 @@ using System.Collections;
 
 		public void UpdateAbilityCooldownText(float num)
 		{
+		AbilityCooldownSlider.maxValue = 12;
+		AbilityCooldownSlider.value = num;
 		if (num > 0)
 		{
             OnAbilityCooldown = true;
@@ -166,7 +169,8 @@ using System.Collections;
 			{
 			
 				dashCooldown -= Time.deltaTime;
-				DashCountdownTMPText.text = ((int)dashCooldown).ToString();
+				DashCooldownSlider.value = dashCooldown;
+                DashCountdownTMPText.text = ((int)dashCooldown).ToString();
 			}
 			else
 			{
@@ -203,6 +207,8 @@ using System.Collections;
 			Vector3 cameraForward = Camera.main.transform.forward;
 			Vector3 cameraRight = Camera.main.transform.right;
 			dashCooldown = addToDashCooldown;
+			DashCooldownSlider.maxValue = addToDashCooldown;
+			DashCooldownSlider.value = addToDashCooldown;
 			// Ignore the y component for calculations
 			cameraForward.y = 0;
 			cameraRight.y = 0;
