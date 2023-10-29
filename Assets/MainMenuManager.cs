@@ -224,6 +224,7 @@ public class MainMenuManager : MonoBehaviour
         LoadingScreen.SetActive(false);
         yield return new WaitForSeconds(1);
         BlackscreenController.Instance.FadeIn();
+        StartCoroutine(MusicController.Instance.StartMatch());
     }
 
     public void SaveData()

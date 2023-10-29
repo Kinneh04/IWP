@@ -46,20 +46,20 @@ public class ShootingScript : MonoBehaviour
     [Header("LateEarlyRating")]
     public TMP_Text LateEarlyRatingText;
    
-    public void ShowTimingRating()
-    {
-        StopCoroutine(ShowTimingRatingCoroutine());
-        StartCoroutine(ShowTimingRatingCoroutine());
-    }
+    //public void ShowTimingRating()
+    //{
+    //    StopCoroutine(ShowTimingRatingCoroutine());
+    //    StartCoroutine(ShowTimingRatingCoroutine());
+    //}
 
-    IEnumerator ShowTimingRatingCoroutine()
-    {
-        LateEarlyRatingText.text = musicController.timing.ToString();
-        LateEarlyRatingText.gameObject.SetActive(false);
-        LateEarlyRatingText.gameObject.SetActive(true);
-        yield return new WaitForSeconds(0.3f);
-        LateEarlyRatingText.gameObject.SetActive(false);
-    }
+    //IEnumerator ShowTimingRatingCoroutine()
+    //{
+    //   // LateEarlyRatingText.text = musicController.timing.ToString();
+    //    LateEarlyRatingText.gameObject.SetActive(false);
+    //    LateEarlyRatingText.gameObject.SetActive(true);
+    //    yield return new WaitForSeconds(0.3f);
+    //    LateEarlyRatingText.gameObject.SetActive(false);
+    //}
 
     private void Start()
     {
@@ -149,7 +149,7 @@ public class ShootingScript : MonoBehaviour
                     weaponMovement.TryShootVisual();
                     FireRaycast();
                     DispenseAmmo();
-                    ShowTimingRating();
+                  //  ShowTimingRating();
                     PistolAnimator.Play(PistolFireAnimClip.name);
                     musicController.beatAlreadyHit = true;
                     //if (musicController.isLate())
@@ -164,7 +164,8 @@ public class ShootingScript : MonoBehaviour
                     GameObject GO = Instantiate(MuzzleFlash, GunShootFrom.transform.position, Quaternion.identity);
                     GO.transform.SetParent(GunShootFrom.transform);
                     musicController.canFire = false;
-                    musicController.canFireButEarly = false;
+                    musicController.hasFired = true;
+                  //  musicController.canFireButEarly = false;
                 }
                 //If user presses and holds, grant less score for kill.
                 //else if (Input.GetMouseButton(0) && musicController.canFire && !isReloading)

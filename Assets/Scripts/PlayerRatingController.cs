@@ -31,6 +31,7 @@ public class PlayerRatingController : MonoBehaviour
     public float decreaseRate;
     public float FrenzyDecreaseAmount;
     bool frenzyAvailable = false;
+    public GameObject SpaceToActivateGO;
 
     [Header("ScoreAndAccuracy")]
     public int ShotsFired;
@@ -75,6 +76,7 @@ public class PlayerRatingController : MonoBehaviour
         if (CurrentFrenzyAmount >= AmountNeededForFrenzy)
         {
             frenzyAvailable = true;
+            SpaceToActivateGO.SetActive(true);
             //shootingScript.StartFrenzyMode();
         }
     }
@@ -203,6 +205,7 @@ public class PlayerRatingController : MonoBehaviour
         {
             shootingScript.StartFrenzyMode();
             frenzyAvailable = false;
+            SpaceToActivateGO.SetActive(false);
         }
     }
 

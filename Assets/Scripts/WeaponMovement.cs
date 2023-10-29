@@ -106,7 +106,7 @@ public class WeaponMovement : MonoBehaviour
         musicController.canFire = false;
         Vector3 returnPos = initialPosition;
         initialPosition -= Shootforce;
-        CurrentRecoil = CameraRecoil;
+        CurrentRecoil += CameraRecoil;
 
         transform.localRotation = Quaternion.Euler(VisualRecoilTiltAmount, transform.localRotation.y, transform.localRotation.z);
         float i = Time.deltaTime * recoilResetDuration * 2;

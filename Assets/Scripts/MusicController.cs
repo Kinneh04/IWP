@@ -1,18 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Transactions;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
+using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
+using UnityEngine.Events;
+using JetBrains.Annotations;
+using System.Windows.Forms;
 
 public class MusicController : MonoBehaviour
 {
+
+    [Header("Countdown")]
+    public TMP_Text countdownText;
+    public int BeginningCountdown;
     [Header("BPM Controller")]
     public float BPM;
     public float BPM_Divider;
     public float DecreaseTime;
     public bool canFire;
-    public bool canFireButEarly;
+   // public bool canFireButEarly;
     [Header("GameObject components")]
     public Transform Crosshair;
     public Vector3 OriginalScaleTransform;
@@ -20,7 +30,7 @@ public class MusicController : MonoBehaviour
     public float ShootLeeway;
     float currentShootLeeway;
     public PlayerRatingController playerRating;
-    public float shotTime;
+    //public float shotTime;
     public BPMPulse[] Pulses;
     //public WeaponMovement weaponMovement;
     float StartTime;
@@ -29,12 +39,18 @@ public class MusicController : MonoBehaviour
     public Slider MusicProgressionSlider;
     int BeatCount;
     public bool beatAlreadyHit = false;
-    public enum Timing
-    {
-        Early, Perfect, Late
-    }
+    public bool StartedMatch = false;
+    [Header("BPMREWORK")]
+    public Intervals[] _intervals;
+    public bool hasFired = false;
+    int beat;
+    //public enum Timing
+    //{
+    //    Early, Perfect, Late
+    //}
+    private static MusicController _instance;
 
-    public Timing timing;
+   // public Timing timing;
     [Header("Crosshair")]
     public GameObject LeftTarget;
     public GameObject RightTarget;
@@ -63,7 +79,7 @@ public class MusicController : MonoBehaviour
     {
         Pulses = GameObject.FindObjectsOfType<BPMPulse>();
         OriginalScaleTransform = Crosshair.localScale;
-        StartMusic();
+       // StartMusic();
     }
 
     public void SpawnFadeCrosshair()
@@ -72,95 +88,227 @@ public class MusicController : MonoBehaviour
         GO.transform.SetParent(CrosshairFadeParent.transform, false);
         GO.GetComponent<CrosshairFadeBPM>().Speed = 1 / (BPM / BPM_Divider);
     }
+    public static MusicController Instance
+    {
+        get
+        {
+            // If the instance doesn't exist, find it in the scene
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<MusicController>();
 
-    private void PlayBeatAudio()
+                // If it still doesn't exist, create a new instance
+                if (_instance == null)
+                {
+                    GameObject singletonObject = new GameObject("MainMenuManager");
+                    _instance = singletonObject.AddComponent<MusicController>();
+                }
+            }
+
+            return _instance;
+        }
+    }
+
+    // Optional: Add any other methods or properties you need for your MainMenuManager
+
+    private void Awake()
+    {
+        // Ensure there's only one instance of this object
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+
+        _instance = this;
+    }
+    public void PlayBeatAudio()
     {
         ExtraBeatAudioSource.PlayOneShot(BeatClip);
     }
-    private void PlaySnareAudio()
+    public void PlaySnareAudio()
     {
         ExtraBeatAudioSource.PlayOneShot(SnareClip);
     }
+
+    public void SpawnCorrectCrosshairPulses()
+    {
+        beat++;
+      
+        if(beat == 2)
+        {
+            beat = 0;
+            SpawnLargeCrosshair(CrosshairSmallL, CrosshairSmallR);
+        }
+        else SpawnLargeCrosshair(CrosshairL, CrosshairR);
+    }
+
+    public IEnumerator StartMatch()
+    {
+        yield return new WaitForSeconds(1);
+        int cooldown = BeginningCountdown;
+        countdownText.gameObject.SetActive(true);
+        countdownText.text = cooldown.ToString();
+        float start = 0.0f;
+        while(cooldown > 0)
+        {
+            start += Time.deltaTime;
+            if(start >= BPM / BPM_Divider)
+            {
+                PlayBeatAudio();
+                cooldown--;
+                countdownText.text = cooldown.ToString();
+                start = 0f;
+                if(cooldown <= 0)
+                {
+
+                    StartMusic();
+                    StartedMatch = true;
+                    countdownText.gameObject.SetActive(false);
+                    PlayBeatAudio();
+                    
+
+                    yield break;
+                }
+              
+            }
+            yield return null;
+        }
+    }
+
+    public void StartShootLeewayCoroutine()
+    {
+        StartCoroutine(ShotLeewayCoroutine());
+    }
+
+    public IEnumerator ShotLeewayCoroutine()
+    {
+        yield return new WaitForSecondsRealtime(ShootLeeway);
+        canFire = false;
+        hasFired = false;
+    }
     private void Update()
     {
-        if (MusicAudioSource.isPlaying)
+        if (!StartedMatch) return;
+        foreach (Intervals interval in _intervals)
         {
-            float currentTime = MusicAudioSource.time;
-            float totalTime = MusicAudioSource.clip.length;
-
-            MusicProgressionSlider.value = currentTime / totalTime;
-        }
-        StartTime += Time.deltaTime;
-
-        if (StartTime >= BPM / BPM_Divider)
-        {
-            timing = Timing.Perfect;
-            StartTime = 0;
-            Pulse();
-            BeatCount++;
-            PlayBeatAudio();
-
-            if (BeatCount == 2)
+            float sampledTime = (MusicAudioSource.timeSamples / (MusicAudioSource.clip.frequency * interval.GetIntervalLength(BPM_Divider)));
+            // Debug.Log(sampledTime);
+            bool f = interval.CheckForNewInterval(sampledTime, ShootLeeway);
+            if(f && !hasFired)
             {
-                BeatCount = 0;
-                PlaySnareAudio();
-                SpawnLargeCrosshair(CrosshairSmallL, CrosshairSmallR);
-                foreach (BPMPulse BPMP in Pulses) BPMP.Pulse();
-            }
-            else
-            {
-                SpawnLargeCrosshair(CrosshairL, CrosshairR);
-            }
-
-            //SpawnFadeCrosshair();
-            playerRating.PumpScale(1.1f);
-
-            currentShootLeeway = ShootLeeway;
-
-            // Set canFire to true for 50ms after the beat
-            if (!beatAlreadyHit)
                 canFire = true;
-            StartCoroutine(ResetCanFire());
-
-        }
-        else if (StartTime >= (BPM / BPM_Divider) - 0.1f)
-        {
-            if(!beatAlreadyHit)
-            canFire = true;
-
-            timing = Timing.Early;
+            }
         }
 
-        // Define a coroutine to reset canFire after the leeway period
-        IEnumerator ResetCanFire()
-        {
-            yield return new WaitForSeconds(ShootLeeway);
-            canFire = false;
-            beatAlreadyHit = false;
-        }
+        //OLD METHOD! DEPRECIATED!
+        //if (MusicAudioSource.isPlaying)
+        //{
+        //    float currentTime = MusicAudioSource.time;
+        //    float totalTime = MusicAudioSource.clip.length;
+
+        //    MusicProgressionSlider.value = currentTime / totalTime;
+        //}
+        //StartTime += Time.deltaTime;
+
+        //if (StartTime >= BPM / BPM_Divider)
+        //{
+        //    timing = Timing.Perfect;
+        //    StartTime = 0;
+        //    Pulse();
+        //    BeatCount++;
+        //    PlayBeatAudio();
+
+        //    if (BeatCount == 2)
+        //    {
+        //        BeatCount = 0;
+        //        PlaySnareAudio();
+        //        SpawnLargeCrosshair(CrosshairSmallL, CrosshairSmallR);
+        //        foreach (BPMPulse BPMP in Pulses) BPMP.Pulse();
+        //    }
+        //    else
+        //    {
+        //        SpawnLargeCrosshair(CrosshairL, CrosshairR);
+        //    }
+
+        //    //SpawnFadeCrosshair();
+        //    playerRating.PumpScale(1.1f);
+
+        //    currentShootLeeway = ShootLeeway;
+
+        //    // Set canFire to true for 50ms after the beat
+        //    if (!beatAlreadyHit)
+        //        canFire = true;
+        //    StartCoroutine(ResetCanFire());
+
+        //}
+        //else if (StartTime >= (BPM / BPM_Divider) - 0.1f)
+        //{
+        //    if(!beatAlreadyHit)
+        //    canFire = true;
+
+        //    timing = Timing.Early;
+        //}
+
+        //// Define a coroutine to reset canFire after the leeway period
+        //IEnumerator ResetCanFire()
+        //{
+        //    yield return new WaitForSeconds(ShootLeeway);
+        //    canFire = false;
+        //    beatAlreadyHit = false;
+        //}
         if (Crosshair.localScale != OriginalScaleTransform)
         {
             Crosshair.localScale = Vector3.Lerp(Crosshair.localScale, OriginalScaleTransform, DecreaseTime * Time.deltaTime);
         }
 
-        if(canFire)
-        {
-            shotTime += Time.deltaTime;
-            currentShootLeeway -= Time.deltaTime;
-            if (currentShootLeeway <= 0)
-            {
-                canFire = false;
-                shotTime = 0;
-            }
-            else if (currentShootLeeway <= ShootLeeway / 2)
-            {
-                timing = Timing.Late;
-            }
-        }
+        //if(canFire)
+        //{
+        //    shotTime += Time.deltaTime;
+        //    currentShootLeeway -= Time.deltaTime;
+        //    if (currentShootLeeway <= 0)
+        //    {
+        //        canFire = false;
+        //        shotTime = 0;
+        //    }
+        //    else if (currentShootLeeway <= ShootLeeway / 2)
+        //    {
+        //        timing = Timing.Late;
+        //    }
+        //}
     }
     public void Pulse()
     {
         Crosshair.localScale = OriginalScaleTransform * 1.5f;
     }
 
+}
+[System.Serializable]
+public class Intervals
+{
+    public float _steps;
+    public UnityEvent _trigger;
+    public int _lastInterval;
+
+    public float GetIntervalLength(float bpm)
+    {
+        return 60f / (bpm * _steps);
+    }
+
+    public bool CheckForNewInterval(float interval, float leeway)
+    {
+        
+        if((int)Mathf.FloorToInt(interval) != (int)_lastInterval)
+        {
+          //  Debug.Log("HIT! " + (int)Mathf.FloorToInt(interval) + " " + (int)_lastInterval);
+            _lastInterval = Mathf.FloorToInt(interval);
+            _trigger.Invoke();
+            return true;
+        }
+        else if(_lastInterval != 0 && interval -_lastInterval >1 - leeway)
+        {
+            return true;
+        }
+        return false;
+    }
 }
