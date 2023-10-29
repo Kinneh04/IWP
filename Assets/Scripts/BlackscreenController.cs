@@ -33,19 +33,25 @@ public class BlackscreenController : MonoBehaviour
 
     public void FadeOut()
     {
+        isFading = false;
+        StopAllCoroutines();
         isFading = true;
         StartCoroutine(FadeOutCoroutine());
     }
 
     public void FadeIn()
     {
+        isFading = false;
+        StopAllCoroutines();
         isFading = true;
         StartCoroutine(FadeInCoroutine());
     }
 
     private IEnumerator FadeOutCoroutine()
     {
+       
         Color color = fadePanel.color;
+        color.a = 0;
         while (fadePanel.color.a < 1)
         {
             color.a += Time.deltaTime * fadeSpeed;
@@ -58,6 +64,7 @@ public class BlackscreenController : MonoBehaviour
     private IEnumerator FadeInCoroutine()
     {
         Color color = fadePanel.color;
+        color.a = 1;
         while (fadePanel.color.a > 0)
         {
             color.a -= Time.deltaTime * fadeSpeed;

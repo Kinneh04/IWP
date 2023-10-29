@@ -7,6 +7,7 @@ using System.Net;
 
 public class SongScript : MonoBehaviour
 {
+    public bool LOCKEDIN = false;
     public string SongName;
     public byte[] audioData;
     public AudioClip currentSongAudioClip;

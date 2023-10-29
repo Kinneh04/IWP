@@ -81,9 +81,30 @@ public class SongEditorManager : MonoBehaviour
     public GameObject CustomSongPrefab;
     public GameObject CustomSongPrefabParent;
 
+    [Header("Exit")]
+    public GameObject ExitConfirmationGO;
+
     public void RenameMapName()
     {
         CustomSong.SongName = MapNameInputField.text;
+    }
+
+    public void BackOutButton()
+    {
+        if(!CustomSong || CustomSong.LOCKEDIN)
+        {
+            MainMenuManager.Instance.ExitSongpicker();
+        }
+        else
+        {
+            ExitConfirmationGO.SetActive(true);
+        }
+    }
+
+    public void DiscardSong()
+    {
+        Destroy(CustomSong.gameObject);
+        MainMenuManager.Instance.ExitSongpicker();
     }
     public IEnumerator SaveSongCoroutine()
     {
@@ -111,6 +132,7 @@ public class SongEditorManager : MonoBehaviour
     public void CompileEvents()
     {
         drumsEnabled = enableDrumsToggle.isOn;
+        CustomSong.LOCKEDIN = true;
         CustomSong.Events.Clear();
         foreach(EventMarker EM in eventMarkers)
         {
