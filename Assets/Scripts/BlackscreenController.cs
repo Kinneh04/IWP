@@ -24,26 +24,20 @@ public class BlackscreenController : MonoBehaviour
         Instance = this;
 
         // Keep the object alive between scenes (optional)
-        DontDestroyOnLoad(gameObject);
         fadePanel.gameObject.SetActive(true);
         FadeIn();
     }
 
-    private bool isFading = false;
 
     public void FadeOut()
     {
-        isFading = false;
         StopAllCoroutines();
-        isFading = true;
         StartCoroutine(FadeOutCoroutine());
     }
 
     public void FadeIn()
     {
-        isFading = false;
         StopAllCoroutines();
-        isFading = true;
         StartCoroutine(FadeInCoroutine());
     }
 
@@ -58,7 +52,6 @@ public class BlackscreenController : MonoBehaviour
             fadePanel.color = color;
             yield return null;
         }
-        isFading = false;
     }
 
     private IEnumerator FadeInCoroutine()
@@ -71,6 +64,5 @@ public class BlackscreenController : MonoBehaviour
             fadePanel.color = color;
             yield return null;
         }
-        isFading = false;
     }
 }

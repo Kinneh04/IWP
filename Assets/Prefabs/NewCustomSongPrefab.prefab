@@ -44,10 +44,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68078a643eb5c024594ed2c9d32b70ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SongName: 
+  LOCKEDIN: 0
+  ImageData: 
+  ImageSprite: {fileID: 0}
+  SongName: My New Song
   audioData: 
   currentSongAudioClip: {fileID: 0}
-  colors: []
-  BPM: 0
+  colors:
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  BPM: 60
   Events: []
-  DifficultyOverride: 0
+  DifficultyOverride: 5

@@ -21,6 +21,43 @@ public class MainMenuManager : MonoBehaviour
     public GameObject SongPickerScreen;
     private static MainMenuManager _instance;
 
+    [Header("CustomSongs")]
+    public Transform CustomSongParent;
+    public GameObject CustomSongBoxPrefab;
+    public GameObject CustomSongBoxPrefabParent;
+    public GameObject StarPrefab;
+    public List<GameObject> LoadedCustomSongsGO = new List<GameObject>();
+
+    public void LoadCurrentlySavedCustomSongs()
+    {
+        foreach(GameObject gameObject in LoadedCustomSongsGO)
+        {
+            Destroy(gameObject);
+        }
+        LoadedCustomSongsGO.Clear();
+        if(CustomSongParent.childCount > 0)
+        {
+            for (int i = 0; i < CustomSongParent.childCount; i++)
+            {
+                Transform child = CustomSongParent.GetChild(i);
+
+                SongScript SS = child.GetComponent<SongScript>();
+                GameObject GO = Instantiate(CustomSongBoxPrefab);
+                GO.transform.SetParent(CustomSongBoxPrefabParent.transform, false);
+                CustomSongBoxprefab customSong = GO.GetComponent<CustomSongBoxprefab>();
+                customSong.boxImage.sprite = SS.ImageSprite;
+                customSong.MusicTitleText.text = SS.SongName;
+                customSong.RelatedSong = SS;
+                for(int u = 0; u < SS.DifficultyOverride; u++)
+                {
+                    GameObject Star = Instantiate(StarPrefab);
+                    Star.transform.SetParent(customSong.StarRatingParent.transform);
+                }
+                LoadedCustomSongsGO.Add(GO);
+            }
+        }
+    }
+
     // This property provides global access to the instance
     public static MainMenuManager Instance
     {
@@ -116,6 +153,7 @@ public class MainMenuManager : MonoBehaviour
         LoadingScreen.SetActive(true);
         EditorScreen.SetActive(true);
         SongPickerScreen.SetActive(false);
+        LoadCurrentlySavedCustomSongs();
         yield return new WaitForSeconds(BlackscreenController.Instance.fadeSpeed);
         LoadingScreen.SetActive(false);
         BlackscreenController.Instance.FadeIn();
@@ -132,6 +170,7 @@ public class MainMenuManager : MonoBehaviour
         BlackscreenController.Instance.FadeOut();
         yield return new WaitForSeconds(BlackscreenController.Instance.fadeSpeed);
         LoadingScreen.SetActive(true);
+        LoadCurrentlySavedCustomSongs();
         EditorScreen.SetActive(true);
         MainMenuUI.SetActive(false);
         yield return new WaitForSeconds(BlackscreenController.Instance.fadeSpeed);

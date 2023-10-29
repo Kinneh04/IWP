@@ -7,6 +7,7 @@ using TMPro;
 using UnityEngine.UI;
 using System;
 using System.IO;
+using UnityEngine.Rendering;
 
 public class SongEditorManager : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class SongEditorManager : MonoBehaviour
     public GameObject ChooseSongMenu;
 
     [Header("CustomSongEventTimeline")]
-    public SongScript CustomSong = new SongScript();
+    public SongScript CustomSong;
 
     [Header("Scrubber")]
     public Slider audioSlider;
@@ -31,6 +32,7 @@ public class SongEditorManager : MonoBehaviour
     public TMP_InputField BPMInput;
     public GameObject BPMWarning;
     public GameObject SongDetailWarning;
+    public Image BGImage;
 
     [Header("ColourPalette")]
     public List<Image> ColorPaletteImages = new List<Image>();
@@ -122,7 +124,7 @@ public class SongEditorManager : MonoBehaviour
         }
         catch(Exception e)
         {
-            SavingText.text = "Error with saving level.";
+            SavingText.text = "Error with saving level. \n Error log: \n" + e.ToString();
         }
 
         MainMenuManager.Instance.LoadingScreen.SetActive(false);
@@ -289,7 +291,7 @@ public class SongEditorManager : MonoBehaviour
         EM.SEM = this;
         EM.TimeText.text = FormatTime(CustomAudioSource.time);
         EM.activateAtTime = CustomAudioSource.time;
-       
+        GO.transform.localScale = new Vector3(1, 1, 1);
         CurrentlySelectedMarker = EM;
         foreach(EventMarker RecordedEM in eventMarkers)
         {
@@ -335,7 +337,7 @@ public class SongEditorManager : MonoBehaviour
 
     public void ChangeSongColors()
     {
-     for(int i = 0; i < ColorPaletteImages.Count; i++)
+        for(int i = 0; i < ColorPaletteImages.Count; i++)
         {
             CustomSong.colors[i] = ColorPaletteImages[i].color;
         }
@@ -440,6 +442,66 @@ public class SongEditorManager : MonoBehaviour
         {
             StartCoroutine(LoadAudioPath(path));
         });
+    }
+
+    public void ChooseImage()
+    {
+        var bp = new BrowserProperties();
+        //  bp.filter = "Audio files(*.mp3)";
+        bp.filterIndex = 0;
+
+        new FileBrowser().OpenFileBrowser(bp, path =>
+        {
+            StartCoroutine(LoadImagePath(path));
+        });
+    }
+      public IEnumerator LoadImagePath(string path)
+    {
+        using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(path))
+        {
+            yield return uwr.SendWebRequest();
+            if (uwr.result == UnityWebRequest.Result.DataProcessingError)
+            {
+                Debug.LogError("Error retrieving file! " + uwr.error);
+                ResultsText.text = uwr.error;
+            }
+            else
+            {
+                var texture2D = DownloadHandlerTexture.GetContent(uwr);
+                Debug.Log("Loaded " + texture2D.name);
+                Sprite sprite = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), Vector2.one * 0.5f);
+                BGImage.sprite = sprite;
+                CustomSong.ImageSprite = sprite;
+                CustomSong.ImageData = ConvertTexture2DToData(texture2D);
+            }
+        }
+    }
+
+    public string ConvertTexture2DToData(Texture2D texture)
+    {
+        // Encode Texture2D to byte array
+        byte[] bytes = texture.EncodeToPNG();
+
+        // Convert byte array to Base64 string
+        string encodedString = System.Convert.ToBase64String(bytes);
+        return encodedString;
+    }
+
+    public Sprite ConvertDataToSprite(string s)
+    {
+        // Retrieve the string later
+        string retrievedString = s;
+
+        // Convert Base64 string back to byte array
+        byte[] retrievedBytes = System.Convert.FromBase64String(retrievedString);
+
+        // Create a new Texture2D and load the byte array
+        Texture2D retrievedTexture = new Texture2D(2, 2);
+        retrievedTexture.LoadImage(retrievedBytes);
+
+        // Create a new Sprite using the retrieved Texture2D
+        Sprite retrievedSprite = Sprite.Create(retrievedTexture, new Rect(0, 0, retrievedTexture.width, retrievedTexture.height), Vector2.one * 0.5f);
+        return retrievedSprite;
     }
 
     public IEnumerator LoadAudioPath(string path)

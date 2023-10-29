@@ -29,7 +29,7 @@ public class FileBrowserUpdate : MonoBehaviour
         {
             yield return uwr.SendWebRequest();
 
-            if (uwr.isNetworkError || uwr.isHttpError)
+            if (uwr.result == UnityWebRequest.Result.ConnectionError)
             {
                 Debug.Log(uwr.error);
             }

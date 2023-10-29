@@ -17,10 +17,6 @@ public class EnemyScript : MonoBehaviour
         Small, Medium, Boss
     }
 
-    public enum EnemyState
-    {
-        Charge, Flank, Distance
-    }
     public EnemyType enemyType;
 
     //public void OnTriggerEnter(Collider other)
@@ -34,14 +30,11 @@ public class EnemyScript : MonoBehaviour
 
      public float chargeSpeed = 5f;
     public float flankSpeed = 3f;
-
-    private EnemyState currentState;
     private Transform player;
 
     void Start()
     {
         OGMatColor = EnemyMat.color;
-        currentState = EnemyState.Charge;
         player = GameObject.FindGameObjectWithTag("Player").transform;
         RB = GetComponent<Rigidbody>();
     }
