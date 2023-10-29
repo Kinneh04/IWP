@@ -7,7 +7,8 @@ using UnityEngine;
 public class ShootingScript : MonoBehaviour
 {
     public MusicController musicController;
-    public WeaponMovement weaponMovement;
+    public WeaponMovement weaponMovement, UziWeaponMovement;
+    
     public PlayerRatingController playerRatingController;
     public bool Holdfire;
     public int SetDamage = 25;
@@ -27,6 +28,8 @@ public class ShootingScript : MonoBehaviour
     public float gatlingGunCooldown;
     public float AddToGatlingGunCooldown = 0.1f;
     public GameObject[] GatlingGunMuzzleFlashPoints;
+    public Animator GatlingGunAnimator;
+    public AnimationClip UziShootAnimClip;
 
     public GameObject Minigun, Revolver;
 
@@ -199,12 +202,14 @@ public class ShootingScript : MonoBehaviour
         {
             if (Input.GetMouseButton(0) && gatlingGunCooldown <= 0)
             {
+                UziWeaponMovement.TryShootVisual();
                 FireRaycast(false);
                 gatlingGunCooldown = AddToGatlingGunCooldown;
                 foreach (GameObject GO in GatlingGunMuzzleFlashPoints)
                 {
                     GameObject MFGO = Instantiate(MuzzleFlash, GO.transform.position, Quaternion.identity);
                     MFGO.transform.SetParent(GO.transform);
+                    GatlingGunAnimator.Play(UziShootAnimClip.name);
                 }
             }
             else if (gatlingGunCooldown > 0) gatlingGunCooldown -= Time.deltaTime;
@@ -222,16 +227,19 @@ public class ShootingScript : MonoBehaviour
                 hit.collider.GetComponent<EnemyScript>().TakeDamage(SetDamage);
                 Debug.Log("HitEnemy!");
                 playerRatingController.AddRating(10, "Enemy Hit!");
+                if(AddToAcc)
                 playerRatingController.AddHitShot();
             }
             else if (hit.collider.CompareTag("Coin"))
             {
                 hit.collider.GetComponent<CoinScript>().Ricochet();
-                playerRatingController.AddHitShot();
+                if (AddToAcc)
+                    playerRatingController.AddHitShot();
             }
             else
             {
-                playerRatingController.AddMissedShot();
+                if (AddToAcc)
+                    playerRatingController.AddMissedShot();
             }
         }
         
