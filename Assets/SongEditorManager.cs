@@ -57,6 +57,22 @@ public class SongEditorManager : MonoBehaviour
     public int maxEvents;
     public TMP_Text EventsLimitText;
     bool maxEventsReached = false;
+
+    [Header("EventMenus")]
+    public GameObject BPMChangerMenu;
+    public TMP_InputField BPMChangeInput;
+    public GameObject Warning;
+
+    public GameObject DifficultyChangerMenu;
+    public TMP_Text CurrentDifficultyText;
+    public Slider ChangeDifficultySlider;
+
+    public void RidAllEventSubmenus()
+    {
+        DifficultyChangerMenu.SetActive(false);
+        BPMChangerMenu.SetActive(false);
+    }
+
     public enum EventTypes
     {
         Nothing, BPMChange, DifficultyChange, EnemySpawn, BossSpawn
@@ -66,24 +82,83 @@ public class SongEditorManager : MonoBehaviour
     {
         CurrentlySelectedMarker = EM;
         EventMarkerWindow.SetActive(true);
+        EventTypeDropdown.value = EM.value;
+        DisplayAppropriateEventMenu(EM.value);
+    }
+
+    public void DisplayAppropriateEventMenu(int v)
+    {
+        RidAllEventSubmenus();
+        switch (v)
+        {
+            case 0:
+                break;
+            case 1:
+                BPMChangerMenu.SetActive(true);
+
+
+
+                BPMChangeInput.text = CurrentlySelectedMarker.currentEvent.GetType().newBPM.ToString();
+                break;
+            case 2:
+                DifficultyChangerMenu.SetActive(true);
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            default:
+                return;
+        }
+    }
+
+    public void RemoveMarkerEvent()
+    {
+       if(CurrentlySelectedMarker.currentEvent)Destroy(CurrentlySelectedMarker.currentEvent);
+    }
+    public void ResetDefaultEventMenu()
+    {
+        EventTypeDropdown.value = 0;
+        RidAllEventSubmenus();
+    }
+
+    public void EnterNewBPMForBPMChangeEvent()
+    {
+        int newBPM = int.Parse(BPMChangeInput.text);
+        if (newBPM < 1 || newBPM > 240) Warning.SetActive(true);
+        else
+        {
+            Warning.SetActive(false);
+            BPMChangeSongEvent BPMChange = CurrentlySelectedMarker.currentEvent.GetComponent<BPMChangeSongEvent>();
+            BPMChange.newBPM = newBPM;
+        }
     }
 
     public void ChangeEventType()
     {
         int v = EventTypeDropdown.value;
-        switch(v)
+        RemoveMarkerEvent();
+        RidAllEventSubmenus();
+        switch (v)
         {
             case 0:
                 CurrentlySelectedMarker.eventType = EventTypes.Nothing;
                 CurrentlySelectedMarker.EventIndicator.text = "N";
+                CurrentlySelectedMarker.currentEvent = null;
+
                 break;
             case 1:
                 CurrentlySelectedMarker.eventType = EventTypes.BPMChange;
                 CurrentlySelectedMarker.EventIndicator.text = "C";
+                CurrentlySelectedMarker.currentEvent = gameObject.AddComponent<BPMChangeSongEvent>();
+                
+                BPMChangerMenu.SetActive(true);
                 break;
             case 2:
                 CurrentlySelectedMarker.eventType = EventTypes.DifficultyChange;
                 CurrentlySelectedMarker.EventIndicator.text = "D";
+                CurrentlySelectedMarker.currentEvent = gameObject.AddComponent<DifficultyChangeSongEvent>();
+                DifficultyChangerMenu.SetActive(true);
                 break;
             case 3:
                 CurrentlySelectedMarker.eventType = EventTypes.EnemySpawn;
@@ -96,6 +171,8 @@ public class SongEditorManager : MonoBehaviour
             default:
                 return;
         }
+        if(CurrentlySelectedMarker.currentEvent) CurrentlySelectedMarker.currentEvent.castTimer = CurrentlySelectedMarker.activateAtTime;
+        CurrentlySelectedMarker.value = v;
     }
 
     public void DeleteEvent()
@@ -124,7 +201,7 @@ public class SongEditorManager : MonoBehaviour
             if(RecordedEM.activateAtTime == EM.activateAtTime)
             {
                 Vector3 newPos = RecordedEM.transform.position;
-                newPos.y += 80f;
+                newPos.y += 100f;
                 EM.transform.position = newPos;
             }
         }

@@ -7,12 +7,6 @@ public class SongScript : MonoBehaviour
 {
     public List<Color> colors = new List<Color>();
     public int BPM;
-    public List<Event> Events = new List<Event>();
+    public List<SongEvent> Events = new List<SongEvent>();
     public int DifficultyOverride;
-}
-
-[Serializable]
-public class SongEvent
-{
-
 }
