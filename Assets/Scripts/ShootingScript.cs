@@ -15,7 +15,8 @@ public class ShootingScript : MonoBehaviour
 
     [Header("Animations")]
     public Animator PistolAnimator;
-    public AnimationClip PistolFireAnimClip, PistolReloadAnimClip;
+    public AnimationClip PistolFireAnimClip;
+
 
     [Header("Tracer")]
     public float tracerMoveSpeed;
@@ -37,7 +38,8 @@ public class ShootingScript : MonoBehaviour
     public int maxAmmo;
     public int CurrentAmmo;
     public bool isReloading;
-    public AnimationClip ReloadAnimClip;
+    public List<AnimationClip> PistolReloadAnimClips = new List<AnimationClip>();
+    public int ReloadIndex = 0;
     public float reloadTime;
     public TMP_Text AmmoCountText;
 
@@ -48,6 +50,7 @@ public class ShootingScript : MonoBehaviour
     public GameObject AntiSpamGO;
     [Header("LateEarlyRating")]
     public TMP_Text LateEarlyRatingText;
+    public float spreadAngle;
    
     //public void ShowTimingRating()
     //{
@@ -76,19 +79,19 @@ public class ShootingScript : MonoBehaviour
         AmmoCountText.text = CurrentAmmo.ToString() + "/" + maxAmmo.ToString();
     }
 
-    public IEnumerator StartReload()
-    {
-        if (!isReloading)
-        {
-            isReloading = true;
-            PistolAnimator.Play(ReloadAnimClip.name);
-            yield return new WaitForSeconds(reloadTime);
-            if (CurrentAmmo > 0) CurrentAmmo = maxAmmo + 1;
-            else CurrentAmmo = maxAmmo;
-            AmmoCountText.text = CurrentAmmo.ToString() + "/" + maxAmmo.ToString();
-            isReloading = false;
-        }
-    }
+    //public IEnumerator StartReload()
+    //{
+    //    if (!isReloading)
+    //    {
+    //        isReloading = true;
+    //        PistolAnimator.Play(ReloadAnimClip.name);
+    //        yield return new WaitForSeconds(reloadTime);
+    //        if (CurrentAmmo > 0) CurrentAmmo = maxAmmo + 1;
+    //        else CurrentAmmo = maxAmmo;
+    //        AmmoCountText.text = CurrentAmmo.ToString() + "/" + maxAmmo.ToString();
+    //        isReloading = false;
+    //    }
+    //}
 
     public void StartFrenzyMode()
     {
@@ -103,13 +106,29 @@ public class ShootingScript : MonoBehaviour
         Minigun.SetActive(false);
         FrenzyMode = false;
     }
+
+    public void IncrementReload()
+    {
+        isReloading = true;
+        musicController.hasFired = true;
+        PistolAnimator.Play(PistolReloadAnimClips[ReloadIndex].name);
+        ReloadIndex++;
+        if(ReloadIndex >= PistolReloadAnimClips.Count)
+        {
+            ReloadIndex = 0;
+            if (CurrentAmmo != 0) CurrentAmmo = maxAmmo + 1;
+            else CurrentAmmo = maxAmmo;
+            isReloading = false;
+            AmmoCountText.text = CurrentAmmo.ToString() + "/" + maxAmmo.ToString();
+        }
+    }
     private void Update()
     {
         if (!FrenzyMode)
         {
-            if(!isReloading && Input.GetKeyDown(KeyCode.R))
+            if(Input.GetKeyDown(KeyCode.R) && musicController.canReload)
             {
-                StartCoroutine(StartReload());
+                IncrementReload();
             }
             if (CurrentAmmo > 0 && !isReloading && musicController.canFire)
             {
@@ -168,6 +187,7 @@ public class ShootingScript : MonoBehaviour
                     GO.transform.SetParent(GunShootFrom.transform);
                     musicController.canFire = false;
                     musicController.hasFired = true;
+                    musicController.canReload = false;
                   //  musicController.canFireButEarly = false;
                 }
                 //If user presses and holds, grant less score for kill.
@@ -194,7 +214,7 @@ public class ShootingScript : MonoBehaviour
             {
                 if(Input.GetMouseButton(0) && musicController.canFire)
                 {
-                    StartCoroutine(StartReload());
+                  //Click
                 }
             }
         }
@@ -242,6 +262,7 @@ public class ShootingScript : MonoBehaviour
                     playerRatingController.AddMissedShot();
             }
         }
+        SpawnTracer(hit.point);
         
     }
     bool RaycastFromCameraCenter(out RaycastHit hit)
@@ -265,18 +286,20 @@ public class ShootingScript : MonoBehaviour
 
     public void SpawnTracer(Vector3 Destination)
     {
-        GameObject NewTracer = Instantiate(Tracer, GunShootFrom.transform.position, Quaternion.identity);
+        Quaternion randomRotation = Quaternion.Euler(Random.Range(-spreadAngle, spreadAngle), Random.Range(-spreadAngle, spreadAngle), 0f);
+
+        GameObject NewTracer = Instantiate(Tracer, GunShootFrom.transform.position, Camera.main.transform.rotation * randomRotation);
         StartCoroutine(MoveTracer(NewTracer, Destination));
     }
 
     public IEnumerator MoveTracer(GameObject GO, Vector3 Destination)
     {
-        while(Vector3.Distance(GO.transform.position, Destination) > 0.1f)
+        while(Vector3.Distance(GO.transform.position, Destination) > 1f)
         {
-            GO.transform.position = Vector3.Lerp(GO.transform.position, Destination, tracerMoveSpeed * Time.deltaTime);
+            GO.transform.position += GO.transform.forward * Time.deltaTime * tracerMoveSpeed;
             yield return null;
 
         }
-        //Destroy(GO);
+        Destroy(GO);
     }
 }

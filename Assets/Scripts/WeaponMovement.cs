@@ -104,6 +104,7 @@ public class WeaponMovement : MonoBehaviour
     {
 
         musicController.canFire = false;
+        musicController.canReload = false;
         Vector3 returnPos = initialPosition;
         initialPosition -= Shootforce;
         CurrentRecoil += CameraRecoil;

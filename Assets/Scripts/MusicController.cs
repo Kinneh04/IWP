@@ -22,6 +22,7 @@ public class MusicController : MonoBehaviour
     public float BPM_Divider;
     public float DecreaseTime;
     public bool canFire;
+    public bool canReload;
    // public bool canFireButEarly;
     [Header("GameObject components")]
     public Transform Crosshair;
@@ -43,7 +44,9 @@ public class MusicController : MonoBehaviour
     [Header("BPMREWORK")]
     public Intervals[] _intervals;
     public bool hasFired = false;
+    public Image CrosshairOuterImage;
     int beat;
+
     //public enum Timing
     //{
     //    Early, Perfect, Late
@@ -134,7 +137,7 @@ public class MusicController : MonoBehaviour
     public void SpawnCorrectCrosshairPulses()
     {
         beat++;
-      
+        CrosshairOuterImage.color = Color.white;
         if(beat == 2)
         {
             beat = 0;
@@ -186,6 +189,7 @@ public class MusicController : MonoBehaviour
         yield return new WaitForSecondsRealtime(ShootLeeway);
         canFire = false;
         hasFired = false;
+        canReload = false;
     }
     private void Update()
     {
@@ -198,6 +202,7 @@ public class MusicController : MonoBehaviour
             if(f && !hasFired)
             {
                 canFire = true;
+                canReload = true;
             }
         }
 
@@ -276,6 +281,13 @@ public class MusicController : MonoBehaviour
         //        timing = Timing.Late;
         //    }
         //}
+
+        if(CrosshairOuterImage.color.a > 0.4f)
+        {
+            Color newA = CrosshairOuterImage.color;
+            newA.a = Mathf.Lerp(newA.a, 0.4f, Time.deltaTime * 3);
+            CrosshairOuterImage.color = newA;
+        }
     }
     public void Pulse()
     {

@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4745197388928484015}
   - component: {fileID: 3032170884154370165}
-  - component: {fileID: -9192158418346595214}
   m_Layer: 0
   m_Name: TracerGameObject
   m_TagString: Untagged
@@ -26,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1188322271330627964}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.015731832, y: 1.2579126, z: -3.63}
+  m_LocalPosition: {x: -0.463, y: 1.2579126, z: -3.581}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -75,7 +74,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Time: 2
+  m_Time: 1
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -84,7 +83,7 @@ TrailRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.10354608
+        value: 0.059739556
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -92,8 +91,8 @@ TrailRenderer:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 1
-        value: 0.06668091
+        time: 0.19726562
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -141,17 +140,3 @@ TrailRenderer:
   m_MinVertexDistance: 0.02
   m_Autodestruct: 1
   m_Emitting: 1
---- !u!114 &-9192158418346595214
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1188322271330627964}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 616a1be8c5f536642a89eff6cb35c61c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SelfDestructAfterSeconds: 1
-  ParticleEffects: {fileID: 0}
