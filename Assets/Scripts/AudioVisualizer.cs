@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AudioVisualizer : MonoBehaviour
 {
@@ -19,6 +20,13 @@ public class AudioVisualizer : MonoBehaviour
     public Transform LTarget, RTarget;
     float StartTime;
     public float CrosshairScaleMultiplier = 3.0f;
+    public float barMultiplier = 4.0f;
+    public float glowMultiplier;
+    public RawImage mainGlow, backGroundGlow;
+    public List<Transform> bars = new List<Transform>();
+    public GameObject MountainGO;
+    public float MountainScaler;
+    public Vector3 OGMountainScale;
     public void SpawnLargeCrosshair(GameObject CL, GameObject CR)
     {
         GameObject LGO = Instantiate(CL, LeftTarget.transform.position, Quaternion.identity);
@@ -39,6 +47,10 @@ public class AudioVisualizer : MonoBehaviour
         if(!audioSource.isPlaying)
             audioSource.Play();
         originalScale = circleRectTransform.localScale;
+        if (MountainGO)
+        {
+            OGMountainScale = MountainGO.transform.localScale;
+        }
     }
     public RectTransform circleRectTransform;
     public float scaleMultiplier = 10f;
@@ -53,12 +65,39 @@ public class AudioVisualizer : MonoBehaviour
         {
             average += spectrumData[i];
         }
+        for (int i = 0; i < bars.Count; i++)
+        {
+            float targetScaleY = spectrumData[i] * (1 - (i / (float)bars.Count - 1)) * barMultiplier;
+            Vector3 targetScale = new Vector3(2, targetScaleY, 1);
+
+            bars[i].transform.localScale = Vector3.Lerp(bars[i].transform.localScale, targetScale, Time.deltaTime * 5.0f);
+        }
         average /= spectrumData.Length;
        // Debug.Log(average);
+
         float newScale = average * scaleMultiplier;
         newScale = Mathf.Clamp(newScale, originalScale.x * minScale, originalScale.x * maxScale);
         newScale = Mathf.Lerp(circleRectTransform.localScale.x, newScale, Time.deltaTime * 2f);
         circleRectTransform.localScale = new Vector3(newScale, newScale, 1f);
+
+        if (MountainGO)
+        {
+            float newMountainScale = average * MountainScaler;
+            newMountainScale = Mathf.Clamp(newMountainScale, OGMountainScale.x * minScale, OGMountainScale.x * maxScale);
+            newMountainScale = Mathf.Lerp(MountainGO.transform.localScale.x, newMountainScale, Time.deltaTime * 2f);
+            MountainGO.transform.localScale = new Vector3(newMountainScale, newMountainScale, 1f);
+        }
+
+        float opacity = average * glowMultiplier;
+        Color color = mainGlow.color;
+        color.a = Mathf.Clamp01(opacity); // Ensure opacity is between 0 and 1
+        float targetOpacity = average * glowMultiplier;
+        float currentOpacity = mainGlow.color.a;
+
+        float newOpacity = Mathf.Lerp(currentOpacity, targetOpacity, Time.deltaTime * 4.0f);
+        color.a = newOpacity;
+        mainGlow.color = color;
+
         if (spawnCrosshairs)
         {
             StartTime += Time.deltaTime;

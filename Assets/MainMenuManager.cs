@@ -187,6 +187,7 @@ public class MainMenuManager : MonoBehaviour
         BlackscreenController.Instance.FadeOut();
         yield return new WaitForSeconds(BlackscreenController.Instance.fadeSpeed);
         LoadingScreen.SetActive(true);
+        MainGameSelectionScreen.SetActive(false);
         EditorScreen.SetActive(false);
         MainMenuUI.SetActive(true);
         yield return new WaitForSeconds(BlackscreenController.Instance.fadeSpeed);

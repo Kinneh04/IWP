@@ -1333,8 +1333,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8934527016483769248}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.41839263, y: 0, z: 7.62}
-  m_LocalScale: {x: 0.022229753, y: 0.022229753, z: 0.022229753}
+  m_LocalPosition: {x: -0.41903, y: -0.03804, z: 7.6112}
+  m_LocalScale: {x: 0.027731616, y: 0.027731616, z: 0.027731616}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 185097282664583620}
@@ -1380,7 +1380,8 @@ MonoBehaviour:
   range: 0
   Rangedball: {fileID: 0}
   AddToCooldown: 0
-  chargeSpeed: 6
+  cooldown: 0
+  chargeSpeed: 7
   flankSpeed: 3
 --- !u!95 &8934527016483769251
 Animator:
@@ -1412,8 +1413,8 @@ Rigidbody:
   m_GameObject: {fileID: 8934527016483769248}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 0.3
-  m_AngularDrag: 0.05
+  m_Drag: 0.1
+  m_AngularDrag: 0.02
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
