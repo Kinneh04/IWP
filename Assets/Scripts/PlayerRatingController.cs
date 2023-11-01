@@ -73,7 +73,7 @@ public class PlayerRatingController : MonoBehaviour
         {
             CurrentFrenzyAmount = AmountNeededForFrenzy + 100;
         }
-        if (CurrentFrenzyAmount >= AmountNeededForFrenzy)
+        if (FrenzySlider.value >= FrenzySlider.maxValue)
         {
             frenzyAvailable = true;
             SpaceToActivateGO.SetActive(true);
@@ -83,6 +83,7 @@ public class PlayerRatingController : MonoBehaviour
 
     public void DecreaseFrenzy(float rating)
     {
+        if (frenzyAvailable) return;
         CurrentFrenzyAmount -= rating;
         FrenzySlider.value = CurrentFrenzyAmount;
         if(CurrentFrenzyAmount < AmountNeededForFrenzy)
@@ -206,6 +207,16 @@ public class PlayerRatingController : MonoBehaviour
             shootingScript.StartFrenzyMode();
             frenzyAvailable = false;
             SpaceToActivateGO.SetActive(false);
+        }
+
+        if(FrenzySlider.value >= FrenzySlider.maxValue)
+        {
+            FrenzySlider.fillRect.GetComponent<Image>().color = new Color(1, 1, 1, 0.5f);
+
+        }
+        else
+        {
+            FrenzySlider.fillRect.GetComponent<Image>().color = Color.red;
         }
     }
 

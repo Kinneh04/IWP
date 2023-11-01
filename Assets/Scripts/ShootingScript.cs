@@ -122,11 +122,12 @@ public class ShootingScript : MonoBehaviour
             AmmoCountText.text = CurrentAmmo.ToString() + "/" + maxAmmo.ToString();
         }
     }
+
     private void Update()
     {
         if (!FrenzyMode)
         {
-            if(Input.GetKeyDown(KeyCode.R) && musicController.canReload)
+            if(Input.GetKeyDown(KeyCode.R) && musicController.canReload && CurrentAmmo < maxAmmo)
             {
                 IncrementReload();
             }
@@ -212,9 +213,9 @@ public class ShootingScript : MonoBehaviour
             }
             else
             {
-                if(Input.GetMouseButton(0) && musicController.canFire)
+                if(Input.GetMouseButtonDown(0) && !musicController.canFire)
                 {
-                  //Click
+                    LateEarlyRatingText.color = Color.red;
                 }
             }
         }
@@ -235,6 +236,9 @@ public class ShootingScript : MonoBehaviour
             else if (gatlingGunCooldown > 0) gatlingGunCooldown -= Time.deltaTime;
             
         }
+        Color T = Color.red;
+        T.a = 0;
+        LateEarlyRatingText.color = Color.Lerp(LateEarlyRatingText.color, T, Time.deltaTime * 3);
     }
 
     public void FireRaycast(bool AddToAcc = true)
