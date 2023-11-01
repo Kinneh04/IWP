@@ -221,11 +221,13 @@ public class ShootingScript : MonoBehaviour
             {
                 if(Input.GetMouseButtonDown(0) && !musicController.canFire && CurrentAmmo > 0)
                 {
+                    LateEarlyRatingText.text = "Missed!";
                     LateEarlyRatingText.color = Color.red;
                     PlayerAS.PlayOneShot(ClickAudioClip);
                 }
                 else if(Input.GetMouseButtonDown(0) && CurrentAmmo <= 0)
                 {
+                    LateEarlyRatingText.text = "No Ammo!";
                     PlayerAS.PlayOneShot(ClickAudioClip);
                 }
             }

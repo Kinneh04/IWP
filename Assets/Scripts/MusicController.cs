@@ -90,6 +90,8 @@ public class MusicController : MonoBehaviour
         GameObject GO = Instantiate(CrosshairFadeGO);
         GO.transform.SetParent(CrosshairFadeParent.transform, false);
         GO.GetComponent<CrosshairFadeBPM>().Speed = 1 / (BPM / BPM_Divider);
+
+  
     }
     public static MusicController Instance
     {
@@ -103,7 +105,7 @@ public class MusicController : MonoBehaviour
                 // If it still doesn't exist, create a new instance
                 if (_instance == null)
                 {
-                    GameObject singletonObject = new GameObject("MainMenuManager");
+                    GameObject singletonObject = new GameObject("MusicController");
                     _instance = singletonObject.AddComponent<MusicController>();
                 }
             }
@@ -145,6 +147,11 @@ public class MusicController : MonoBehaviour
         }
         else SpawnLargeCrosshair(CrosshairL, CrosshairR);
         foreach (BPMPulse BPMP in Pulses) BPMP.Pulse();
+
+        if (FirstPersonController.Instance.isLow)
+        {
+            FirstPersonController.Instance.HeartbeatAudioSource.PlayOneShot(FirstPersonController.Instance.Heartbeat);
+        }
     }
 
     public IEnumerator StartMatch()

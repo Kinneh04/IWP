@@ -1353,7 +1353,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 28.42, y: 21, z: 38.6}
+  m_Size: {x: 37.76, y: 21, z: 38.6}
   m_Center: {x: 0, y: 7.9, z: 0}
 --- !u!114 &8934527016483769250
 MonoBehaviour:
@@ -1374,8 +1374,13 @@ MonoBehaviour:
   DeathParticles: {fileID: 4058727824660422441, guid: 0524977708a5f6b43a80a3566263623e,
     type: 3}
   EnemyMat: {fileID: 2100000, guid: d4ba2cc18199ea54c8d4731c85da73b6, type: 2}
+  enemyBehaviour: 0
   enemyType: 0
-  chargeSpeed: 8
+  SpawnFrom: {fileID: 0}
+  range: 0
+  Rangedball: {fileID: 0}
+  AddToCooldown: 0
+  chargeSpeed: 6
   flankSpeed: 3
 --- !u!95 &8934527016483769251
 Animator:

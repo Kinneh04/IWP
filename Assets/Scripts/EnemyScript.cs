@@ -17,7 +17,21 @@ public class EnemyScript : MonoBehaviour
         Small, Medium, Boss
     }
 
+
+    public enum EnemyBehaviour
+    {
+        Melee, Ranged
+    }
+    public EnemyBehaviour enemyBehaviour;
     public EnemyType enemyType;
+
+    [Header("For Ranged Only")]
+
+    public Transform SpawnFrom;
+    public float range;
+    public GameObject Rangedball;
+    public float AddToCooldown;
+    public float cooldown;
 
     //public void OnTriggerEnter(Collider other)
     //{
@@ -46,8 +60,33 @@ public class EnemyScript : MonoBehaviour
 
     void ChargeBehavior()
     {
-        transform.LookAt(player.transform);
-        RB.AddForce(transform.forward * chargeSpeed);
+        if (enemyBehaviour == EnemyBehaviour.Melee)
+        {
+            transform.LookAt(player.transform);
+            RB.AddForce(transform.forward * chargeSpeed);
+        }
+        else if(enemyBehaviour == EnemyBehaviour.Ranged)
+        {
+            if (Vector3.Distance(transform.position, player.position) > range)
+            {
+                transform.LookAt(player.transform);
+                RB.AddForce(transform.forward * chargeSpeed);
+            }
+            else
+            {
+                transform.LookAt(player.transform);
+            }
+            if(cooldown <= 0)
+            {
+                cooldown = AddToCooldown;
+                ShootProjectile();
+            }
+            if (cooldown > 0) cooldown -= Time.deltaTime;
+        }
+    }
+    public void ShootProjectile()
+    {
+        Instantiate(Rangedball, transform.position, transform.rotation);
     }
     public void TakeDamage(int damage)
     {

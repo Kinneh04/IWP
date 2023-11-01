@@ -6,7 +6,7 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     public Transform target;
-    public GameObject prefabToSpawn;
+    public List<Enemy> TypesOfEnemies = new List<Enemy>();
     public float minDistance = 10.0f;
     public float minSpawnInterval = 2.0f;
     public float maxSpawnInterval = 5.0f;
@@ -48,7 +48,7 @@ public class EnemySpawner : MonoBehaviour
     }
 
 
-    IEnumerator SpawnEnemyGroup(int numEnemies, Vector3 SpawnPosition)
+    IEnumerator SpawnEnemyGroup(GameObject Enemy, int numEnemies, Vector3 SpawnPosition)
     {
         float angleStep = 360f / numEnemies;
         float radius = 2f; // Adjust the radius as needed
@@ -59,16 +59,19 @@ public class EnemySpawner : MonoBehaviour
             float radians = angle * Mathf.Deg2Rad;
 
             Vector3 spawnPosition = SpawnPosition + new Vector3(Mathf.Cos(radians) * radius, 0, Mathf.Sin(radians) * radius);
-            Instantiate(prefabToSpawn, spawnPosition, Quaternion.identity);
+            Instantiate(Enemy, spawnPosition, Quaternion.identity);
             yield return new WaitForSeconds(0.2f);
         }
     }
     void Start()
     {
-        StartCoroutine(SpawnObjectPeriodically());
+        foreach (Enemy E in TypesOfEnemies)
+        {
+            StartCoroutine(SpawnObjectPeriodically(E));
+        }
     }
 
-    IEnumerator SpawnObjectPeriodically()
+    IEnumerator SpawnObjectPeriodically(Enemy E)
     {
         while (true)
         {
@@ -79,18 +82,21 @@ public class EnemySpawner : MonoBehaviour
             }
             Vector3 spawnPosition;
 
+
             do
             {
                 spawnPosition = GetRandomSpawnPosition();
+                spawnPosition.y += E.DistanceFromFloor;
             } while (RaycastToTarget(spawnPosition));
 
-            if (Random.Range(0, 10) < difficulty)
+            if (Random.Range(0, 10) < difficulty && E.canSpawninGroup)
             {
-                int numEnemiesInGroup = Random.Range(3, 2 * difficulty); // Adjust the range as needed
-                StartCoroutine(SpawnEnemyGroup(numEnemiesInGroup, spawnPosition));
+                int numEnemiesInGroup = Random.Range(3, difficulty); // Adjust the range as needed
+                StartCoroutine(SpawnEnemyGroup(E.EnemyGO, numEnemiesInGroup, spawnPosition));
             }
-            else Instantiate(prefabToSpawn, spawnPosition, Quaternion.identity);
-            float randomInterval = Random.Range(minSpawnInterval, maxSpawnInterval);
+            else Instantiate(E.EnemyGO, spawnPosition, Quaternion.identity);
+
+            float randomInterval = Random.Range(E.minSpawnInterval, E.maxSpawnInterval);
             yield return new WaitForSeconds(randomInterval);
         }
     }
@@ -132,4 +138,14 @@ public class EnemySpawner : MonoBehaviour
     {
         // Conduct boss spawning behaviour here;
     }
+}
+
+[System.Serializable]
+public class Enemy
+{
+    public GameObject EnemyGO;
+    public float SpawnChance;
+    public bool canSpawninGroup = false;
+    public float minSpawnInterval, maxSpawnInterval;
+    public float DistanceFromFloor;
 }

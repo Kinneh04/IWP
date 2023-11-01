@@ -2738,7 +2738,7 @@ MonoBehaviour:
     type: 3}
   EnemyMat: {fileID: 2100000, guid: 8e67e61056c497a4a9153cced456a747, type: 2}
   enemyType: 1
-  chargeSpeed: 8
+  chargeSpeed: 4
   flankSpeed: 3
 --- !u!95 &8934527016483769251
 Animator:

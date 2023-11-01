@@ -8,6 +8,8 @@ TagManager:
   - Enemy
   - Bullet
   - Coin
+  - EnemyProjectile
+  - PlayerHitbox
   layers:
   - Default
   - TransparentFX

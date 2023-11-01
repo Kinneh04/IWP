@@ -98,6 +98,49 @@ using System.Collections;
 
 		private const float _threshold = 0.01f;
 
+
+	[Header("HealthAndDeath")]
+	public bool isLow = false;
+	public bool isDead = false;
+	public int Health = 100;
+	public AudioSource HeartbeatAudioSource;
+	public AudioClip Heartbeat;
+	public Slider HealthSlider;
+	public TMP_Text HealthText;
+
+    private static FirstPersonController _instance;
+    public static FirstPersonController Instance
+    {
+        get
+        {
+            // If the instance doesn't exist, find it in the scene
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<FirstPersonController>();
+
+                // If it still doesn't exist, create a new instance
+                if (_instance == null)
+                {
+                    GameObject singletonObject = new GameObject("FirstPersonController");
+                    _instance = singletonObject.AddComponent<FirstPersonController>();
+                }
+            }
+
+            return _instance;
+        }
+    }
+    public void TakeDamage(int damage)
+	{
+		Health -= damage;
+        float volume = (1.0f - (Health / 100.0f))/3;
+		HeartbeatAudioSource.volume = volume;
+		HealthText.text = Health.ToString();
+		HealthSlider.value = Health;
+		if (Health <= 80) isLow = true;
+		else isLow = false;
+
+
+    }	
 	
 		private bool IsCurrentDeviceMouse
 		{
