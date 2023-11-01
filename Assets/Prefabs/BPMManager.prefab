@@ -302,11 +302,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 641214c9271e7334592e8de5405b13f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  countdownText: {fileID: 0}
+  BeginningCountdown: 0
   BPM: 60
   BPM_Divider: 150
   DecreaseTime: 15
   canFire: 0
-  canFireButEarly: 0
+  canReload: 0
   Crosshair: {fileID: 0}
   OriginalScaleTransform: {x: 0, y: 0, z: 0}
   CrosshairFadeGO: {fileID: 3921569213468790984, guid: 35c20416156b1c34ca6dcb8abb82f069,
@@ -314,7 +316,6 @@ MonoBehaviour:
   CrosshairFadeParent: {fileID: 0}
   ShootLeeway: 0.14
   playerRating: {fileID: 0}
-  shotTime: 0
   Pulses: []
   MusicAudioSource: {fileID: 2064564273}
   ExtraBeatAudioSource: {fileID: 720794167}
@@ -322,7 +323,10 @@ MonoBehaviour:
   SnareClip: {fileID: 8300000, guid: 2227fa30a332af34580a159c62e8a8a3, type: 3}
   MusicProgressionSlider: {fileID: 0}
   beatAlreadyHit: 0
-  timing: 0
+  StartedMatch: 0
+  _intervals: []
+  hasFired: 0
+  CrosshairOuterImage: {fileID: 0}
   LeftTarget: {fileID: 0}
   RightTarget: {fileID: 0}
   CrosshairL: {fileID: 0}

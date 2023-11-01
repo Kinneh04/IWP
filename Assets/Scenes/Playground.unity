@@ -36414,7 +36414,7 @@ MonoBehaviour:
   - {fileID: 1315833317}
   - {fileID: 195913734}
   MountainGO: {fileID: 2077166108}
-  MountainScaler: 0
+  MountainScaler: 8000
   OGMountainScale: {x: 0, y: 0, z: 0}
   circleRectTransform: {fileID: 1887057303}
   scaleMultiplier: 1000
@@ -41962,8 +41962,8 @@ MonoBehaviour:
   - {fileID: 2014820393}
   - {fileID: 304396768}
   - {fileID: 1896453149}
-  MountainGO: {fileID: 0}
-  MountainScaler: 0
+  MountainGO: {fileID: 986317433}
+  MountainScaler: 8000
   OGMountainScale: {x: 0, y: 0, z: 0}
   circleRectTransform: {fileID: 2118470884}
   scaleMultiplier: 1000
