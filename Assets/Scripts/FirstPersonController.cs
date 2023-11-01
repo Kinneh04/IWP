@@ -190,11 +190,11 @@ using System.Collections;
 
 		private void Dashing()
         {
-			if (Input.GetKeyDown(KeyCode.LeftShift) && !isDashing && dashCooldown <= 0)
+			if (Input.GetKeyDown(KeyCode.LeftShift) && MusicController.Instance.canFire && !isDashing && dashCooldown <= 0)
 			{
 				StartCoroutine(Dash());
 			}
-        if (Input.GetKeyDown(KeyCode.E) && !OnAbilityCooldown)
+        if (Input.GetKeyDown(KeyCode.E) && MusicController.Instance.canFire && !OnAbilityCooldown)
         {
 			CurrentAbility.UseAbility();
         }

@@ -42,7 +42,7 @@ public class MusicController : MonoBehaviour
     public bool beatAlreadyHit = false;
     public bool StartedMatch = false;
     [Header("BPMREWORK")]
-    public Intervals[] _intervals;
+    public List<Intervals> _intervals = new List<Intervals>();
     public bool hasFired = false;
     public Image CrosshairOuterImage;
     int beat;
@@ -196,6 +196,10 @@ public class MusicController : MonoBehaviour
         if (!StartedMatch) return;
         foreach (Intervals interval in _intervals)
         {
+            if(interval == null)
+            {
+                _intervals.Remove(interval);
+            }
             float sampledTime = (MusicAudioSource.timeSamples / (MusicAudioSource.clip.frequency * interval.GetIntervalLength(BPM_Divider)));
             // Debug.Log(sampledTime);
             bool f = interval.CheckForNewInterval(sampledTime, ShootLeeway);
