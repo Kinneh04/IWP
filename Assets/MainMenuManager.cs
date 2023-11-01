@@ -14,6 +14,9 @@ public class MainMenuManager : MonoBehaviour
     [Header("MainMenu")]
     public GameObject MainMenuUI;
     public AudioSource MainMenuAudioSource;
+
+    [Header("MainGamescreen")]
+    public GameObject MainGameSelectionScreen;
     [Header("EditorScreen")]
     public SongEditorManager SEM;
     public GameObject EditorScreen;
@@ -202,6 +205,24 @@ public class MainMenuManager : MonoBehaviour
     }
 
     public void PressPlayButton()
+    {
+        StartCoroutine(GoToSongSelectionSequence());
+    }
+
+    public IEnumerator GoToSongSelectionSequence()
+    {
+        BlackscreenController.Instance.FadeOut();
+        yield return new WaitForSeconds(BlackscreenController.Instance.fadeSpeed);
+        LoadingScreen.SetActive(true);
+        MainMenuUI.SetActive(false);
+        MainGameSelectionScreen.SetActive(true);
+        yield return new WaitForSeconds(BlackscreenController.Instance.fadeSpeed);
+        LoadingScreen.SetActive(false);
+        BlackscreenController.Instance.FadeIn();
+
+    }
+
+    public void StartDemoGame()
     {
         StartCoroutine(PlaydemoSequence());
     }
