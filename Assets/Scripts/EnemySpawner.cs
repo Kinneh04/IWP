@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
@@ -11,6 +12,42 @@ public class EnemySpawner : MonoBehaviour
     public float maxSpawnInterval = 5.0f;
     public float groupSpacing = 1.0f; // Spacing between enemies in a group
     public int difficulty = 1; // Adjust difficulty level
+    public bool AllowedToSpawn;
+    private static EnemySpawner _instance;
+
+    private void Awake()
+    {
+        // Ensure there's only one instance of this object
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+
+        _instance = this;
+    }
+    public static EnemySpawner Instance
+    {
+        get
+        {
+            // If the instance doesn't exist, find it in the scene
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<EnemySpawner>();
+
+                // If it still doesn't exist, create a new instance
+                if (_instance == null)
+                {
+                    GameObject singletonObject = new GameObject("MainMenuManager");
+                    _instance = singletonObject.AddComponent<EnemySpawner>();
+                }
+            }
+
+            return _instance;
+        }
+    }
+
+
     IEnumerator SpawnEnemyGroup(int numEnemies, Vector3 SpawnPosition)
     {
         float angleStep = 360f / numEnemies;
@@ -35,6 +72,11 @@ public class EnemySpawner : MonoBehaviour
     {
         while (true)
         {
+            if(!AllowedToSpawn)
+            {
+                yield return new WaitForSeconds(1);
+                continue;
+            }
             Vector3 spawnPosition;
 
             do

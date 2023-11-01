@@ -234,11 +234,13 @@ public class MainMenuManager : MonoBehaviour
         LoadingScreen.SetActive(true);
         foreach (GameObject GO in GameobjectsToDisableForDemo)
         {
+            if (!GO) continue;
             GO.SetActive(false);
         }
         yield return new WaitForSeconds(0.5f);
         foreach (GameObject GO in GameobjectsToEnableForDemo)
         {
+            if (!GO) continue; 
             GO.SetActive(true);
         }
         yield return new WaitForSeconds(0.5f);

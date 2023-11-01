@@ -144,6 +144,7 @@ public class MusicController : MonoBehaviour
             SpawnLargeCrosshair(CrosshairSmallL, CrosshairSmallR);
         }
         else SpawnLargeCrosshair(CrosshairL, CrosshairR);
+        foreach (BPMPulse BPMP in Pulses) BPMP.Pulse();
     }
 
     public IEnumerator StartMatch()
@@ -164,7 +165,7 @@ public class MusicController : MonoBehaviour
                 start = 0f;
                 if(cooldown <= 0)
                 {
-
+                    EnemySpawner.Instance.AllowedToSpawn = true;
                     StartMusic();
                     StartedMatch = true;
                     countdownText.gameObject.SetActive(false);
@@ -211,13 +212,13 @@ public class MusicController : MonoBehaviour
         }
 
         //OLD METHOD! DEPRECIATED!
-        //if (MusicAudioSource.isPlaying)
-        //{
-        //    float currentTime = MusicAudioSource.time;
-        //    float totalTime = MusicAudioSource.clip.length;
+        if (MusicAudioSource.isPlaying)
+        {
+            float currentTime = MusicAudioSource.time;
+            float totalTime = MusicAudioSource.clip.length;
 
-        //    MusicProgressionSlider.value = currentTime / totalTime;
-        //}
+            MusicProgressionSlider.value = currentTime / totalTime;
+        }
         //StartTime += Time.deltaTime;
 
         //if (StartTime >= BPM / BPM_Divider)
