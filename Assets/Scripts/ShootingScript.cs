@@ -38,7 +38,7 @@ public class ShootingScript : MonoBehaviour
     public int maxAmmo;
     public int CurrentAmmo;
     public bool isReloading;
-    public List<AnimationClip> PistolReloadAnimClips = new List<AnimationClip>();
+    public List<WeaponReloadPart> PistolReloadAnimClips = new List<WeaponReloadPart>();
     public int ReloadIndex = 0;
     public float reloadTime;
     public TMP_Text AmmoCountText;
@@ -51,6 +51,10 @@ public class ShootingScript : MonoBehaviour
     [Header("LateEarlyRating")]
     public TMP_Text LateEarlyRatingText;
     public float spreadAngle;
+
+    [Header("Sounds")]
+    public AudioSource PlayerAS;
+    public AudioClip ShootingAudioClip, ClickAudioClip;
    
     //public void ShowTimingRating()
     //{
@@ -76,6 +80,7 @@ public class ShootingScript : MonoBehaviour
     void DispenseAmmo()
     {
         CurrentAmmo -= 1;
+        PlayerAS.PlayOneShot(ShootingAudioClip);
         AmmoCountText.text = CurrentAmmo.ToString() + "/" + maxAmmo.ToString();
     }
 
@@ -111,7 +116,8 @@ public class ShootingScript : MonoBehaviour
     {
         isReloading = true;
         musicController.hasFired = true;
-        PistolAnimator.Play(PistolReloadAnimClips[ReloadIndex].name);
+        PistolAnimator.Play(PistolReloadAnimClips[ReloadIndex].animClip.name);
+        PlayerAS.PlayOneShot(PistolReloadAnimClips[ReloadIndex].audioClip);
         ReloadIndex++;
         if(ReloadIndex >= PistolReloadAnimClips.Count)
         {
@@ -213,9 +219,14 @@ public class ShootingScript : MonoBehaviour
             }
             else
             {
-                if(Input.GetMouseButtonDown(0) && !musicController.canFire)
+                if(Input.GetMouseButtonDown(0) && !musicController.canFire && CurrentAmmo > 0)
                 {
                     LateEarlyRatingText.color = Color.red;
+                    PlayerAS.PlayOneShot(ClickAudioClip);
+                }
+                else if(Input.GetMouseButtonDown(0) && CurrentAmmo <= 0)
+                {
+                    PlayerAS.PlayOneShot(ClickAudioClip);
                 }
             }
         }
@@ -306,4 +317,11 @@ public class ShootingScript : MonoBehaviour
         }
         Destroy(GO);
     }
+}
+
+[System.Serializable]
+public class WeaponReloadPart
+{
+    public AnimationClip animClip;
+    public AudioClip audioClip;
 }
