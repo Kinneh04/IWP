@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 public class OfficialSongManager : MonoBehaviour
 {
     [Header("Fill in")]
@@ -9,6 +10,7 @@ public class OfficialSongManager : MonoBehaviour
     public AudioSource MainMenuAudioSource;
     public EnemySpawner enemyManager;
     public Button PlayButton;
+    public TMP_Text SongSelectText;
 
     [Header("Dont fill in")]
     public OfficialSongScript CurrentlySelectedSong;
@@ -36,6 +38,7 @@ public class OfficialSongManager : MonoBehaviour
             CurrentlySelectedSong = SS;
             StartCoroutine(TransitionToNewSong());
             PlayButton.interactable = true;
+            SongSelectText.text = "Selected: " + SS.TitleOfSong;
         }
     }
 
