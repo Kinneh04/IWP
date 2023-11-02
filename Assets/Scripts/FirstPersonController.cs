@@ -132,7 +132,7 @@ using System.Collections;
     public void TakeDamage(int damage)
 	{
 		Health -= damage;
-        float volume = (1.0f - (Health / 100.0f))/3;
+        float volume = (1.0f - (Health / 100.0f))/1.5f;
 		HeartbeatAudioSource.volume = volume;
 		HealthText.text = Health.ToString();
 		HealthSlider.value = Health;

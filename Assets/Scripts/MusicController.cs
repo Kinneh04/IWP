@@ -17,17 +17,26 @@ public class MusicController : MonoBehaviour
     [Header("Countdown")]
     public TMP_Text countdownText;
     public int BeginningCountdown;
+
     [Header("BPM Controller")]
     public float BPM;
     public float BPM_Divider;
     public float DecreaseTime;
     public bool canFire;
     public bool canReload;
+
+    [Header("LightsController")]
+    public Light[] PulsingLights;
+    public Light[] TransitioningLights;
+    public List<Color> LightColorPalette = new List<Color>();
+
    // public bool canFireButEarly;
     [Header("GameObject components")]
     public Transform Crosshair;
     public Vector3 OriginalScaleTransform;
     public GameObject CrosshairFadeGO, CrosshairFadeParent;
+
+    [Header("Shooting")]
     public float ShootLeeway;
     float currentShootLeeway;
     public PlayerRatingController playerRating;
@@ -35,12 +44,15 @@ public class MusicController : MonoBehaviour
     public BPMPulse[] Pulses;
     //public WeaponMovement weaponMovement;
     float StartTime;
+
+    [Header("Audio")]
     public AudioSource MusicAudioSource, ExtraBeatAudioSource;
     public AudioClip BeatClip, SnareClip;
     public Slider MusicProgressionSlider;
     int BeatCount;
     public bool beatAlreadyHit = false;
     public bool StartedMatch = false;
+
     [Header("BPMREWORK")]
     public List<Intervals> _intervals = new List<Intervals>();
     public bool hasFired = false;

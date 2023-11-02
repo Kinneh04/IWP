@@ -1362,9 +1362,29 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 588680390278389099, guid: 02d763ada85b3a84fbc708184bc1bdff,
         type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 588680390278389099, guid: 02d763ada85b3a84fbc708184bc1bdff,
+        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1032042878}
+      objectReference: {fileID: 635898629}
+    - target: {fileID: 588680390278389099, guid: 02d763ada85b3a84fbc708184bc1bdff,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PreviewSong
+      objectReference: {fileID: 0}
+    - target: {fileID: 588680390278389099, guid: 02d763ada85b3a84fbc708184bc1bdff,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: OfficialSongManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 588680390278389099, guid: 02d763ada85b3a84fbc708184bc1bdff,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: OfficialSongScript, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 1495739354543679644, guid: 02d763ada85b3a84fbc708184bc1bdff,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -3406,6 +3426,7 @@ GameObject:
   - component: {fileID: 162791462}
   - component: {fileID: 162791464}
   - component: {fileID: 162791463}
+  - component: {fileID: 162791465}
   m_Layer: 5
   m_Name: Playbutton
   m_TagString: Untagged
@@ -3532,6 +3553,62 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 162791461}
   m_CullTransparentMesh: 1
+--- !u!114 &162791465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 162791461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 162791463}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1032042878}
+        m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
+        m_MethodName: PressPlayButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &174022986
 GameObject:
   m_ObjectHideFlags: 0
@@ -10921,6 +10998,7 @@ Transform:
   - {fileID: 1032042877}
   - {fileID: 1510382125}
   - {fileID: 1072989967}
+  - {fileID: 635898628}
   m_Father: {fileID: 1010531060}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -13924,6 +14002,56 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 625155804}
   m_CullTransparentMesh: 1
+--- !u!1 &635898627
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 635898628}
+  - component: {fileID: 635898629}
+  m_Layer: 0
+  m_Name: MainGameOfficialSongTImelines
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &635898628
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 635898627}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1260033586}
+  m_Father: {fileID: 479669567}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &635898629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 635898627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 342098d402aa5744b84dfa32a5abd041, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  musicController: {fileID: 372429410}
+  MainMenuAudioSource: {fileID: 2093645908}
+  enemyManager: {fileID: 1430100250}
+  PlayButton: {fileID: 162791465}
+  CurrentlySelectedSong: {fileID: 0}
 --- !u!1 &641969514
 GameObject:
   m_ObjectHideFlags: 0
@@ -18410,7 +18538,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &873808413
 RectTransform:
   m_ObjectHideFlags: 0
@@ -18474,9 +18602,9 @@ RectTransform:
   m_Father: {fileID: 1226752973}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 582.71716, y: -300.2481}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 368.4781, y: 600.4962}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &884065691
@@ -22081,6 +22209,7 @@ MonoBehaviour:
   StarPrefab: {fileID: 5874110072821799078, guid: 12f6085cb7e4d6e438858eb646a6f4ea,
     type: 3}
   LoadedCustomSongsGO: []
+  officialSongManager: {fileID: 0}
 --- !u!1 &1042817314
 GameObject:
   m_ObjectHideFlags: 0
@@ -25027,7 +25156,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -0.000035489247, y: -1.0494995}
-  m_SizeDelta: {x: 766.9562, y: 600.4962}
+  m_SizeDelta: {x: 0, y: 600.4962}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1226752974
 MonoBehaviour:
@@ -25638,6 +25767,60 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 5393215579111688471}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1260033585
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1260033586}
+  - component: {fileID: 1260033587}
+  m_Layer: 0
+  m_Name: Level_1_IntoAsgard
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1260033586
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1260033585}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 635898628}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1260033587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1260033585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46dc1c73816e0bb4e80c7b2db9b5d503, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SongAudioClip: {fileID: 8300000, guid: f1beddb0078ce964dbe971bac47382dd, type: 3}
+  colors:
+  - {r: 0.7830189, g: 0, b: 0, a: 1}
+  - {r: 1, g: 0.40943396, b: 0.40943396, a: 1}
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 0.3773585, g: 0, b: 0, a: 1}
+  BPM: 176
+  Events: []
+  DifficultyOverride: 3
+  PreviewStartTime: 64
 --- !u!1 &1264765984
 GameObject:
   m_ObjectHideFlags: 0
@@ -29142,7 +29325,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1474550299
 RectTransform:
   m_ObjectHideFlags: 0
@@ -29642,9 +29825,34 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 588680390278389099, guid: 02d763ada85b3a84fbc708184bc1bdff,
         type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 588680390278389099, guid: 02d763ada85b3a84fbc708184bc1bdff,
+        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1032042878}
+      objectReference: {fileID: 635898629}
+    - target: {fileID: 588680390278389099, guid: 02d763ada85b3a84fbc708184bc1bdff,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PreviewSong
+      objectReference: {fileID: 0}
+    - target: {fileID: 588680390278389099, guid: 02d763ada85b3a84fbc708184bc1bdff,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: OfficialSongManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 588680390278389099, guid: 02d763ada85b3a84fbc708184bc1bdff,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 1260033587}
+    - target: {fileID: 588680390278389099, guid: 02d763ada85b3a84fbc708184bc1bdff,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: OfficialSongScript, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 588680390870251202, guid: 02d763ada85b3a84fbc708184bc1bdff,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -92370,9 +92578,9 @@ RectTransform:
   m_Father: {fileID: 1226752973}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 184.23904, y: -300.2481}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 368.4781, y: 600.4962}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7345158601175107137

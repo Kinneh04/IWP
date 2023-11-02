@@ -31,6 +31,9 @@ public class MainMenuManager : MonoBehaviour
     public GameObject StarPrefab;
     public List<GameObject> LoadedCustomSongsGO = new List<GameObject>();
 
+    [Header("OfficialSongs")]
+    public OfficialSongManager officialSongManager;
+
     public void LoadCurrentlySavedCustomSongs()
     {
         foreach(GameObject gameObject in LoadedCustomSongsGO)
@@ -101,7 +104,7 @@ public class MainMenuManager : MonoBehaviour
         while(AS.volume > 0)
         {
             yield return null;
-            AS.volume = Mathf.Lerp(AS.volume, 0, 3 * Time.deltaTime);
+            AS.volume = Mathf.Lerp(AS.volume, 0, 2 * Time.deltaTime);
         }
         AS.volume = 0;
         AS.Pause();
@@ -213,6 +216,7 @@ public class MainMenuManager : MonoBehaviour
     public IEnumerator GoToSongSelectionSequence()
     {
         BlackscreenController.Instance.FadeOut();
+      
         yield return new WaitForSeconds(BlackscreenController.Instance.fadeSpeed);
         LoadingScreen.SetActive(true);
         MainMenuUI.SetActive(false);
@@ -231,6 +235,7 @@ public class MainMenuManager : MonoBehaviour
     public IEnumerator PlaydemoSequence()
     {
         BlackscreenController.Instance.FadeOut();
+        StartCoroutine(FadeOutAudioSource(MainMenuAudioSource));
         yield return new WaitForSeconds(BlackscreenController.Instance.fadeSpeed);
         LoadingScreen.SetActive(true);
         foreach (GameObject GO in GameobjectsToDisableForDemo)
@@ -244,7 +249,9 @@ public class MainMenuManager : MonoBehaviour
             if (!GO) continue; 
             GO.SetActive(true);
         }
-        yield return new WaitForSeconds(0.5f);
+
+        officialSongManager.LoadSong();
+        yield return new WaitForSeconds(0.75f);
         LoadingScreen.SetActive(false);
         yield return new WaitForSeconds(1);
         BlackscreenController.Instance.FadeIn();
