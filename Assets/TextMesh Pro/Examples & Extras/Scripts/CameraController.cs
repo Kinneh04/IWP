@@ -122,7 +122,6 @@ namespace TMPro.Examples
         }
 
 
-
         void GetPlayerInput()
         {
             moveVector = Vector3.zero;

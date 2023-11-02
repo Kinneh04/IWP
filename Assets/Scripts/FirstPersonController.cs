@@ -107,6 +107,7 @@ using System.Collections;
 	public AudioClip Heartbeat;
 	public Slider HealthSlider;
 	public TMP_Text HealthText;
+	public float VisualHealth = 100;
 
     private static FirstPersonController _instance;
     public static FirstPersonController Instance
@@ -132,10 +133,9 @@ using System.Collections;
     public void TakeDamage(int damage)
 	{
 		Health -= damage;
-        float volume = (1.0f - (Health / 100.0f))/1.5f;
+        float volume = (1.0f - (Health / 100.0f))/2f;
 		HeartbeatAudioSource.volume = volume;
-		HealthText.text = Health.ToString();
-		HealthSlider.value = Health;
+	
 		if (Health <= 80) isLow = true;
 		else isLow = false;
 
@@ -221,8 +221,13 @@ using System.Collections;
 				DashImage.color = OriginalColor;
 			}
 
-
-		}
+			if(Health != VisualHealth)
+			{
+				VisualHealth = Mathf.Lerp(VisualHealth, Health, 20 * Time.deltaTime);
+				HealthText.text = ((int)VisualHealth).ToString();
+				HealthSlider.value = VisualHealth;
+			}
+    }
 		private void GroundedCheck()
 		{
 			// set sphere position, with offset

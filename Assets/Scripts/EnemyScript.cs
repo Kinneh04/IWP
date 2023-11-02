@@ -32,6 +32,7 @@ public class EnemyScript : MonoBehaviour
     public GameObject Rangedball;
     public float AddToCooldown;
     public float cooldown;
+    public PlayerRatingController ratingController;
 
     //public void OnTriggerEnter(Collider other)
     //{
@@ -123,6 +124,8 @@ public class EnemyScript : MonoBehaviour
 
     public void Die()
     {
+        ratingController.OnKillEnemy();
+
         Instantiate(BloodspurtFX,transform.position,Quaternion.identity);
         Instantiate(DeathParticles, transform.position,Quaternion.identity);
         Destroy(gameObject);

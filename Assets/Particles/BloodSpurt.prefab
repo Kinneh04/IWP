@@ -5926,7 +5926,7 @@ ParticleSystem:
       countCurve:
         serializedVersion: 2
         minMaxState: 0
-        scalar: 15
+        scalar: 5
         minScalar: 30
         maxCurve:
           serializedVersion: 2
@@ -5984,7 +5984,7 @@ ParticleSystem:
       countCurve:
         serializedVersion: 2
         minMaxState: 0
-        scalar: 20
+        scalar: 15
         minScalar: 30
         maxCurve:
           serializedVersion: 2
@@ -9155,7 +9155,7 @@ ParticleSystem:
           inWeight: 0.33333334
           outWeight: 0.33333334
         - serializedVersion: 3
-          time: 0.5113375
+          time: 0.13566077
           value: 0
           inSlope: 0
           outSlope: 0
@@ -9905,6 +9905,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SelfDestructAfterSeconds: 15
+  ParticleEffects: {fileID: 0}
 --- !u!1 &8237142795718918680
 GameObject:
   m_ObjectHideFlags: 0

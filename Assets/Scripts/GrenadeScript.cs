@@ -10,9 +10,11 @@ public class GrenadeScript : MonoBehaviour
     public int Damage;
     Intervals I = new Intervals();
     public GameObject ExplosionEffects;
+    public PlayerRatingController playerRatingController;
     public void Start()
     {
-        musicController = GameObject.FindAnyObjectByType<MusicController>();
+        musicController = GameObject.FindObjectOfType<MusicController>();
+        playerRatingController = GameObject.FindObjectOfType<PlayerRatingController>();
         I = new Intervals();
         I._steps = 1;
         I._trigger = new UnityEngine.Events.UnityEvent();
@@ -45,6 +47,8 @@ public class GrenadeScript : MonoBehaviour
             if(Vector3.Distance(E.transform.position, transform.position) < ExplosionRadius)
             {
                 E.GetComponent<EnemyScript>().TakeDamage(Damage);
+                playerRatingController.AddHitShot();
+                playerRatingController.AddRating(10, "Grenade Kill", Color.yellow);
             }
         }
         Destroy(gameObject, 0.05f);

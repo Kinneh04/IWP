@@ -16,6 +16,13 @@ public class PlayerRatingController : MonoBehaviour
     public List<RatingClass> ratingClasses = new List<RatingClass>();
     public GameObject RatingPrefab;
     public int currentRatingIndex = 0;
+    public int killCombo = 0;
+
+    [Header("Multiplier")]
+    public float Multiplier = 1.0f;
+    public float AddToMultipliercooldown;
+    public float currentMultiplierCooldown;
+    public TMP_Text multiplierText;
 
     [Header("KillFeed")]
     public Transform KillfeedParent;
@@ -48,21 +55,49 @@ public class PlayerRatingController : MonoBehaviour
     {
         TargetAcc = (float)ShotsHit / (float)ShotsFired * 100;
     }
+    
 
     public void AddMissedShot()
     {
         ShotsFired++;
         TargetAndRecalculateAcc();
+        Multiplier = 1.0f;
+        currentMultiplierCooldown = 0;
+        killCombo = 0;
     }
-
+    public void OnKillEnemy()
+    {
+        killCombo++;
+        if(killCombo <= 1)
+        {
+            AddRating(10, "Single Kill");
+        }
+        else if(killCombo == 2)
+        {
+            AddRating(15, "Double Kill");
+        }
+        else if (killCombo == 3)
+        {
+            AddRating(20, "Triple Kill", Color.yellow);
+        }
+        else if (killCombo == 4)
+        {
+            AddRating(30, "Quad Kill", Color.yellow);
+        }
+        else if (killCombo >= 5)
+        {
+            AddRating(40, "Multi Kill", Color.cyan);
+        }
+    }
     public void AddHitShot()
     {
         ShotsFired++; ShotsHit++;
         TargetAndRecalculateAcc();
+
+        Multiplier += 0.05f * killCombo;
+        if (Multiplier > 5) Multiplier = 5;
+        currentMultiplierCooldown = AddToMultipliercooldown;
     }
-
-
-
 
     public void AddToFrenzy(float rating)
     {
@@ -109,24 +144,30 @@ public class PlayerRatingController : MonoBehaviour
         IncreaseRatingBy1();
     }
 
-    public void AddRating(float rating, string ShowString = null)
+    public void AddRating(float rating, string ShowString = null, Color? c = null)
     {
-        Rating += rating;
+        Rating += rating * Multiplier;
         if(rating > 0) RatingSlider.value = Rating;
-        Targetscore += (int)rating;
+        Targetscore += (int)(rating * Multiplier);
 
         if(ShowString != "" && ShowString != null)
         {
             GameObject GO = Instantiate(KillFeedPrefab);
             GO.transform.SetParent(KillfeedParent, true);
             TMP_Text text = GO.GetComponent<TMP_Text>();
-            if(rating < 0)
+            if (rating < 0)
             {
-                text.text = ShowString + rating.ToString();
+                text.text = "- " + ShowString;
                 text.color = Color.red;
             }
             else
-            text.text = ShowString + " +" + rating.ToString();
+            {
+                text.text = "+ " + ShowString;
+                if(c != null)
+                {
+                    text.color = (Color)c;
+                }
+            }
         }
         PumpScale(1.15f);
         AddToFrenzy(rating);
@@ -164,8 +205,8 @@ public class PlayerRatingController : MonoBehaviour
     }
     public void DecreaseRatingBy1()
     {
-       
-        if (currentRatingIndex - 1 < 0) RatingPrefab.SetActive(false);
+
+        if (currentRatingIndex - 1 < 0) return;
         else
         {
             PumpScale(1.15f);
@@ -218,10 +259,20 @@ public class PlayerRatingController : MonoBehaviour
         {
             FrenzySlider.fillRect.GetComponent<Image>().color = Color.red;
         }
+
+        if(currentMultiplierCooldown > 0)
+        {
+            currentMultiplierCooldown -= Time.deltaTime;
+        }
+        else
+        {
+            Multiplier -= Time.deltaTime * 0.1f;
+            killCombo = 0;
+            if (Multiplier < 1) Multiplier = 1.0f;
+        
+        }
+        multiplierText.text = "x" + Multiplier.ToString("F2") + " Multiplier";
     }
-
-
-
 }
 
 [Serializable]

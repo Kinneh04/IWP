@@ -1353,7 +1353,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 37.76, y: 21, z: 38.6}
+  m_Size: {x: 63.43, y: 35, z: 68.9}
   m_Center: {x: 0, y: 7.9, z: 0}
 --- !u!114 &8934527016483769250
 MonoBehaviour:
@@ -1381,6 +1381,7 @@ MonoBehaviour:
   Rangedball: {fileID: 0}
   AddToCooldown: 0
   cooldown: 0
+  ratingController: {fileID: 0}
   chargeSpeed: 7
   flankSpeed: 3
 --- !u!95 &8934527016483769251

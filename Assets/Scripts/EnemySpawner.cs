@@ -14,7 +14,7 @@ public class EnemySpawner : MonoBehaviour
     public int difficulty = 1; // Adjust difficulty level
     public bool AllowedToSpawn;
     private static EnemySpawner _instance;
-
+    public PlayerRatingController PRC;
     private void Awake()
     {
         // Ensure there's only one instance of this object
@@ -59,7 +59,8 @@ public class EnemySpawner : MonoBehaviour
             float radians = angle * Mathf.Deg2Rad;
 
             Vector3 spawnPosition = SpawnPosition + new Vector3(Mathf.Cos(radians) * radius, 0, Mathf.Sin(radians) * radius);
-            Instantiate(Enemy, spawnPosition, Quaternion.identity);
+            GameObject GO =Instantiate(Enemy, spawnPosition, Quaternion.identity);
+            GO.GetComponent<EnemyScript>().ratingController = PRC;
             yield return new WaitForSeconds(0.2f);
         }
     }
@@ -94,7 +95,11 @@ public class EnemySpawner : MonoBehaviour
                 int numEnemiesInGroup = Random.Range(3, difficulty); // Adjust the range as needed
                 StartCoroutine(SpawnEnemyGroup(E.EnemyGO, numEnemiesInGroup, spawnPosition));
             }
-            else Instantiate(E.EnemyGO, spawnPosition, Quaternion.identity);
+            else
+            {
+                GameObject GO = Instantiate(E.EnemyGO, spawnPosition, Quaternion.identity);
+                GO.GetComponent<EnemyScript>().ratingController = PRC;
+            }
 
             float randomInterval = Random.Range(E.minSpawnInterval, E.maxSpawnInterval);
             yield return new WaitForSeconds(randomInterval);

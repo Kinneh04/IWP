@@ -222,12 +222,14 @@ public class ShootingScript : MonoBehaviour
                 if(Input.GetMouseButtonDown(0) && !musicController.canFire && CurrentAmmo > 0)
                 {
                     LateEarlyRatingText.text = "Missed!";
-                    LateEarlyRatingText.color = Color.red;
+                    LateEarlyRatingText.color = Color.yellow;
                     PlayerAS.PlayOneShot(ClickAudioClip);
+                    playerRatingController.AddMissedShot();
                 }
                 else if(Input.GetMouseButtonDown(0) && CurrentAmmo <= 0)
                 {
                     LateEarlyRatingText.text = "No Ammo!";
+                    LateEarlyRatingText.color = Color.yellow;
                     PlayerAS.PlayOneShot(ClickAudioClip);
                 }
             }
@@ -262,8 +264,7 @@ public class ShootingScript : MonoBehaviour
             if (hit.collider.CompareTag("Enemy"))
             {
                 hit.collider.GetComponent<EnemyScript>().TakeDamage(SetDamage);
-                Debug.Log("HitEnemy!");
-                playerRatingController.AddRating(10, "Enemy Hit!");
+                //playerRatingController.AddRating(10, "Enemy Hit!");
                 if(AddToAcc)
                 playerRatingController.AddHitShot();
             }
@@ -278,6 +279,11 @@ public class ShootingScript : MonoBehaviour
                 if (AddToAcc)
                     playerRatingController.AddMissedShot();
             }
+        }
+        else
+        {
+            if (AddToAcc)
+                playerRatingController.AddMissedShot();
         }
         SpawnTracer(hit.point);
         
