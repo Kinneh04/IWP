@@ -33,8 +33,10 @@ public class OfficialSongManager : MonoBehaviour
 
     public void PreviewSong(OfficialSongScript SS)
     {
+     
         if (CurrentlySelectedSong != SS)
         {
+            StopAllCoroutines();
             CurrentlySelectedSong = SS;
             StartCoroutine(TransitionToNewSong());
             PlayButton.interactable = true;
