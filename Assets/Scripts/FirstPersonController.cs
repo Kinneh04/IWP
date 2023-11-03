@@ -76,7 +76,7 @@ using System.Collections;
 		public float dashCooldown = 0.0f;
 		public float addToDashCooldown = 5.0f;
 		private bool isDashing = false;
-	public float currentRecoil;
+		public float currentRecoil;
 
 	[Header("UI elements for abilities")]
 	public TMP_Text AbilityCountdownTMPText;
@@ -105,9 +105,12 @@ using System.Collections;
 	public int Health = 100;
 	public AudioSource HeartbeatAudioSource;
 	public AudioClip Heartbeat;
+	public AudioClip DeathAudioClip;
 	public Slider HealthSlider;
 	public TMP_Text HealthText;
 	public float VisualHealth = 100;
+	public GameObject DeathScreen;
+	public GameObject MainGameUI;
 
     private static FirstPersonController _instance;
     public static FirstPersonController Instance
@@ -132,12 +135,25 @@ using System.Collections;
     }
     public void TakeDamage(int damage)
 	{
+		if (isDead) return;
 		Health -= damage;
         float volume = (1.0f - (Health / 100.0f))/2f;
 		HeartbeatAudioSource.volume = volume;
 	
 		if (Health <= 80) isLow = true;
 		else isLow = false;
+
+		if (Health <= 0)
+		{
+			MainGameUI.SetActive(false);
+			DeathScreen.SetActive(true);
+			Health = 0;
+			MusicController.Instance.MusicAudioSource.Pause();
+			MusicController.Instance.MusicAudioSource.time = 0;
+			HeartbeatAudioSource.volume = 1;
+			HeartbeatAudioSource.PlayOneShot(DeathAudioClip);
+			HeartbeatAudioSource.volume = 0;
+		}
 
 
     }	
@@ -203,11 +219,14 @@ using System.Collections;
 
 		private void Update()
 		{
-			JumpAndGravity();
-			GroundedCheck();
-			Dashing();
-			Move();
-			CameraRotation();
+			if (!isDead)
+			{
+				JumpAndGravity();
+				GroundedCheck();
+				Dashing();
+				Move();
+				CameraRotation();
+			}
 			if (dashCooldown > 0)
 			{
 			
