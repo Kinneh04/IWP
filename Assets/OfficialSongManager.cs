@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Unity.VisualScripting;
+
 public class OfficialSongManager : MonoBehaviour
 {
     [Header("Fill in")]
@@ -28,7 +30,7 @@ public class OfficialSongManager : MonoBehaviour
         {
             musicController.LightColorPalette.Add(c);
         }
-        
+        musicController.LoadNewEventsFromOfficialSong(CurrentlySelectedSong);
     }
 
     public void PreviewSong(OfficialSongScript SS)

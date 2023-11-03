@@ -70,7 +70,7 @@ public class AudioVisualizer : MonoBehaviour
             float targetScaleY = spectrumData[i] * (1 - (i / (float)bars.Count - 1)) * barMultiplier;
             Vector3 targetScale = new Vector3(2, targetScaleY, 1);
 
-            bars[i].transform.localScale = Vector3.Lerp(bars[i].transform.localScale, targetScale, Time.deltaTime * 5.0f);
+            bars[i].transform.localScale = Vector3.Lerp(bars[i].transform.localScale, targetScale, Time.deltaTime * 3.0f);
         }
         average /= spectrumData.Length;
        // Debug.Log(average);
@@ -94,14 +94,14 @@ public class AudioVisualizer : MonoBehaviour
         float targetOpacity = average * glowMultiplier;
         float currentOpacity = mainGlow.color.a;
 
-        float newOpacity = Mathf.Lerp(currentOpacity, targetOpacity, Time.deltaTime * 4.0f);
+        float newOpacity = Mathf.Lerp(currentOpacity, targetOpacity, Time.deltaTime * 3.0f);
         color.a = newOpacity;
         mainGlow.color = color;
 
         if (spawnCrosshairs)
         {
             StartTime += Time.deltaTime;
-            if (StartTime > BPM / BPM_Divider && average > 0.011f)
+            if (StartTime > BPM / BPM_Divider && average > 0.009f)
             {
                 StartTime = 0;
                 BCount++;

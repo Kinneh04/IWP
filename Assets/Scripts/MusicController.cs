@@ -29,6 +29,9 @@ public class MusicController : MonoBehaviour
     public Light[] PulsingLights;
     public Light[] TransitioningLights;
     public List<Color> LightColorPalette = new List<Color>();
+    public float OriginalLightIntensity;
+    public float PulseSpeed;
+    public float PulseLightIntensity;
 
    // public bool canFireButEarly;
     [Header("GameObject components")]
@@ -58,6 +61,19 @@ public class MusicController : MonoBehaviour
     public bool hasFired = false;
     public Image CrosshairOuterImage;
     int beat;
+
+    [Header("EventsAndStuff")]
+    public List<SongEvent> LoadedEvents = new List<SongEvent>();
+
+
+    public void LoadNewEventsFromOfficialSong(OfficialSongScript OSS)
+    {
+        LoadedEvents.Clear();
+        foreach(SongEvent E in OSS.Events)
+        {
+            LoadedEvents.Add(E);
+        }
+    }
 
     //public enum Timing
     //{
@@ -211,6 +227,27 @@ public class MusicController : MonoBehaviour
         hasFired = false;
         canReload = false;
     }
+
+    public void PulseDungeonLights()
+    {
+        foreach (Light L in PulsingLights)
+        {
+            L.intensity = PulseLightIntensity;
+        }
+    }
+
+    public void UpdateLights()
+    {
+        foreach(Light L in PulsingLights)
+        {
+            if(L.intensity > OriginalLightIntensity)
+            {
+                L.intensity = Mathf.Lerp(L.intensity, OriginalLightIntensity, PulseSpeed * Time.deltaTime);
+            }
+        }
+    }
+
+
     private void Update()
     {
         if (!StartedMatch) return;
@@ -229,7 +266,7 @@ public class MusicController : MonoBehaviour
                 canReload = true;
             }
         }
-
+        UpdateLights();
         //OLD METHOD! DEPRECIATED!
         if (MusicAudioSource.isPlaying)
         {
@@ -237,6 +274,7 @@ public class MusicController : MonoBehaviour
             float totalTime = MusicAudioSource.clip.length;
 
             MusicProgressionSlider.value = currentTime / totalTime;
+            UpdateEvents();
         }
         //StartTime += Time.deltaTime;
 
@@ -306,16 +344,31 @@ public class MusicController : MonoBehaviour
         //    }
         //}
 
-        if(CrosshairOuterImage.color.a > 0.4f)
+        if(CrosshairOuterImage.color.a > 0.2f)
         {
             Color newA = CrosshairOuterImage.color;
-            newA.a = Mathf.Lerp(newA.a, 0.4f, Time.deltaTime * 3);
+            newA.a = Mathf.Lerp(newA.a, 0.2f, Time.deltaTime * 3);
             CrosshairOuterImage.color = newA;
         }
     }
     public void Pulse()
     {
         Crosshair.localScale = OriginalScaleTransform * 1.5f;
+    }
+
+    public void UpdateEvents()
+    {
+        if(LoadedEvents.Count > 0)
+        {
+            foreach(SongEvent SE in LoadedEvents)
+            {
+                if(MusicAudioSource.time >= SE.castTimer && !SE.Played)
+                {
+                    SE.CastEvent();
+                    SE.Played = true;
+                }
+            }
+        }
     }
 
 }

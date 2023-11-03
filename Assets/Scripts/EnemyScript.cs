@@ -50,7 +50,7 @@ public class EnemyScript : MonoBehaviour
     void Start()
     {
         OGMatColor = EnemyMat.color;
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        player = GameObject.FindGameObjectWithTag("PlayerHitbox").transform;
         RB = GetComponent<Rigidbody>();
     }
 
