@@ -48,6 +48,11 @@ public class PlayerRatingController : MonoBehaviour
     public float currentAcc, TargetAcc;
     public TMP_Text ScoreTMP_Text, AccuracyTMP_Text;
 
+    [Header("Crosshair")]
+    public GameObject HitmarkerGameObject;
+    public float cooldown;
+    public float addToCooldown;
+
     [Header("Components")]
     public ShootingScript shootingScript;
 
@@ -93,7 +98,8 @@ public class PlayerRatingController : MonoBehaviour
     {
         ShotsFired++; ShotsHit++;
         TargetAndRecalculateAcc();
-
+        HitmarkerGameObject.SetActive(true);
+        cooldown = addToCooldown;
         Multiplier += 0.05f * killCombo;
         if (Multiplier > 5) Multiplier = 5;
         currentMultiplierCooldown = AddToMultipliercooldown;
@@ -219,6 +225,15 @@ public class PlayerRatingController : MonoBehaviour
 
     private void Update()
     {
+
+        if(cooldown > 0)
+        {
+            cooldown -= Time.deltaTime;
+            if (cooldown <= 0)
+            {
+                HitmarkerGameObject.SetActive(false);
+            }
+        }
 
         if(currentAcc != TargetAcc)
         {
