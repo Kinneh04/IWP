@@ -108,7 +108,7 @@ public class MusicController : MonoBehaviour
     }
     private void Start()
     {
-        Pulses = GameObject.FindObjectsOfType<BPMPulse>();
+       
         OriginalScaleTransform = Crosshair.localScale;
        // StartMusic();
     }
@@ -175,7 +175,7 @@ public class MusicController : MonoBehaviour
         }
         else SpawnLargeCrosshair(CrosshairL, CrosshairR);
         foreach (BPMPulse BPMP in Pulses) BPMP.Pulse();
-
+        Pulses = GameObject.FindObjectsOfType<BPMPulse>();
         if (FirstPersonController.Instance.isLow)
         {
             FirstPersonController.Instance.HeartbeatAudioSource.PlayOneShot(FirstPersonController.Instance.Heartbeat);
