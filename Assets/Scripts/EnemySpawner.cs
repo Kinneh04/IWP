@@ -15,6 +15,10 @@ public class EnemySpawner : MonoBehaviour
     public bool AllowedToSpawn;
     private static EnemySpawner _instance;
     public PlayerRatingController PRC;
+    public List<GameObject> SpawnedEnemies = new List<GameObject>();
+
+
+
     private void Awake()
     {
         // Ensure there's only one instance of this object
@@ -47,6 +51,18 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
+    public void RemoveAllEnemies()
+    {
+        foreach(GameObject GO in SpawnedEnemies)
+        {
+            if(GO)
+            {
+                Destroy(GO);
+            }
+        }
+        SpawnedEnemies.Clear();
+    }
+
 
     IEnumerator SpawnEnemyGroup(GameObject Enemy, int numEnemies, Vector3 SpawnPosition)
     {
@@ -61,6 +77,7 @@ public class EnemySpawner : MonoBehaviour
             Vector3 spawnPosition = SpawnPosition + new Vector3(Mathf.Cos(radians) * radius, 0, Mathf.Sin(radians) * radius);
             GameObject GO =Instantiate(Enemy, spawnPosition, Quaternion.identity);
             GO.GetComponent<EnemyScript>().ratingController = PRC;
+            SpawnedEnemies.Add(GO);
             yield return new WaitForSeconds(0.2f);
         }
     }
@@ -99,6 +116,7 @@ public class EnemySpawner : MonoBehaviour
             {
                 GameObject GO = Instantiate(E.EnemyGO, spawnPosition, Quaternion.identity);
                 GO.GetComponent<EnemyScript>().ratingController = PRC;
+                SpawnedEnemies.Add(GO);
             }
 
             float randomInterval = Random.Range(E.minSpawnInterval, E.maxSpawnInterval);

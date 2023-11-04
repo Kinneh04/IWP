@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class EnemyScript : MonoBehaviour
@@ -17,6 +18,7 @@ public class EnemyScript : MonoBehaviour
         Small, Medium, Boss
     }
 
+    public Vector3 TargetPosition;
 
     public enum EnemyBehaviour
     {
@@ -33,6 +35,7 @@ public class EnemyScript : MonoBehaviour
     public float AddToCooldown;
     public float cooldown;
     public PlayerRatingController ratingController;
+    public float raycastCooldown = 0.2f;
 
     //public void OnTriggerEnter(Collider other)
     //{
@@ -63,7 +66,30 @@ public class EnemyScript : MonoBehaviour
     {
         if (enemyBehaviour == EnemyBehaviour.Melee)
         {
-            transform.LookAt(player.transform);
+            //transform.LookAt(player.transform);
+            //RB.AddForce(transform.forward * chargeSpeed);
+            if (raycastCooldown > 0)
+            {
+                raycastCooldown -= Time.deltaTime;
+            }
+            else
+            {
+                raycastCooldown = 0.2f;
+                RaycastHit hit;
+                if (Physics.Raycast(transform.position, player.position - transform.position, out hit))
+                {
+                    if (hit.collider.gameObject == player.gameObject)
+                    {
+                        TargetPosition = player.position;
+                        transform.LookAt(TargetPosition);
+                     
+                    }
+                }
+                else
+                {
+                    transform.LookAt(TargetPosition);
+                }
+            }
             RB.AddForce(transform.forward * chargeSpeed);
         }
         else if(enemyBehaviour == EnemyBehaviour.Ranged)

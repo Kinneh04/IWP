@@ -29,6 +29,7 @@ public class MusicController : MonoBehaviour
     public Light[] PulsingLights;
     public Light[] TransitioningLights;
     public List<Color> LightColorPalette = new List<Color>();
+    public Light CelingLight;
     public float OriginalLightIntensity;
     public float PulseSpeed;
     public float PulseLightIntensity;
@@ -65,6 +66,9 @@ public class MusicController : MonoBehaviour
     [Header("EventsAndStuff")]
     public List<SongEvent> LoadedEvents = new List<SongEvent>();
 
+    [Header("Finished")]
+    public bool isFinished = false;
+
 
     public void LoadNewEventsFromOfficialSong(OfficialSongScript OSS)
     {
@@ -73,6 +77,13 @@ public class MusicController : MonoBehaviour
         {
             LoadedEvents.Add(E);
         }
+        foreach(Light L in PulsingLights)
+        {
+            L.color = OSS.colors[0];
+        }
+        CelingLight.color = OSS.colors[1];
+
+
     }
 
     //public enum Timing
@@ -251,6 +262,12 @@ public class MusicController : MonoBehaviour
     private void Update()
     {
         if (!StartedMatch) return;
+        if(MusicAudioSource.time > MusicAudioSource.clip.length && !isFinished)
+        {
+            isFinished = true;
+            EnemySpawner.Instance.AllowedToSpawn = false;
+            EnemySpawner.Instance.RemoveAllEnemies();
+        }
         foreach (Intervals interval in _intervals)
         {
             if(interval == null)
