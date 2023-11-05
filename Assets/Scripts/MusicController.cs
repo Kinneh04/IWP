@@ -68,6 +68,7 @@ public class MusicController : MonoBehaviour
 
     [Header("Finished")]
     public bool isFinished = false;
+    public ScoreManager scoreManager;
 
 
     public void LoadNewEventsFromOfficialSong(OfficialSongScript OSS)
@@ -267,6 +268,8 @@ public class MusicController : MonoBehaviour
             isFinished = true;
             EnemySpawner.Instance.AllowedToSpawn = false;
             EnemySpawner.Instance.RemoveAllEnemies();
+            scoreManager.FinalScoreGameObject.SetActive(true);
+            scoreManager.ChangeLevelCompleteVars(playerRating.Targetscore, playerRating.KillAmount, playerRating.HighestCombo, playerRating.MultikillAmount, playerRating.TargetAcc);
         }
         foreach (Intervals interval in _intervals)
         {

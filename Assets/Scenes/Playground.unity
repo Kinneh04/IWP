@@ -48798,13 +48798,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FinalScore: 0
-  FinalScoreText: {fileID: 0}
-  FinalScoreGameObject: {fileID: 0}
-  FinalGrade: {fileID: 0}
-  Kills: {fileID: 0}
-  HighestCombo: {fileID: 0}
-  Multikills: {fileID: 0}
-  Accuracy: {fileID: 0}
+  FinalScoreText: {fileID: 685418681}
+  FinalScoreGameObject: {fileID: 935365511}
+  FinalGradeText: {fileID: 1774026901}
+  KillsText: {fileID: 675972113}
+  HighestComboText: {fileID: 1522386703}
+  MultikillsText: {fileID: 2123584484}
+  AccuracyText: {fileID: 633267212}
+  NewHighScore: {fileID: 875855532}
 --- !u!1 &1670160466
 GameObject:
   m_ObjectHideFlags: 0

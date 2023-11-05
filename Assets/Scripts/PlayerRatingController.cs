@@ -17,7 +17,7 @@ public class PlayerRatingController : MonoBehaviour
     public GameObject RatingPrefab;
     public int currentRatingIndex = 0;
     public int killCombo = 0;
-
+    public int HighestCombo = 0;
     [Header("Multiplier")]
     public float Multiplier = 1.0f;
     public float AddToMultipliercooldown;
@@ -53,6 +53,10 @@ public class PlayerRatingController : MonoBehaviour
     public float cooldown;
     public float addToCooldown;
 
+    [Header("Scoring")]
+    public int KillAmount = 0;
+    public int MultikillAmount = 0;
+
     [Header("Components")]
     public ShootingScript shootingScript;
 
@@ -73,6 +77,8 @@ public class PlayerRatingController : MonoBehaviour
     public void OnKillEnemy()
     {
         killCombo++;
+        if (killCombo > HighestCombo) HighestCombo = killCombo;
+        KillAmount++;
         if(killCombo <= 1)
         {
             AddRating(10, "Single Kill");
@@ -92,6 +98,7 @@ public class PlayerRatingController : MonoBehaviour
         else if (killCombo >= 5)
         {
             AddRating(40, "Multi Kill", Color.cyan);
+            MultikillAmount++;
         }
     }
     public void AddHitShot()

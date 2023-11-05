@@ -219,7 +219,7 @@ using System.Collections;
 
 		private void Update()
 		{
-			if (!isDead)
+			if (!isDead && !MusicController.Instance.isFinished)
 			{
 				JumpAndGravity();
 				GroundedCheck();
