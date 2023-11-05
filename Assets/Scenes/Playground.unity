@@ -2812,6 +2812,7 @@ MonoBehaviour:
   RatingPrefab: {fileID: 893039538}
   currentRatingIndex: 0
   killCombo: 0
+  HighestCombo: 0
   Multiplier: 1
   AddToMultipliercooldown: 3
   currentMultiplierCooldown: 0
@@ -2838,6 +2839,8 @@ MonoBehaviour:
   HitmarkerGameObject: {fileID: 87932157}
   cooldown: 0
   addToCooldown: 0.15
+  KillAmount: 0
+  MultikillAmount: 0
   shootingScript: {fileID: 135756641613574980}
 --- !u!1 &108026658
 GameObject:
@@ -6885,9 +6888,9 @@ RectTransform:
   m_Father: {fileID: 1414280398}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 267.32, y: -52.64115}
   m_SizeDelta: {x: 534.64, y: 105.2823}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &237218189
@@ -27308,9 +27311,9 @@ RectTransform:
   m_Father: {fileID: 1414280398}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 267.32, y: -440.48807}
   m_SizeDelta: {x: 534.64, y: 105.2823}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &879433835
@@ -29342,7 +29345,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &935365512
 RectTransform:
   m_ObjectHideFlags: 0
@@ -32436,9 +32439,9 @@ RectTransform:
   m_Father: {fileID: 1414280398}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 267.32, y: -181.92346}
   m_SizeDelta: {x: 534.64, y: 105.2823}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1035792685
@@ -39441,9 +39444,9 @@ RectTransform:
   m_Father: {fileID: 1414280398}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 267.32, y: -311.20575}
   m_SizeDelta: {x: 534.64, y: 105.2823}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1298862356
