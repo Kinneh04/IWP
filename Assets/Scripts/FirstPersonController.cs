@@ -93,7 +93,7 @@ using System.Collections;
 		private PlayerInput _playerInput;
 #endif
 		private CharacterController _controller;
-		private StarterAssetsInputs _input;
+		public StarterAssetsInputs _input;
 		private GameObject _mainCamera;
 
 		private const float _threshold = 0.01f;
@@ -111,8 +111,22 @@ using System.Collections;
 	public float VisualHealth = 100;
 	public GameObject DeathScreen;
 	public GameObject MainGameUI;
-
+	public bool isTransitioning;
     private static FirstPersonController _instance;
+
+	[Header("EnemyBehindIndicator")]
+	public GameObject BehindIndicator;
+
+	public void Cleanup()
+    {
+		Health = 100;
+		isLow = false;
+		isDashing = false;
+		isDead = false;
+		dashCooldown = 0;
+		OnAbilityCooldown = false;
+		
+    }
     public static FirstPersonController Instance
     {
         get
@@ -133,9 +147,9 @@ using System.Collections;
             return _instance;
         }
     }
-    public void TakeDamage(int damage)
+	public void TakeDamage(int damage)
 	{
-		if (isDead) return;
+		if (isDead || isTransitioning) return;
 		Health -= damage;
         float volume = (1.0f - (Health / 100.0f))/2f;
 		HeartbeatAudioSource.volume = volume;
@@ -147,12 +161,12 @@ using System.Collections;
 		{
 			MainGameUI.SetActive(false);
 			DeathScreen.SetActive(true);
+			isDead = true;
 			Health = 0;
 			MusicController.Instance.MusicAudioSource.Pause();
 			MusicController.Instance.MusicAudioSource.time = 0;
 			HeartbeatAudioSource.volume = 1;
 			HeartbeatAudioSource.PlayOneShot(DeathAudioClip);
-			HeartbeatAudioSource.volume = 0;
 		}
 
 
@@ -217,35 +231,47 @@ using System.Collections;
 			_fallTimeoutDelta = FallTimeout;
 		}
 
-		private void Update()
-		{
-			if (!isDead && !MusicController.Instance.isFinished)
-			{
-				JumpAndGravity();
-				GroundedCheck();
-				Dashing();
-				Move();
-				CameraRotation();
-			}
-			if (dashCooldown > 0)
-			{
-			
-				dashCooldown -= Time.deltaTime;
-				DashCooldownSlider.value = dashCooldown;
-                DashCountdownTMPText.text = ((int)dashCooldown).ToString();
-			}
-			else
-			{
-				DashCountdownTMPText.gameObject.SetActive(false);
-				DashImage.color = OriginalColor;
-			}
+	private void Update()
+	{
+		if (isTransitioning || MusicController.Instance.isFinished || isDead) return;
 
-			if(Health != VisualHealth)
-			{
-				VisualHealth = Mathf.Lerp(VisualHealth, Health, 20 * Time.deltaTime);
-				HealthText.text = ((int)VisualHealth).ToString();
-				HealthSlider.value = VisualHealth;
-			}
+			JumpAndGravity();
+			GroundedCheck();
+			Dashing();
+			Move();
+			CameraRotation();
+		
+
+		if(isDead || MusicController.Instance.isFinished)
+		{
+			if(Input.GetKeyDown(KeyCode.Escape))
+            {
+				MainMenuManager.Instance.ReturnToMainMenuFromGame();
+            }
+			if(Input.GetKeyDown(KeyCode.R))
+            {
+				MainMenuManager.Instance.RetryLevel();
+            }
+		}
+		if (dashCooldown > 0)
+		{
+			
+			dashCooldown -= Time.deltaTime;
+			DashCooldownSlider.value = dashCooldown;
+            DashCountdownTMPText.text = ((int)dashCooldown).ToString();
+		}
+		else
+		{
+			DashCountdownTMPText.gameObject.SetActive(false);
+			DashImage.color = OriginalColor;
+		}
+
+		if(Health != VisualHealth)
+		{
+			VisualHealth = Mathf.Lerp(VisualHealth, Health, 20 * Time.deltaTime);
+			HealthText.text = ((int)VisualHealth).ToString();
+			HealthSlider.value = VisualHealth;
+		}
     }
 		private void GroundedCheck()
 		{

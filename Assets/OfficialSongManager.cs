@@ -31,6 +31,7 @@ public class OfficialSongManager : MonoBehaviour
             musicController.LightColorPalette.Add(c);
         }
         musicController.LoadNewEventsFromOfficialSong(CurrentlySelectedSong);
+        musicController.MusicAudioSource.time = CurrentlySelectedSong.OfficialStartTime;
     }
 
     public void PreviewSong(OfficialSongScript SS)

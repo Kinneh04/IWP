@@ -70,6 +70,18 @@ public class MusicController : MonoBehaviour
     public bool isFinished = false;
     public ScoreManager scoreManager;
 
+    public void Cleanup()
+    {
+        isFinished = false;
+        currentShootLeeway = 0;
+        canFire = false;
+        StartedMatch = false;
+        beatAlreadyHit = false;
+        MusicAudioSource.time = 0;
+        MusicAudioSource.Stop();
+        MusicProgressionSlider.value = 0;
+        
+    }
 
     public void LoadNewEventsFromOfficialSong(OfficialSongScript OSS)
     {
@@ -194,6 +206,7 @@ public class MusicController : MonoBehaviour
         }
     }
 
+
     public IEnumerator StartMatch()
     {
         yield return new WaitForSeconds(1);
@@ -212,7 +225,7 @@ public class MusicController : MonoBehaviour
                 start = 0f;
                 if(cooldown <= 0)
                 {
-                    EnemySpawner.Instance.AllowedToSpawn = true;
+                    EnemySpawner.Instance.StartEnemySpawning();
                     StartMusic();
                     StartedMatch = true;
                     countdownText.gameObject.SetActive(false);
@@ -266,14 +279,13 @@ public class MusicController : MonoBehaviour
         if(MusicAudioSource.time > MusicAudioSource.clip.length && !isFinished)
         {
             isFinished = true;
-            EnemySpawner.Instance.AllowedToSpawn = false;
-            EnemySpawner.Instance.RemoveAllEnemies();
+            EnemySpawner.Instance.Cleanup();
             scoreManager.FinalScoreGameObject.SetActive(true);
             scoreManager.ChangeLevelCompleteVars(playerRating.Targetscore, playerRating.KillAmount, playerRating.HighestCombo, playerRating.MultikillAmount, playerRating.TargetAcc);
         }
         foreach (Intervals interval in _intervals)
         {
-            if(interval == null)
+            if(interval == null || interval.ToBeDeleted)
             {
                 _intervals.Remove(interval);
             }
@@ -395,6 +407,7 @@ public class MusicController : MonoBehaviour
 [System.Serializable]
 public class Intervals
 {
+    public bool ToBeDeleted = false;
     public float _steps;
     public UnityEvent _trigger;
     public int _lastInterval;

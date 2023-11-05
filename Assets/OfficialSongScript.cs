@@ -13,4 +13,7 @@ public class OfficialSongScript : MonoBehaviour
     
     [Header("optional")]
     public float PreviewStartTime;
+
+    [Header("For Debugging only!")]
+    public float OfficialStartTime;
 }

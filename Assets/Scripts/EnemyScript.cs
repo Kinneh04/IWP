@@ -36,6 +36,7 @@ public class EnemyScript : MonoBehaviour
     public float cooldown;
     public PlayerRatingController ratingController;
     public float raycastCooldown = 0.2f;
+    public FirstPersonController FPC;
 
     //public void OnTriggerEnter(Collider other)
     //{
@@ -55,6 +56,7 @@ public class EnemyScript : MonoBehaviour
         OGMatColor = EnemyMat.color;
         player = GameObject.FindGameObjectWithTag("PlayerHitbox").transform;
         RB = GetComponent<Rigidbody>();
+        FPC = FirstPersonController.Instance;
     }
 
     void Update()
@@ -62,35 +64,36 @@ public class EnemyScript : MonoBehaviour
         ChargeBehavior();
     }
 
+
     void ChargeBehavior()
     {
         if (enemyBehaviour == EnemyBehaviour.Melee)
         {
-            //transform.LookAt(player.transform);
-            //RB.AddForce(transform.forward * chargeSpeed);
-            if (raycastCooldown > 0)
-            {
-                raycastCooldown -= Time.deltaTime;
-            }
-            else
-            {
-                raycastCooldown = 0.2f;
-                RaycastHit hit;
-                if (Physics.Raycast(transform.position, player.position - transform.position, out hit))
-                {
-                    if (hit.collider.gameObject == player.gameObject)
-                    {
-                        TargetPosition = player.position;
-                        transform.LookAt(TargetPosition);
-                     
-                    }
-                }
-                else
-                {
-                    transform.LookAt(TargetPosition);
-                }
-            }
+            transform.LookAt(player.transform);
             RB.AddForce(transform.forward * chargeSpeed);
+            //if (raycastCooldown > 0)
+            //{
+            //    raycastCooldown -= Time.deltaTime;
+            //}
+            //else
+            //{
+            //    raycastCooldown = 0.2f;
+            //    RaycastHit hit;
+            //    if (Physics.Raycast(transform.position, player.position - transform.position, out hit))
+            //    {
+            //        if (hit.collider.gameObject == player.gameObject)
+            //        {
+            //            TargetPosition = player.position;
+            //            transform.LookAt(TargetPosition);
+
+            //        }
+            //    }
+            //    else
+            //    {
+            //        transform.LookAt(TargetPosition);
+            //    }
+            //}
+            //RB.AddForce(transform.forward * chargeSpeed);
         }
         else if(enemyBehaviour == EnemyBehaviour.Ranged)
         {

@@ -9,6 +9,7 @@ public class MainMenuManager : MonoBehaviour
     public AnimationClip ShowSubbuttonsAnimationClip;
     public List<GameObject> GameobjectsToEnableForDemo = new List<GameObject>();
     public List<GameObject> GameobjectsToDisableForDemo = new List<GameObject>();
+    public List<GameObject> DisabledGOsBeforeEntering = new List<GameObject>();
     public GameObject LoadingScreen;
 
     [Header("MainMenu")]
@@ -232,6 +233,92 @@ public class MainMenuManager : MonoBehaviour
         StartCoroutine(PlaydemoSequence());
     }
 
+    public void ReturnToMainMenuFromGame()
+    {
+        StartCoroutine(ReturnToMenuFromGameCoroutine());
+    }
+
+    public void RetryLevel()
+    {
+        StartCoroutine(RetryLevelCoroutine());
+    }
+
+    public IEnumerator ReturnToMenuFromGameCoroutine()
+    {
+        BlackscreenController.Instance.FadeOut();
+        yield return new WaitForSeconds(BlackscreenController.Instance.fadeSpeed);
+        LoadingScreen.SetActive(true);
+
+        foreach (GameObject GO in DisabledGOsBeforeEntering)
+        {
+            if (!GO) continue;
+            GO.SetActive(true);
+        }
+        DisabledGOsBeforeEntering.Clear();
+        MusicController.Instance.Cleanup();
+        PlayerRatingController.Instance.Cleanup();
+        FirstPersonController.Instance.Cleanup();
+        FirstPersonController.Instance.DeathScreen.SetActive(false);
+        EnemySpawner.Instance.Cleanup();
+        yield return new WaitForSeconds(0.5f);
+        foreach (GameObject GO in GameobjectsToEnableForDemo)
+        {
+            if (!GO) continue;
+                GO.SetActive(false);
+
+        }
+        Cursor.lockState = CursorLockMode.None;
+        yield return new WaitForSeconds(1f);
+        LoadingScreen.SetActive(false);
+        BlackscreenController.Instance.FadeIn();
+        //  StartCoroutine(MusicController.Instance.StartMatch());
+    }
+
+    public IEnumerator RetryLevelCoroutine()
+    {
+        BlackscreenController.Instance.FadeOut();
+        yield return new WaitForSeconds(BlackscreenController.Instance.fadeSpeed);
+        LoadingScreen.SetActive(true);
+        MusicController.Instance.Cleanup();
+        EnemySpawner.Instance.Cleanup();
+        FirstPersonController.Instance.Cleanup();
+        foreach (GameObject GO in DisabledGOsBeforeEntering)
+        {
+            if (!GO) continue;
+            GO.SetActive(true);
+        }
+        DisabledGOsBeforeEntering.Clear();
+        foreach (GameObject GO in GameobjectsToEnableForDemo)
+        {
+            if (!GO) continue;
+            GO.SetActive(false);
+
+        }
+        foreach (GameObject GO in GameobjectsToDisableForDemo)
+        {
+            if (!GO) continue;
+            if (GO.activeSelf)
+            {
+                GO.SetActive(false);
+                DisabledGOsBeforeEntering.Add(GO);
+            }
+        }
+        yield return new WaitForSeconds(0.5f);
+        foreach (GameObject GO in GameobjectsToEnableForDemo)
+        {
+            if (!GO) continue;
+
+            GO.SetActive(true);
+        }
+        FirstPersonController.Instance.DeathScreen.SetActive(false);
+        PlayerRatingController.Instance.Cleanup();
+        yield return new WaitForSeconds(0.3f);
+        LoadingScreen.SetActive(false);
+        BlackscreenController.Instance.FadeIn();
+        yield return new WaitForSeconds(1);
+        StartCoroutine(MusicController.Instance.StartMatch());
+    }
+
     public IEnumerator PlaydemoSequence()
     {
         BlackscreenController.Instance.FadeOut();
@@ -241,12 +328,17 @@ public class MainMenuManager : MonoBehaviour
         foreach (GameObject GO in GameobjectsToDisableForDemo)
         {
             if (!GO) continue;
-            GO.SetActive(false);
+            if (GO.activeSelf)
+            {
+                GO.SetActive(false);
+                DisabledGOsBeforeEntering.Add(GO);
+            }
         }
         yield return new WaitForSeconds(0.5f);
         foreach (GameObject GO in GameobjectsToEnableForDemo)
         {
             if (!GO) continue; 
+
             GO.SetActive(true);
         }
 
@@ -254,6 +346,7 @@ public class MainMenuManager : MonoBehaviour
         yield return new WaitForSeconds(0.75f);
         LoadingScreen.SetActive(false);
         yield return new WaitForSeconds(1);
+        Cursor.lockState = CursorLockMode.Locked;
         BlackscreenController.Instance.FadeIn();
         StartCoroutine(MusicController.Instance.StartMatch());
     }

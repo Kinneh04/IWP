@@ -30,6 +30,7 @@ public class PlayerRatingController : MonoBehaviour
     private Vector3 Minscale, MaxScale;
     public float MaxScaleMultiplier;
     public GameObject Tracer;
+    public List<GameObject> InstantiatedKillFeedPrefabs = new List<GameObject>();
 
     [Header("Frenzy")]
     public Slider FrenzySlider;
@@ -59,6 +60,56 @@ public class PlayerRatingController : MonoBehaviour
 
     [Header("Components")]
     public ShootingScript shootingScript;
+    private static PlayerRatingController _instance;
+
+    public static PlayerRatingController Instance
+    {
+        get
+        {
+            // If the instance doesn't exist, find it in the scene
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<PlayerRatingController>();
+
+                // If it still doesn't exist, create a new instance
+                if (_instance == null)
+                {
+                    GameObject singletonObject = new GameObject("PlayerRatingController");
+                    _instance = singletonObject.AddComponent<PlayerRatingController>();
+                }
+            }
+
+            return _instance;
+        }
+    }
+    public void Cleanup()
+    {
+        ShotsFired = 0;
+        Multiplier = 1.0f;
+        killCombo = 0;
+        currentMultiplierCooldown = 0;
+
+        KillAmount = 0;
+        frenzyAvailable = false;
+        CurrentFrenzyAmount = 0;
+        Rating = 0;
+        currentRatingIndex = 0;
+
+        currentScore = 0;
+        Targetscore = 0;
+        TargetAcc = 100;
+        currentAcc = TargetAcc;
+        ScoreTMP_Text.text = currentScore.ToString("000000");
+        AccuracyTMP_Text.text = TargetAcc.ToString() + "%";
+        SpaceToActivateGO.SetActive(false);
+
+        foreach(GameObject GO in InstantiatedKillFeedPrefabs)
+        {
+            if (!GO) continue;
+            Destroy(GO);
+        }
+        InstantiatedKillFeedPrefabs.Clear();
+    }
 
     public void TargetAndRecalculateAcc()
     {
@@ -146,8 +197,17 @@ public class PlayerRatingController : MonoBehaviour
     }
 
 
-    private void Start()
+    private void Awake()
     {
+
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+
+        _instance = this;
+
         RatingImage.sprite = ratingClasses[currentRatingIndex].RatingSprite;
         RatingSlider.maxValue = ratingClasses[currentRatingIndex].MaximumRating;
         RatingSlider.value = Rating;
@@ -167,6 +227,7 @@ public class PlayerRatingController : MonoBehaviour
         {
             GameObject GO = Instantiate(KillFeedPrefab);
             GO.transform.SetParent(KillfeedParent, true);
+            InstantiatedKillFeedPrefabs.Add(GO);
             TMP_Text text = GO.GetComponent<TMP_Text>();
             if (rating < 0)
             {

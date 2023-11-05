@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class SpawnBossSongEvent : SongEvent
 {
-    public EnemySpawner enemyController;
+    public BossManager bossController;
     public string bossName;
     public override void CastEvent()
     {
-        if (enemyController == null)
+        if (bossController == null)
         {
-            enemyController = GameObject.FindObjectOfType<EnemySpawner>();
+            bossController = GameObject.FindObjectOfType<BossManager>();
         }
-        enemyController.SpawnBossByName(bossName);
+        bossController.SpawnBossByName(bossName);
         base.CastEvent();
     }
 }

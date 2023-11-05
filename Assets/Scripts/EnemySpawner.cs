@@ -16,11 +16,37 @@ public class EnemySpawner : MonoBehaviour
     private static EnemySpawner _instance;
     public PlayerRatingController PRC;
     public List<GameObject> SpawnedEnemies = new List<GameObject>();
+    public List<EnemyScript> SpawnedEnemyScripts = new List<EnemyScript>();
+    public FirstPersonController FPC;
+    public Transform player;
+    public void CheckForBehindPlayer()
+    {
+       
+        foreach(EnemyScript ES in SpawnedEnemyScripts)
+        {
+            if (!ES || ES.enemyType == EnemyScript.EnemyType.Small) continue;
+            Vector3 direction = transform.position - player.position;
+            float angle = Vector3.Angle(direction, player.forward);
 
-
+            if (angle < 35f && Vector3.Distance(ES.transform.position, player.position) < 5) // Adjust this angle to fit your needs
+            {
+                FPC.BehindIndicator.SetActive(true);
+                return;
+            }
+            
+        }
+        FPC.BehindIndicator.SetActive(false);
+    }
+    public void Cleanup()
+    {
+        RemoveAllEnemies();
+        AllowedToSpawn = false;
+        StopAllCoroutines();
+    }
 
     private void Awake()
     {
+      //  player = GameObject.FindGameObjectWithTag("PlayerHitbox").transform;
         // Ensure there's only one instance of this object
         if (_instance != null && _instance != this)
         {
@@ -29,6 +55,17 @@ public class EnemySpawner : MonoBehaviour
         }
 
         _instance = this;
+
+  
+    }
+
+    public void StartEnemySpawning()
+    {
+        foreach (Enemy E in TypesOfEnemies)
+        {
+            StartCoroutine(SpawnObjectPeriodically(E));
+        }
+        AllowedToSpawn = true;
     }
     public static EnemySpawner Instance
     {
@@ -51,6 +88,12 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
+    //private void Update()
+    //{
+    //    if(AllowedToSpawn && SpawnedEnemyScripts.Count > 0)
+    //        CheckForBehindPlayer();
+    //}
+
     public void RemoveAllEnemies()
     {
         foreach(GameObject GO in SpawnedEnemies)
@@ -60,6 +103,7 @@ public class EnemySpawner : MonoBehaviour
                 Destroy(GO);
             }
         }
+        SpawnedEnemyScripts.Clear();
         SpawnedEnemies.Clear();
     }
 
@@ -78,17 +122,10 @@ public class EnemySpawner : MonoBehaviour
             GameObject GO =Instantiate(Enemy, spawnPosition, Quaternion.identity);
             GO.GetComponent<EnemyScript>().ratingController = PRC;
             SpawnedEnemies.Add(GO);
+            SpawnedEnemyScripts.Add(GO.GetComponent<EnemyScript>());
             yield return new WaitForSeconds(0.2f);
         }
     }
-    void Start()
-    {
-        foreach (Enemy E in TypesOfEnemies)
-        {
-            StartCoroutine(SpawnObjectPeriodically(E));
-        }
-    }
-
     IEnumerator SpawnObjectPeriodically(Enemy E)
     {
         while (true)
@@ -117,6 +154,7 @@ public class EnemySpawner : MonoBehaviour
                 GameObject GO = Instantiate(E.EnemyGO, spawnPosition, Quaternion.identity);
                 GO.GetComponent<EnemyScript>().ratingController = PRC;
                 SpawnedEnemies.Add(GO);
+                SpawnedEnemyScripts.Add(GO.GetComponent<EnemyScript>());
             }
 
             float randomInterval = Random.Range(E.minSpawnInterval, E.maxSpawnInterval);
@@ -155,11 +193,6 @@ public class EnemySpawner : MonoBehaviour
         }
 
         return false; // Didn't hit anything
-    }
-
-    public void SpawnBossByName(string name)
-    {
-        // Conduct boss spawning behaviour here;
     }
 }
 
