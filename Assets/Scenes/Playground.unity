@@ -12132,7 +12132,7 @@ PrefabInstance:
     - target: {fileID: 8390568870500087828, guid: 5df4b59e8e7496b4f8cfb3ce0f562744,
         type: 3}
       propertyPath: PulseLightIntensity
-      value: 15
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: 8390568870500087828, guid: 5df4b59e8e7496b4f8cfb3ce0f562744,
         type: 3}
@@ -12152,7 +12152,7 @@ PrefabInstance:
     - target: {fileID: 8390568870500087828, guid: 5df4b59e8e7496b4f8cfb3ce0f562744,
         type: 3}
       propertyPath: OriginalLightIntensity
-      value: 10
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 8390568870500087828, guid: 5df4b59e8e7496b4f8cfb3ce0f562744,
         type: 3}
@@ -41977,7 +41977,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 0.7262083, b: 0.6264151, a: 1}
-  m_Intensity: 5
+  m_Intensity: 2
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -42076,10 +42076,10 @@ MonoBehaviour:
   TitleOfSong: Into Hell
   SongAudioClip: {fileID: 8300000, guid: f1beddb0078ce964dbe971bac47382dd, type: 3}
   colors:
-  - {r: 1, g: 0.25943398, b: 0.31015784, a: 0.69803923}
-  - {r: 1, g: 0.3575222, b: 0.25943398, a: 0.69803923}
-  - {r: 1, g: 0.5853257, b: 0.28773582, a: 0.69803923}
-  - {r: 1, g: 0.33333337, b: 0.4150264, a: 0.69803923}
+  - {r: 1, g: 0.2815928, b: 0.16509432, a: 0.69803923}
+  - {r: 1, g: 0.21674295, b: 0.13679248, a: 0.69803923}
+  - {r: 1, g: 0.5247253, b: 0.18396229, a: 0.69803923}
+  - {r: 1, g: 0, b: 0.019191265, a: 0.69803923}
   BPM: 176
   Events:
   - {fileID: 1260033588}
@@ -42115,7 +42115,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2867fef27a089144593c20fab9c80b33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  castTimer: 248.9
+  castTimer: 248.2
   Played: 0
   bossController: {fileID: 1023038196}
   bossName: Helson

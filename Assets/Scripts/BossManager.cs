@@ -34,6 +34,10 @@ public class BossManager : MonoBehaviour
             TargetFOV = OriginalFOV;
             currentZoomFactor = 0;
             AddedInterval.ToBeDeleted = true;
+
+            EnemySpawner.Instance.AllowedToSpawn = true;
+            InstantiatedBoss.canStartAttacking = true;
+            FirstPersonController.Instance.isTransitioning = false;
         }
         else
         {
@@ -65,11 +69,6 @@ public class BossManager : MonoBehaviour
         AddedInterval._trigger.AddListener(delegate { ZoomInOnBoss1Factor(); });
         AddedInterval._lastInterval = 0;
         MC._intervals.Add(AddedInterval);
-        yield return new WaitForSeconds(2);
-        LightbeamEffect.SetActive(false);
-        EnemySpawner.Instance.AllowedToSpawn = true;
-        InstantiatedBoss.canStartAttacking = true;
-        FirstPersonController.Instance.isTransitioning = false;
     }
 
     public void SpawnBossByName(string name)
