@@ -7,7 +7,7 @@ public class EnemySpawner : MonoBehaviour
 {
     public Transform target;
     public List<Enemy> TypesOfEnemies = new List<Enemy>();
-    public float minDistance = 10.0f;
+    public float minDistance = 10.0f, maxDistance = 10.0f;
     public float minSpawnInterval = 2.0f;
     public float maxSpawnInterval = 5.0f;
     public float groupSpacing = 1.0f; // Spacing between enemies in a group
@@ -170,7 +170,7 @@ public class EnemySpawner : MonoBehaviour
         while (!isValid)
         {
             float randomAngle = Random.Range(0f, 360f);
-            float randomDistance = Random.Range(minDistance, minDistance * 2); // Ensure at least 10 units away
+            float randomDistance = Random.Range(minDistance, maxDistance); // Ensure at least 10 units away
 
             float radians = randomAngle * Mathf.Deg2Rad;
             spawnPosition = new Vector3(Mathf.Cos(radians) * randomDistance, 0, Mathf.Sin(radians) * randomDistance) + target.position;

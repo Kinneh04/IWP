@@ -1115,7 +1115,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6149586666300549913}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 6.56, z: 17.81}
+  m_LocalPosition: {x: 0, y: 6.56, z: 29.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1405,11 +1405,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BloodspurtFX: {fileID: 8237142794598097314, guid: 9deb4358763fe4441bab18f8d588a535,
     type: 3}
-  Health: 70
+  Health: 100
   RB: {fileID: 53558880}
   DeathParticles: {fileID: 4058727824660422441, guid: fbb300cbad042f74c9c4d98ddc3d5778,
     type: 3}
   EnemyMat: {fileID: 2100000, guid: b5eb924ec02110847bc828b1ee528636, type: 2}
+  TargetPosition: {x: 0, y: 0, z: 0}
   enemyBehaviour: 1
   enemyType: 1
   SpawnFrom: {fileID: 3655506410029585673}
@@ -1419,6 +1420,8 @@ MonoBehaviour:
   AddToCooldown: 4
   cooldown: 0
   ratingController: {fileID: 0}
+  raycastCooldown: 0.2
+  FPC: {fileID: 0}
   chargeSpeed: 4
   flankSpeed: 3
 --- !u!95 &8934527016483769251

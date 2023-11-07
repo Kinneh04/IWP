@@ -14,6 +14,11 @@ public class EnemyProjectile : MonoBehaviour
             FPC.TakeDamage(Damage);
             Destroy(gameObject);
         }
+        else if(!other.CompareTag("Enemy"))
+        {
+            Debug.Log("ProjectileHit: " + other.gameObject.name);
+            Destroy(gameObject);
+        }
     }
 
     private void Update()
