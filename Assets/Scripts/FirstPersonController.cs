@@ -233,6 +233,17 @@ using System.Collections;
 
 	private void Update()
 	{
+		if (isDead || MusicController.Instance.isFinished)
+		{
+			if (Input.GetKeyDown(KeyCode.Escape))
+			{
+				MainMenuManager.Instance.ReturnToMainMenuFromGame();
+			}
+			if (Input.GetKeyDown(KeyCode.R))
+			{
+				MainMenuManager.Instance.RetryLevel();
+			}
+		}
 		if (isTransitioning || MusicController.Instance.isFinished || isDead) return;
 
 			JumpAndGravity();
@@ -242,17 +253,7 @@ using System.Collections;
 			CameraRotation();
 		
 
-		if(isDead || MusicController.Instance.isFinished)
-		{
-			if(Input.GetKeyDown(KeyCode.Escape))
-            {
-				MainMenuManager.Instance.ReturnToMainMenuFromGame();
-            }
-			if(Input.GetKeyDown(KeyCode.R))
-            {
-				MainMenuManager.Instance.RetryLevel();
-            }
-		}
+		
 		if (dashCooldown > 0)
 		{
 			

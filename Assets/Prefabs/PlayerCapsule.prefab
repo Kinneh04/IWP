@@ -228,13 +228,20 @@ MonoBehaviour:
   DashCooldownSlider: {fileID: 0}
   CurrentAbility: {fileID: 0}
   SpawnAbilitySpawnablesFrom: {fileID: 0}
+  _input: {fileID: 0}
   isLow: 0
   isDead: 0
   Health: 100
   HeartbeatAudioSource: {fileID: 0}
   Heartbeat: {fileID: 0}
+  DeathAudioClip: {fileID: 0}
   HealthSlider: {fileID: 0}
   HealthText: {fileID: 0}
+  VisualHealth: 100
+  DeathScreen: {fileID: 0}
+  MainGameUI: {fileID: 0}
+  isTransitioning: 0
+  BehindIndicator: {fileID: 0}
 --- !u!114 &1978471637655604388
 MonoBehaviour:
   m_ObjectHideFlags: 0

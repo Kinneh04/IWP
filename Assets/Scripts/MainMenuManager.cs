@@ -35,6 +35,49 @@ public class MainMenuManager : MonoBehaviour
     [Header("OfficialSongs")]
     public OfficialSongManager officialSongManager;
 
+    [Header("Shop")]
+    public GameObject ShopUI;
+    public AudioSource ShopAudioSource;
+    public StoreManager storeManager;
+    public void ToShop()
+    {
+        StartCoroutine(TransitionToShop());
+    }
+    public void FromShopToMenu()
+    {
+        StartCoroutine(BackToMenuFromShop());
+    }
+
+    public IEnumerator TransitionToShop()
+    {
+        BlackscreenController.Instance.FadeOut();
+        StartCoroutine(FadeOutAudioSource(MainMenuAudioSource));
+        yield return new WaitForSeconds(BlackscreenController.Instance.fadeSpeed);
+        LoadingScreen.SetActive(true);
+        MainGameSelectionScreen.SetActive(false);
+        ShopUI.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        LoadingScreen.SetActive(false);
+        BlackscreenController.Instance.FadeIn();
+        //ShopAudioSource.Play();
+        StartCoroutine(FadeInAudioSource(ShopAudioSource));
+    }
+
+    public IEnumerator BackToMenuFromShop()
+    {
+        BlackscreenController.Instance.FadeOut();
+        StartCoroutine(FadeOutAudioSource(ShopAudioSource));
+
+        yield return new WaitForSeconds(BlackscreenController.Instance.fadeSpeed);
+        LoadingScreen.SetActive(true);
+        MainGameSelectionScreen.SetActive(true);
+        yield return new WaitForSeconds(0.5f); 
+        ShopUI.SetActive(false);
+        LoadingScreen.SetActive(false);
+        BlackscreenController.Instance.FadeIn();
+        StartCoroutine(FadeInAudioSource(MainMenuAudioSource));
+        ShopAudioSource.Stop();
+    }
     public void LoadCurrentlySavedCustomSongs()
     {
         foreach(GameObject gameObject in LoadedCustomSongsGO)
@@ -102,7 +145,8 @@ public class MainMenuManager : MonoBehaviour
     }
     public IEnumerator FadeOutAudioSource(AudioSource AS)
     {
-        while(AS.volume > 0)
+        
+        while(AS.volume > 0.05f)
         {
             yield return null;
             AS.volume = Mathf.Lerp(AS.volume, 0, 2 * Time.deltaTime);
@@ -114,7 +158,8 @@ public class MainMenuManager : MonoBehaviour
     public IEnumerator FadeInAudioSource(AudioSource AS)
     {
         AS.Play();
-        while (AS.volume < 1)
+        AS.volume = 0.0f;
+        while (AS.volume < 0.8f)
         {
             yield return null;
             AS.volume = Mathf.Lerp(AS.volume, 1, 3 * Time.deltaTime);
@@ -334,6 +379,7 @@ public class MainMenuManager : MonoBehaviour
                 DisabledGOsBeforeEntering.Add(GO);
             }
         }
+        storeManager.LoadWeaponDetails();
         yield return new WaitForSeconds(0.5f);
         foreach (GameObject GO in GameobjectsToEnableForDemo)
         {

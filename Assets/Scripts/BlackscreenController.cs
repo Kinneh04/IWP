@@ -46,6 +46,7 @@ public class BlackscreenController : MonoBehaviour
        
         Color color = fadePanel.color;
         color.a = 0;
+        fadePanel.raycastTarget = true;
         while (fadePanel.color.a < 1)
         {
             color.a += Time.deltaTime * fadeSpeed;
@@ -64,5 +65,6 @@ public class BlackscreenController : MonoBehaviour
             fadePanel.color = color;
             yield return null;
         }
+        fadePanel.raycastTarget = false;
     }
 }

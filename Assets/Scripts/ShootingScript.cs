@@ -14,8 +14,8 @@ public class ShootingScript : MonoBehaviour
     public int SetDamage = 25;
 
     [Header("Animations")]
-    public Animator PistolAnimator;
-    public AnimationClip PistolFireAnimClip;
+    public Animator MainWeaponAnimator;
+    public AnimationClip FireAnimClip;
 
 
     [Header("Tracer")]
@@ -38,7 +38,7 @@ public class ShootingScript : MonoBehaviour
     public int maxAmmo;
     public int CurrentAmmo;
     public bool isReloading;
-    public List<WeaponReloadPart> PistolReloadAnimClips = new List<WeaponReloadPart>();
+    public List<WeaponReloadPart> ReloadAnimClips = new List<WeaponReloadPart>();
     public int ReloadIndex = 0;
     public float reloadTime;
     public TMP_Text AmmoCountText;
@@ -116,14 +116,13 @@ public class ShootingScript : MonoBehaviour
     {
         isReloading = true;
         musicController.hasFired = true;
-        PistolAnimator.Play(PistolReloadAnimClips[ReloadIndex].animClip.name);
-        PlayerAS.PlayOneShot(PistolReloadAnimClips[ReloadIndex].audioClip);
+        MainWeaponAnimator.Play(ReloadAnimClips[ReloadIndex].animClip.name);
+        PlayerAS.PlayOneShot(ReloadAnimClips[ReloadIndex].audioClip);
         ReloadIndex++;
-        if(ReloadIndex >= PistolReloadAnimClips.Count)
+        if(ReloadIndex >= ReloadAnimClips.Count)
         {
             ReloadIndex = 0;
-            if (CurrentAmmo != 0) CurrentAmmo = maxAmmo + 1;
-            else CurrentAmmo = maxAmmo;
+            CurrentAmmo = maxAmmo;
             isReloading = false;
             AmmoCountText.text = CurrentAmmo.ToString() + "/" + maxAmmo.ToString();
         }
@@ -133,7 +132,8 @@ public class ShootingScript : MonoBehaviour
     {
         if (!FrenzyMode)
         {
-            if(Input.GetKeyDown(KeyCode.R) && musicController.canReload && CurrentAmmo < maxAmmo)
+            if(Input.GetKeyDown(KeyCode.R) && musicController.canReload && CurrentAmmo < maxAmmo
+                || Input.GetMouseButtonDown(1) && musicController.canReload && CurrentAmmo < maxAmmo)
             {
                 IncrementReload();
             }
@@ -178,8 +178,11 @@ public class ShootingScript : MonoBehaviour
                     weaponMovement.TryShootVisual();
                     FireRaycast();
                     DispenseAmmo();
-                  //  ShowTimingRating();
-                    PistolAnimator.Play(PistolFireAnimClip.name);
+                    //  ShowTimingRating();
+                    if (FireAnimClip)
+                    {
+                        MainWeaponAnimator.Play(FireAnimClip.name);
+                    }
                     musicController.beatAlreadyHit = true;
                     //if (musicController.isLate())
                     //{
