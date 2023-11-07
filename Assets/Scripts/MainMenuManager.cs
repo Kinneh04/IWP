@@ -157,8 +157,9 @@ public class MainMenuManager : MonoBehaviour
 
     public IEnumerator FadeInAudioSource(AudioSource AS)
     {
-        AS.Play();
         AS.volume = 0.0f;
+        AS.Play();
+
         while (AS.volume < 0.8f)
         {
             yield return null;

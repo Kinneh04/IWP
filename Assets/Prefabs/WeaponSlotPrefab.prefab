@@ -1131,6 +1131,22 @@ MonoBehaviour:
   Cost: 0
   isPurchased: 0
   isEquipped: 0
+  RelatedWeapon:
+    GunName: 
+    GunDesc: 
+    TotalShots: 0
+    ReloadCycles: 0
+    GunImage: {fileID: 0}
+    GunCost: 0
+    GunEquippedOnStart: 0
+    GunUnlocked: 0
+    GunAnimator: {fileID: 0}
+    FireAnimClip: {fileID: 0}
+    maxAmmo: 0
+    currentAmmo: 0
+    ReloadAnims: []
+    ActiveWeapon: {fileID: 0}
+    weaponMovement: {fileID: 0}
 --- !u!1 &5094660913399546759
 GameObject:
   m_ObjectHideFlags: 0
@@ -1319,7 +1335,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: EQUIPPED
+  m_text: EQUIP
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 85378d8bb70331f4a8d3296263819046, type: 2}
   m_sharedMaterial: {fileID: 4275569761461716857, guid: 85378d8bb70331f4a8d3296263819046,

@@ -124,6 +124,7 @@ public class ShootingScript : MonoBehaviour
             ReloadIndex = 0;
             CurrentAmmo = maxAmmo;
             isReloading = false;
+            musicController.canFire = false;
             AmmoCountText.text = CurrentAmmo.ToString() + "/" + maxAmmo.ToString();
         }
     }
