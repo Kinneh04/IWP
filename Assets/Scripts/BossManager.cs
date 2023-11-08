@@ -28,6 +28,7 @@ public class BossManager : MonoBehaviour
 
     public GameObject BossKilledFX;
     public GameObject BossKilledUIElements;
+    Intervals BossStartI = new Intervals();
     private void Update()
     {
         if(CVC.m_Lens.FieldOfView != TargetFOV)
@@ -48,7 +49,7 @@ public class BossManager : MonoBehaviour
             InstantiatedBoss.canStartAttacking = true;
             FirstPersonController.Instance.isTransitioning = false;
 
-            Intervals BossStartI = new Intervals();
+            BossStartI = new Intervals();
             BossStartI._steps = 1;
             BossStartI._trigger = new UnityEngine.Events.UnityEvent();
             BossStartI._trigger.AddListener(delegate { InstantiatedBoss.ChooseRandomAttack(); });
@@ -77,7 +78,7 @@ public class BossManager : MonoBehaviour
         AttachedBossEnemyScript = null;
         StartCoroutine(KillbossEffects());
         PlayerRatingController.Instance.AddRating(100, "Boss Slain", Color.cyan);
-
+        BossStartI.ToBeDeleted = true;
      
     }
 
