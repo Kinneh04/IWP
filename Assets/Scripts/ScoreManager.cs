@@ -6,6 +6,7 @@ using UnityEngine;
 public class ScoreManager : MonoBehaviour
 {
     public int FinalScore;
+    public string Grade;
     public TMP_Text FinalScoreText;
     public GameObject FinalScoreGameObject;
     public TMP_Text FinalGradeText, KillsText, HighestComboText, MultikillsText, AccuracyText;
@@ -21,11 +22,13 @@ public class ScoreManager : MonoBehaviour
         if (bosskilled)
         {
             FinalGradeText.text = "B";
+            Grade = "B";
             FinalGradeText.color = Color.cyan;
         }
         else
         {
             FinalGradeText.text = "P";
+            Grade = "P";
             FinalGradeText.color = Color.yellow;
         }
 
