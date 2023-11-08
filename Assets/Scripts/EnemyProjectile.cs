@@ -25,4 +25,9 @@ public class EnemyProjectile : MonoBehaviour
     {
         transform.position += transform.forward * speed * Time.deltaTime;
     }
+
+    private void Start()
+    {
+        Destroy(transform.parent.gameObject, 4.0f);
+    }
 }

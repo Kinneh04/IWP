@@ -10,6 +10,8 @@ TagManager:
   - Coin
   - EnemyProjectile
   - PlayerHitbox
+  - Floor
+  - Wall
   layers:
   - Default
   - TransparentFX

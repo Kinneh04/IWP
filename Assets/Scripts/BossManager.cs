@@ -19,6 +19,7 @@ public class BossManager : MonoBehaviour
     public Boss CurrentlyChosenBoss;
     public Transform PlayerRoot;
     public CinemachineVirtualCamera CVC;
+    public int OGDifficulty;
     private void Update()
     {
         if(CVC.m_Lens.FieldOfView != TargetFOV)
@@ -38,6 +39,13 @@ public class BossManager : MonoBehaviour
             EnemySpawner.Instance.AllowedToSpawn = true;
             InstantiatedBoss.canStartAttacking = true;
             FirstPersonController.Instance.isTransitioning = false;
+
+            Intervals BossStartI = new Intervals();
+            BossStartI._steps = 1;
+            BossStartI._trigger = new UnityEngine.Events.UnityEvent();
+            BossStartI._trigger.AddListener(delegate { InstantiatedBoss.ChooseRandomAttack(); });
+            BossStartI._lastInterval = 1;
+            MC._intervals.Add(BossStartI);
         }
         else
         {
@@ -52,7 +60,8 @@ public class BossManager : MonoBehaviour
 
     public IEnumerator SpawnBossCoroutine(Boss B)
     {
-
+        OGDifficulty = EnemySpawner.Instance.difficulty;
+        EnemySpawner.Instance.difficulty = 2;
         LightbeamEffect.SetActive(true);
         yield return new WaitForSeconds(1);
         FirstPersonController.Instance.isTransitioning = true;

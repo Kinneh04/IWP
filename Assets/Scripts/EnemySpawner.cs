@@ -19,6 +19,7 @@ public class EnemySpawner : MonoBehaviour
     public List<EnemyScript> SpawnedEnemyScripts = new List<EnemyScript>();
     public FirstPersonController FPC;
     public Transform player;
+    public int maxEnemies = 10;
     public void CheckForBehindPlayer()
     {
        
@@ -107,23 +108,36 @@ public class EnemySpawner : MonoBehaviour
         SpawnedEnemies.Clear();
     }
 
+    public bool HitmaxEnemies()
+    {
+        foreach(EnemyScript E in SpawnedEnemyScripts)
+        {
+            if (E == null) SpawnedEnemyScripts.Remove(E);
+        }
+        if (SpawnedEnemyScripts.Count >= maxEnemies)
+            return true;
+        return false;
+    }
 
     IEnumerator SpawnEnemyGroup(GameObject Enemy, int numEnemies, Vector3 SpawnPosition)
     {
-        float angleStep = 360f / numEnemies;
-        float radius = 2f; // Adjust the radius as needed
-
-        for (int i = 0; i < numEnemies; i++)
+        if (!HitmaxEnemies())
         {
-            float angle = i * angleStep;
-            float radians = angle * Mathf.Deg2Rad;
+            float angleStep = 360f / numEnemies;
+            float radius = 2f; // Adjust the radius as needed
 
-            Vector3 spawnPosition = SpawnPosition + new Vector3(Mathf.Cos(radians) * radius, 0, Mathf.Sin(radians) * radius);
-            GameObject GO =Instantiate(Enemy, spawnPosition, Quaternion.identity);
-            GO.GetComponent<EnemyScript>().ratingController = PRC;
-            SpawnedEnemies.Add(GO);
-            SpawnedEnemyScripts.Add(GO.GetComponent<EnemyScript>());
-            yield return new WaitForSeconds(0.2f);
+            for (int i = 0; i < numEnemies; i++)
+            {
+                float angle = i * angleStep;
+                float radians = angle * Mathf.Deg2Rad;
+
+                Vector3 spawnPosition = SpawnPosition + new Vector3(Mathf.Cos(radians) * radius, 0, Mathf.Sin(radians) * radius);
+                GameObject GO = Instantiate(Enemy, spawnPosition, Quaternion.identity);
+                GO.GetComponent<EnemyScript>().ratingController = PRC;
+                SpawnedEnemies.Add(GO);
+                SpawnedEnemyScripts.Add(GO.GetComponent<EnemyScript>());
+                yield return new WaitForSeconds(0.2f);
+            }
         }
     }
     IEnumerator SpawnObjectPeriodically(Enemy E)
@@ -135,14 +149,16 @@ public class EnemySpawner : MonoBehaviour
                 yield return new WaitForSeconds(1);
                 continue;
             }
-            Vector3 spawnPosition;
-
-
-            do
+            if (HitmaxEnemies())
             {
-                spawnPosition = GetRandomSpawnPosition();
-                spawnPosition.y += E.DistanceFromFloor;
-            } while (RaycastToTarget(spawnPosition));
+                float RI = Random.Range(E.minSpawnInterval, E.maxSpawnInterval);
+                yield return new WaitForSeconds(RI);
+                continue;
+            }
+            Vector3 spawnPosition;
+            spawnPosition = GetRandomPositionWithinRange(target.position);
+            spawnPosition.y = E.DistanceFromFloor;
+
 
             if (Random.Range(0, 10) < difficulty && E.canSpawninGroup)
             {
@@ -162,38 +178,52 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    Vector3 GetRandomSpawnPosition()
+    Vector3 GetRandomPositionWithinRange(Vector3 playerPosition)
     {
-        Vector3 spawnPosition = Vector3.zero;
-        bool isValid = false;
-
-        while (!isValid)
+        Vector3 randomPosition = GetRandomPosition(playerPosition, minDistance, maxDistance);
+        int tries = 10;
+        while (!IsOnValidSurface(randomPosition) && tries > 0 || !IsClearPath(playerPosition, randomPosition) &&tries > 0) 
         {
-            float randomAngle = Random.Range(0f, 360f);
-            float randomDistance = Random.Range(minDistance, maxDistance); // Ensure at least 10 units away
-
-            float radians = randomAngle * Mathf.Deg2Rad;
-            spawnPosition = new Vector3(Mathf.Cos(radians) * randomDistance, 0, Mathf.Sin(radians) * randomDistance) + target.position;
-
-            if (Vector3.Distance(spawnPosition, target.position) >= minDistance)
-            {
-                isValid = true;
-            }
+            randomPosition = GetRandomPosition(playerPosition, minDistance, maxDistance);
+            tries--;
         }
 
-        return spawnPosition;
+        return randomPosition;
     }
 
-    bool RaycastToTarget(Vector3 spawnPosition)
+
+    Vector3 GetRandomPosition(Vector3 playerPosition, float minDistance, float maxDistance)
+    {
+        Vector3 randomDirection = Random.insideUnitSphere.normalized;
+        float randomDistance = Random.Range(minDistance, maxDistance);
+        return playerPosition + randomDirection * randomDistance;
+    }
+
+    bool IsOnValidSurface(Vector3 position)
     {
         RaycastHit hit;
-        if (Physics.Raycast(spawnPosition, (target.position - spawnPosition).normalized, out hit, minDistance))
+        if (Physics.Raycast(position, -Vector3.up, out hit) && hit.transform.CompareTag("Floor"))
         {
-            return true; // Hit something along the way
+            return true;
         }
-
-        return false; // Didn't hit anything
+        return false;
     }
+
+    bool IsClearPath(Vector3 from, Vector3 to)
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(from, to - from, out hit, Vector3.Distance(from, to)))
+        {
+            if (hit.collider.tag != "Player" && hit.collider.tag != "PlayerHitbox")
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+
 }
 
 [System.Serializable]
