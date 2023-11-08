@@ -91,7 +91,15 @@ public class MusicController : MonoBehaviour
         MusicAudioSource.time = 0;
         MusicAudioSource.Stop();
         MusicProgressionSlider.value = 0;
-        
+        scoreManager.FinalScoreGameObject.SetActive(false);
+
+        foreach(Intervals I in _intervals)
+        {
+            if(I.ToBeDeleted)
+            {
+                _intervals.Remove(I);
+            }
+        }
     }
 
     public void LoadNewEventsFromOfficialSong(OfficialSongScript OSS)
@@ -297,7 +305,7 @@ public class MusicController : MonoBehaviour
             RI.color = gc;
         }
 
-        if(MusicAudioSource.time > MusicAudioSource.clip.length && !isFinished)
+        if(MusicAudioSource.time >= MusicAudioSource.clip.length && !isFinished)
         {
             isFinished = true;
             EnemySpawner.Instance.Cleanup();

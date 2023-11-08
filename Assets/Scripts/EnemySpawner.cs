@@ -110,19 +110,18 @@ public class EnemySpawner : MonoBehaviour
 
     public bool HitmaxEnemies()
     {
+        int NoOfEnemies = 0;
         foreach(EnemyScript E in SpawnedEnemyScripts)
         {
-            if (E == null) SpawnedEnemyScripts.Remove(E);
+            if (E != null) NoOfEnemies++;
         }
-        if (SpawnedEnemyScripts.Count >= maxEnemies)
+        if (NoOfEnemies >= maxEnemies)
             return true;
         return false;
     }
 
     IEnumerator SpawnEnemyGroup(GameObject Enemy, int numEnemies, Vector3 SpawnPosition)
     {
-        if (!HitmaxEnemies())
-        {
             float angleStep = 360f / numEnemies;
             float radius = 2f; // Adjust the radius as needed
 
@@ -138,21 +137,14 @@ public class EnemySpawner : MonoBehaviour
                 SpawnedEnemyScripts.Add(GO.GetComponent<EnemyScript>());
                 yield return new WaitForSeconds(0.2f);
             }
-        }
     }
     IEnumerator SpawnObjectPeriodically(Enemy E)
     {
         while (true)
         {
-            if(!AllowedToSpawn)
+            if(!AllowedToSpawn || HitmaxEnemies())
             {
                 yield return new WaitForSeconds(1);
-                continue;
-            }
-            if (HitmaxEnemies())
-            {
-                float RI = Random.Range(E.minSpawnInterval, E.maxSpawnInterval);
-                yield return new WaitForSeconds(RI);
                 continue;
             }
             Vector3 spawnPosition;

@@ -25,15 +25,61 @@ public class BossManager : MonoBehaviour
     public GameObject BossHealth;
     public TMP_Text BossNameText;
     public Slider BossHealthSlider;
-
+    public TMP_Text TimeLeftToKillText;
     public GameObject BossKilledFX;
     public GameObject BossKilledUIElements;
+    public GameObject BossEscapedUIElements;
     Intervals BossStartI = new Intervals();
+    public float TimeLeftToKill = 0;
+    private static BossManager _instance;
+
+    private void Awake()
+    {
+        // Ensure there's only one instance of this object
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+
+        _instance = this;
+    }
+    public static BossManager Instance
+    {
+        get
+        {
+            // If the instance doesn't exist, find it in the scene
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<BossManager>();
+
+                // If it still doesn't exist, create a new instance
+                if (_instance == null)
+                {
+                    GameObject singletonObject = new GameObject("MainMenuManager");
+                    _instance = singletonObject.AddComponent<BossManager>();
+                }
+            }
+
+            return _instance;
+        }
+    }
+
     private void Update()
     {
         if(CVC.m_Lens.FieldOfView != TargetFOV)
         {
             CVC.m_Lens.FieldOfView = Mathf.Lerp(CVC.m_Lens.FieldOfView, TargetFOV, 7.0f * Time.deltaTime);
+        }
+        if (InstantiatedBoss && TimeLeftToKill > 0)
+        {
+            TimeLeftToKill -= Time.deltaTime;
+            TimeLeftToKillText.text = "TIME TO KILL: " + TimeLeftToKill.ToString("F1");
+            if(TimeLeftToKill <= 0)
+            {
+                BossEscape();
+                
+            }
         }
     }
     public void ZoomInOnBoss1Factor()
@@ -73,7 +119,7 @@ public class BossManager : MonoBehaviour
     public void KillBoss()
     {
         BossHealth.SetActive(false);
-        Destroy(InstantiatedBoss.gameObject);
+        if(InstantiatedBoss) Destroy(InstantiatedBoss.gameObject);
         CurrentlyChosenBoss = null;
         AttachedBossEnemyScript = null;
         StartCoroutine(KillbossEffects());
@@ -82,6 +128,38 @@ public class BossManager : MonoBehaviour
         EnemySpawner.Instance.difficulty = OGDifficulty;
     }
 
+    public void Cleanup()
+    {
+        BossHealth.SetActive(false);
+        if (InstantiatedBoss) Destroy(InstantiatedBoss.gameObject);
+        CurrentlyChosenBoss = null;
+        AttachedBossEnemyScript = null;
+        if(BossStartI == null) BossStartI.ToBeDeleted = true;
+        EnemySpawner.Instance.difficulty = OGDifficulty;
+    }
+
+    public void BossEscape()
+    {
+        BossHealth.SetActive(false);
+        Destroy(InstantiatedBoss.gameObject);
+        InstantiatedBoss = null;
+        CurrentlyChosenBoss = null;
+        AttachedBossEnemyScript = null;
+        StartCoroutine(BossEscapeEffects());
+        PlayerRatingController.Instance.AddRating(-100, "Boss Escaped", Color.red);
+        BossStartI.ToBeDeleted = true;
+        EnemySpawner.Instance.difficulty = OGDifficulty;
+    }
+    public IEnumerator BossEscapeEffects()
+    {
+        if (BossEscapedUIElements)
+        {
+            BossEscapedUIElements.SetActive(true);
+        }
+
+        yield return new WaitForSeconds(2);
+        BossEscapedUIElements.SetActive(false);
+    }
     public IEnumerator KillbossEffects()
     {
         if (BossKilledFX)
@@ -125,16 +203,19 @@ public class BossManager : MonoBehaviour
         BossHealth.SetActive(true);
     }
 
-    public void SpawnBossByName(string name)
+    public void SpawnBossByName(string name, float time = 0)
     {
         foreach(Boss B in AvailableBosses)
         {
             if(B.BossName == name)
             {
                 spawnBoss(B);
+                TimeLeftToKill = time;
                 return;
             }
         }
+
+         
     }
 }
 

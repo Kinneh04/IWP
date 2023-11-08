@@ -18,7 +18,8 @@ public class ScoreManager : MonoBehaviour
         KillsText.text = Kills.ToString();
         HighestComboText.text = HighestCombo.ToString();
         MultikillsText.text = Multikills.ToString();
-        AccuracyText.text = Accuracy.ToString();
+        AccuracyText.text = Accuracy.ToString("F2") + "%";
+        FinalScoreText.text = "SCORE: " + FinalScore.ToString() ;
         if (bosskilled)
         {
             FinalGradeText.text = "B";

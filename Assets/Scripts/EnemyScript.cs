@@ -38,6 +38,10 @@ public class EnemyScript : MonoBehaviour
     public float raycastCooldown = 0.2f;
     public FirstPersonController FPC;
     public BossManager AttachedBossManager;
+
+    [Header("ForBossOnly")]
+    public Animator BossAnimator;
+    public AnimationClip bossHitAnimClip;
     //public void OnTriggerEnter(Collider other)
     //{
     //    if(other.CompareTag("Bullet"))
@@ -142,6 +146,7 @@ public class EnemyScript : MonoBehaviour
             {
                 Die();
             }
+            BossAnimator.Play(bossHitAnimClip.name);
             AttachedBossManager.UpdateHealthSlider();
         }
     }

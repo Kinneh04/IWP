@@ -306,6 +306,7 @@ public class MainMenuManager : MonoBehaviour
         FirstPersonController.Instance.Cleanup();
         FirstPersonController.Instance.DeathScreen.SetActive(false);
         EnemySpawner.Instance.Cleanup();
+        BossManager.Instance.Cleanup();
         yield return new WaitForSeconds(0.5f);
         foreach (GameObject GO in GameobjectsToEnableForDemo)
         {
@@ -328,6 +329,7 @@ public class MainMenuManager : MonoBehaviour
         MusicController.Instance.Cleanup();
         EnemySpawner.Instance.Cleanup();
         FirstPersonController.Instance.Cleanup();
+        BossManager.Instance.Cleanup();
         foreach (GameObject GO in DisabledGOsBeforeEntering)
         {
             if (!GO) continue;

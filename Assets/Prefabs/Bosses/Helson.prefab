@@ -1638,10 +1638,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BloodspurtFX: {fileID: 8237142794598097314, guid: e5e16623fa576c34dbd6e2a0f62da36f,
     type: 3}
-  Health: 150
+  Health: 1500
   RB: {fileID: 0}
   DeathParticles: {fileID: 0}
-  EnemyMat: {fileID: 0}
+  EnemyMat: {fileID: 2100000, guid: 893a174022b750a4b8a323f23cf4c54b, type: 2}
   TargetPosition: {x: 0, y: 0, z: 0}
   enemyBehaviour: 0
   enemyType: 2
@@ -1654,6 +1654,8 @@ MonoBehaviour:
   raycastCooldown: 0.2
   FPC: {fileID: 0}
   AttachedBossManager: {fileID: 0}
+  BossAnimator: {fileID: 8244322662929750985}
+  bossHitAnimClip: {fileID: 7400000, guid: 0a486fd810f62824a88445365fdff185, type: 2}
   chargeSpeed: 5
   flankSpeed: 3
 --- !u!135 &5053564004412479194

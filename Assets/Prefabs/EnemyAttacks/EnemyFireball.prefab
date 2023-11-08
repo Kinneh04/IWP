@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1284064411606151663}
   - component: {fileID: 8609330104883464520}
   - component: {fileID: 5683313040145307747}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: White_Flash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4885,7 +4885,7 @@ GameObject:
   - component: {fileID: 8059705705076473090}
   - component: {fileID: 1213699608195462562}
   - component: {fileID: 6595311184238091922}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Ball
   m_TagString: EnemyProjectile
   m_Icon: {fileID: 0}
@@ -5076,7 +5076,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4356951936732523472}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: EnemyFireball
   m_TagString: Untagged
   m_Icon: {fileID: 0}
