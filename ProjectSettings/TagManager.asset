@@ -12,6 +12,7 @@ TagManager:
   - PlayerHitbox
   - Floor
   - Wall
+  - Boss
   layers:
   - Default
   - TransparentFX

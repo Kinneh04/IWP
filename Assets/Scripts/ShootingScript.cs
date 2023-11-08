@@ -223,7 +223,7 @@ public class ShootingScript : MonoBehaviour
             }
             else
             {
-                if(Input.GetMouseButtonDown(0) && !musicController.canFire && CurrentAmmo > 0)
+                if(Input.GetMouseButtonDown(0) && !musicController.canFire && CurrentAmmo > 0 && !FirstPersonController.Instance.isTransitioning)
                 {
                     LateEarlyRatingText.text = "Missed!";
                     LateEarlyRatingText.color = Color.yellow;
@@ -240,7 +240,7 @@ public class ShootingScript : MonoBehaviour
         }
         else
         {
-            if (Input.GetMouseButton(0) && gatlingGunCooldown <= 0)
+            if (Input.GetMouseButton(0) && gatlingGunCooldown <= 0 && !FirstPersonController.Instance.isTransitioning)
             {
                 UziWeaponMovement.TryShootVisual();
                 FireRaycast(false);
@@ -259,13 +259,14 @@ public class ShootingScript : MonoBehaviour
         T.a = 0;
         LateEarlyRatingText.color = Color.Lerp(LateEarlyRatingText.color, T, Time.deltaTime * 3);
     }
+    
 
     public void FireRaycast(bool AddToAcc = true)
     {
         RaycastHit hit;
         if (RaycastFromCameraCenter(out hit))
         {
-            if (hit.collider.CompareTag("Enemy"))
+            if (hit.collider.CompareTag("Enemy") || hit.collider.CompareTag("Boss"))
             {
                 hit.collider.GetComponent<EnemyScript>().TakeDamage(SetDamage);
                 //playerRatingController.AddRating(10, "Enemy Hit!");

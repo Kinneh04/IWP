@@ -37,7 +37,7 @@ public class EnemyScript : MonoBehaviour
     public PlayerRatingController ratingController;
     public float raycastCooldown = 0.2f;
     public FirstPersonController FPC;
-
+    public BossManager AttachedBossManager;
     //public void OnTriggerEnter(Collider other)
     //{
     //    if(other.CompareTag("Bullet"))
@@ -61,7 +61,8 @@ public class EnemyScript : MonoBehaviour
 
     void Update()
     {
-        ChargeBehavior();
+        if(enemyType != EnemyType.Boss)
+            ChargeBehavior();
     }
 
 
@@ -134,6 +135,15 @@ public class EnemyScript : MonoBehaviour
             if (BloodspurtFX) Instantiate(BloodspurtFX, transform.position, Quaternion.identity);
             if (Health <= 0) Die();
         }
+        else if (enemyType == EnemyType.Boss)
+        {
+            Health -= damage;
+            if(Health <= 0)
+            {
+                Die();
+            }
+            AttachedBossManager.UpdateHealthSlider();
+        }
     }
 
     public IEnumerator FlashDamage()
@@ -153,10 +163,17 @@ public class EnemyScript : MonoBehaviour
 
     public void Die()
     {
-        ratingController.OnKillEnemy();
+        if (enemyType == EnemyType.Boss)
+        {
+            AttachedBossManager.KillBoss();
+        }
+        else
+        {
+            ratingController.OnKillEnemy();
 
-        Instantiate(BloodspurtFX,transform.position,Quaternion.identity);
-        Instantiate(DeathParticles, transform.position,Quaternion.identity);
-        Destroy(gameObject);
+            Instantiate(BloodspurtFX, transform.position, Quaternion.identity);
+            Instantiate(DeathParticles, transform.position, Quaternion.identity);
+            Destroy(gameObject);
+        }
     }
 }
