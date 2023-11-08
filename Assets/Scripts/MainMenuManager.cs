@@ -52,7 +52,7 @@ public class MainMenuManager : MonoBehaviour
     {
         BlackscreenController.Instance.FadeOut();
         StartCoroutine(FadeOutAudioSource(MainMenuAudioSource));
-        yield return new WaitForSeconds(BlackscreenController.Instance.fadeSpeed);
+        yield return new WaitForSeconds(1 / BlackscreenController.Instance.fadeSpeed);
         LoadingScreen.SetActive(true);
         MainGameSelectionScreen.SetActive(false);
         ShopUI.SetActive(true);
@@ -68,7 +68,7 @@ public class MainMenuManager : MonoBehaviour
         BlackscreenController.Instance.FadeOut();
         StartCoroutine(FadeOutAudioSource(ShopAudioSource));
 
-        yield return new WaitForSeconds(BlackscreenController.Instance.fadeSpeed);
+        yield return new WaitForSeconds(1 / BlackscreenController.Instance.fadeSpeed);
         LoadingScreen.SetActive(true);
         MainGameSelectionScreen.SetActive(true);
         yield return new WaitForSeconds(0.5f); 
@@ -177,11 +177,11 @@ public class MainMenuManager : MonoBehaviour
     {
         StartCoroutine(FadeOutAudioSource(MainMenuAudioSource));
         BlackscreenController.Instance.FadeOut();
-        yield return new WaitForSeconds(BlackscreenController.Instance.fadeSpeed);
+        yield return new WaitForSeconds(1 / BlackscreenController.Instance.fadeSpeed);
         LoadingScreen.SetActive(true);
         EditorScreen.SetActive(false);
         SongPickerScreen.SetActive(true);
-        yield return new WaitForSeconds(BlackscreenController.Instance.fadeSpeed);
+        yield return new WaitForSeconds(1 / BlackscreenController.Instance.fadeSpeed);
         LoadingScreen.SetActive(false);
         BlackscreenController.Instance.FadeIn();
         SEM.Cleanup();
@@ -202,12 +202,12 @@ public class MainMenuManager : MonoBehaviour
         }
         StartCoroutine(FadeOutAudioSource(CustomEditorAudioSource));
         BlackscreenController.Instance.FadeOut();
-        yield return new WaitForSeconds(BlackscreenController.Instance.fadeSpeed);
+        yield return new WaitForSeconds(1 / BlackscreenController.Instance.fadeSpeed);
         LoadingScreen.SetActive(true);
         EditorScreen.SetActive(true);
         SongPickerScreen.SetActive(false);
         LoadCurrentlySavedCustomSongs();
-        yield return new WaitForSeconds(BlackscreenController.Instance.fadeSpeed);
+        yield return new WaitForSeconds(1 / BlackscreenController.Instance.fadeSpeed);
         LoadingScreen.SetActive(false);
         BlackscreenController.Instance.FadeIn();
         StartCoroutine(FadeInAudioSource(MainMenuAudioSource));
@@ -221,12 +221,12 @@ public class MainMenuManager : MonoBehaviour
     public IEnumerator EditorSequence()
     {
         BlackscreenController.Instance.FadeOut();
-        yield return new WaitForSeconds(BlackscreenController.Instance.fadeSpeed);
+        yield return new WaitForSeconds(1 / BlackscreenController.Instance.fadeSpeed);
         LoadingScreen.SetActive(true);
         LoadCurrentlySavedCustomSongs();
         EditorScreen.SetActive(true);
         MainMenuUI.SetActive(false);
-        yield return new WaitForSeconds(BlackscreenController.Instance.fadeSpeed);
+        yield return new WaitForSeconds(1 / BlackscreenController.Instance.fadeSpeed);
         LoadingScreen.SetActive(false);
         BlackscreenController.Instance.FadeIn();
         
@@ -235,12 +235,12 @@ public class MainMenuManager : MonoBehaviour
     public IEnumerator ReturnToMainMenuSequence()
     {
         BlackscreenController.Instance.FadeOut();
-        yield return new WaitForSeconds(BlackscreenController.Instance.fadeSpeed);
+        yield return new WaitForSeconds(1 / BlackscreenController.Instance.fadeSpeed);
         LoadingScreen.SetActive(true);
         MainGameSelectionScreen.SetActive(false);
         EditorScreen.SetActive(false);
         MainMenuUI.SetActive(true);
-        yield return new WaitForSeconds(BlackscreenController.Instance.fadeSpeed);
+        yield return new WaitForSeconds(1 / BlackscreenController.Instance.fadeSpeed);
         LoadingScreen.SetActive(false);
         BlackscreenController.Instance.FadeIn();
     }
@@ -264,11 +264,11 @@ public class MainMenuManager : MonoBehaviour
     {
         BlackscreenController.Instance.FadeOut();
       
-        yield return new WaitForSeconds(BlackscreenController.Instance.fadeSpeed);
+        yield return new WaitForSeconds(1 / BlackscreenController.Instance.fadeSpeed);
         LoadingScreen.SetActive(true);
         MainMenuUI.SetActive(false);
         MainGameSelectionScreen.SetActive(true);
-        yield return new WaitForSeconds(BlackscreenController.Instance.fadeSpeed);
+        yield return new WaitForSeconds(1 / BlackscreenController.Instance.fadeSpeed);
         LoadingScreen.SetActive(false);
         BlackscreenController.Instance.FadeIn();
 
@@ -292,7 +292,7 @@ public class MainMenuManager : MonoBehaviour
     public IEnumerator ReturnToMenuFromGameCoroutine()
     {
         BlackscreenController.Instance.FadeOut();
-        yield return new WaitForSeconds(BlackscreenController.Instance.fadeSpeed);
+        yield return new WaitForSeconds(1 / BlackscreenController.Instance.fadeSpeed);
         LoadingScreen.SetActive(true);
 
         foreach (GameObject GO in DisabledGOsBeforeEntering)
@@ -323,7 +323,7 @@ public class MainMenuManager : MonoBehaviour
     public IEnumerator RetryLevelCoroutine()
     {
         BlackscreenController.Instance.FadeOut();
-        yield return new WaitForSeconds(BlackscreenController.Instance.fadeSpeed);
+        yield return new WaitForSeconds(1 / BlackscreenController.Instance.fadeSpeed);
         LoadingScreen.SetActive(true);
         MusicController.Instance.Cleanup();
         EnemySpawner.Instance.Cleanup();
@@ -369,7 +369,7 @@ public class MainMenuManager : MonoBehaviour
     {
         BlackscreenController.Instance.FadeOut();
         StartCoroutine(FadeOutAudioSource(MainMenuAudioSource));
-        yield return new WaitForSeconds(BlackscreenController.Instance.fadeSpeed);
+        yield return new WaitForSeconds(1 / BlackscreenController.Instance.fadeSpeed);
         LoadingScreen.SetActive(true);
         foreach (GameObject GO in GameobjectsToDisableForDemo)
         {
