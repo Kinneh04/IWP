@@ -79,7 +79,7 @@ public class BossManager : MonoBehaviour
         StartCoroutine(KillbossEffects());
         PlayerRatingController.Instance.AddRating(100, "Boss Slain", Color.cyan);
         BossStartI.ToBeDeleted = true;
-     
+        EnemySpawner.Instance.difficulty = OGDifficulty;
     }
 
     public IEnumerator KillbossEffects()

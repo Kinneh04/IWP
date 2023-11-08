@@ -70,6 +70,17 @@ public class MusicController : MonoBehaviour
     public bool isFinished = false;
     public ScoreManager scoreManager;
 
+    [Header("Glows")]
+    public List<RawImage> Glows = new List<RawImage>();
+    public Color OriginalGlowColor, PulseGlowColor;
+    public void PulseGlows()
+    {
+        foreach(RawImage RI in Glows)
+        {
+            RI.color = PulseGlowColor;
+        }
+    }
+
     public void Cleanup()
     {
         isFinished = false;
@@ -124,6 +135,7 @@ public class MusicController : MonoBehaviour
         CrosshairLerp CHR = RGO.GetComponent<CrosshairLerp>();
         CHL.target = LTarget.transform; CHR.target = RTarget.transform;
         CHL.speed = 1 / (BPM / BPM_Divider); CHR.speed = 1 / (BPM / BPM_Divider);
+        PulseGlows();
     }
 
     public void StartMusic()
@@ -276,6 +288,15 @@ public class MusicController : MonoBehaviour
     private void Update()
     {
         if (!StartedMatch) return;
+
+
+        Color gc = Glows[0].color;
+        gc = Color.Lerp(gc, OriginalGlowColor, 3.5f * Time.deltaTime);
+        foreach(RawImage RI in Glows)
+        {
+            RI.color = gc;
+        }
+
         if(MusicAudioSource.time > MusicAudioSource.clip.length && !isFinished)
         {
             isFinished = true;
