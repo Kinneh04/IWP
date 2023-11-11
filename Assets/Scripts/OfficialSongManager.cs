@@ -79,7 +79,7 @@ public class OfficialSongManager : MonoBehaviour
 
     void OnDestroy()
     {
-        SerializeAndStoreData();
+      //  SerializeAndStoreData();
     }
     void GetOfficialSongScores()
     {
@@ -141,7 +141,7 @@ public class OfficialSongManager : MonoBehaviour
     private void Start()
     {
         PlayButton.interactable = false;
-        GetOfficialSongScores();
+       // GetOfficialSongScores();
     }
     public void LoadSong()
     {

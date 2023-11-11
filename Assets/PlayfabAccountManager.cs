@@ -36,6 +36,6 @@ public class PlayfabAccountManager : MonoBehaviour
 
     public void OpenSignUpPage()
     {
-
+        SignUpPage.SetActive(true);
     }
 }
