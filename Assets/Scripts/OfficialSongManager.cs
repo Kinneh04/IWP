@@ -7,6 +7,8 @@ using Unity.VisualScripting;
 using PlayFab;
 using PlayFab.ClientModels;
 using Newtonsoft.Json;
+using PlayFab.ServerModels;
+
 public class OfficialSongManager : MonoBehaviour
 {
     [Header("Fill in")]
@@ -15,29 +17,83 @@ public class OfficialSongManager : MonoBehaviour
     public EnemySpawner enemyManager;
     public Button PlayButton;
     public TMP_Text SongSelectText;
-    public List<OfficialSongScript> OfficialSongsList = new List<OfficialSongScript>();
+   
+    public List<OfficialSongLeaderboard> SongLeaderboardList;
 
     [Header("Popupmenu")]
     public GameObject SelectedPopupMenu;
     public TMP_Text SongNameText, SongTimeText, SongBPMText, SongDifficultyText, SongBossText;
+
+
+    [Header("LeaderboardThings")]
     public GameObject LeaderboardScoreprefab;
     public Transform LeaderboardPrefabParent;
+    public List<GameObject> InstantiatedLeaderboardPrefabs = new List<GameObject>();
+    public TMP_Text RefreshingText;
 
     [Header("Dont fill in")]
+
     public OfficialSongScript CurrentlySelectedSong;
+
+    public void RefreshLeaderboardBasedOnNumber(int i)
+    {
+        if(InstantiatedLeaderboardPrefabs.Count > 0)
+        {
+            foreach(GameObject GO in InstantiatedLeaderboardPrefabs)
+            {
+                Destroy(GO);
+            }
+            InstantiatedLeaderboardPrefabs.Clear();
+        }
+        RefreshingText.gameObject.SetActive(true);
+        RefreshingText.text = "Refreshing...";
+
+        foreach(OfficialSongLeaderboard OSL in SongLeaderboardList)
+        {
+            if (OSL.SongID == i)
+            {
+                if (OSL.leaderboardEntries.Count > 0)
+                {
+                    foreach (LeaderboardEntry LBE in OSL.leaderboardEntries)
+                    {
+                        GameObject GO = Instantiate(LeaderboardScoreprefab);
+                        LeaderboardPrefab LBP = GO.GetComponent<LeaderboardPrefab>();
+                        LBP.NameText.text = LBE.LBName;
+                        LBP.ScoreText.text = "SCORE: "+LBE.LBScore;
+                        LBP.RankText.text = LBE.LBRanking;
+                        LBP.AccText.text = LBE.LBAccuracy;
+                        GO.transform.SetParent(LeaderboardPrefabParent, false);
+                        InstantiatedLeaderboardPrefabs.Add(GO);
+
+                    }
+                    RefreshingText.gameObject.SetActive(false);
+                }
+                else
+                {
+                    RefreshingText.text = "LEADERBOARD EMPTY!";
+                }
+                return;
+            }
+        }
+    }
+
+    void OnDestroy()
+    {
+        SerializeAndStoreData();
+    }
     void GetOfficialSongScores()
     {
-        PlayFabClientAPI.GetTitleData(new GetTitleDataRequest
+        PlayFabClientAPI.GetTitleData(new PlayFab.ClientModels.GetTitleDataRequest
         {
             Keys = new List<string> { "OfficialSongScores" }
         }, OnGetTitleDataSuccess, OnGetTitleDataFailure);
     }
 
-    void OnGetTitleDataSuccess(GetTitleDataResult result)
+    void OnGetTitleDataSuccess(PlayFab.ClientModels.GetTitleDataResult result)
     {
         if (result.Data.TryGetValue("OfficialSongScores", out string officialSongScores))
         {
-            // You have successfully retrieved the data. Use 'officialSongScores' for further processing.
+            SongLeaderboardList = JsonConvert.DeserializeObject<List<OfficialSongLeaderboard>>(officialSongScores);
         }
         else
         {
@@ -46,16 +102,25 @@ public class OfficialSongManager : MonoBehaviour
     }
     void SerializeAndStoreData()
     {
-        string serializedData = JsonConvert.SerializeObject(OfficialSongsList);
+        string serializedData = JsonConvert.SerializeObject(SongLeaderboardList, Formatting.Indented, new JsonSerializerSettings
+        {
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+        });
 
+        if (serializedData == "{}" || serializedData == "[]")
+        {
+            Debug.LogError("Failed To serialize Data! ");
+            return;
+        }
         Dictionary<string, string> titleData = new Dictionary<string, string>
         {
             { "OfficialSongData", serializedData }
         };
 
-        PlayFabClientAPI.SetTitleData(new SetTitleDataRequest
+        PlayFabServerAPI.SetTitleData(new SetTitleDataRequest
         {
-            Data = titleData
+            Key = "OfficialSongScores",
+            Value = serializedData
         }, OnSetTitleDataSuccess, OnSetTitleDataFailure);
     }
 
@@ -103,6 +168,7 @@ public class OfficialSongManager : MonoBehaviour
             SongSelectText.text = "Selected: " + SS.TitleOfSong;
 
             SelectedPopupMenu.SetActive(true);
+            RefreshLeaderboardBasedOnNumber(SS.SongID);
             SongNameText.text = SS.TitleOfSong;
             int length = (int)SS.SongAudioClip.length;
             int minutes = length / 60;

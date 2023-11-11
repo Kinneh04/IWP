@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class OfficialSongScript : MonoBehaviour
 {
+    [Header("Necessities")]
+    public int SongID;
     public string TitleOfSong;
+    [Space(1)]
     public AudioClip SongAudioClip;
     public List<Color> colors = new List<Color>();
     public int BPM;
@@ -16,19 +19,10 @@ public class OfficialSongScript : MonoBehaviour
     public float PreviewStartTime;
 
     [Header("Leaderboard")]
-    public List<LeaderboardEntry> leaderboardEntries = new List<LeaderboardEntry>();
+    public OfficialSongLeaderboard songLeaderboard;
 
     [Header("For Debugging only!")]
     public float OfficialStartTime;
 }
 
-
-[System.Serializable]
-public class LeaderboardEntry
-{
-    public string LBName;
-    public string LBAccuracy;
-    public string LBRanking;
-    public string LBScore;
-}
 
