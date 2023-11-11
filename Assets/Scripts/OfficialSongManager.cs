@@ -45,6 +45,13 @@ public class OfficialSongManager : MonoBehaviour
             }
             InstantiatedLeaderboardPrefabs.Clear();
         }
+
+        if(!PlayFabClientAPI.IsClientLoggedIn())
+        {
+            RefreshingText.text = "Log in to see leaderboards!";
+            RefreshingText.gameObject.SetActive(true);
+            return;
+        }
         RefreshingText.gameObject.SetActive(true);
         RefreshingText.text = "Refreshing...";
 
