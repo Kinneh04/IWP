@@ -33,13 +33,21 @@ public class OfficialSongManager : MonoBehaviour
     public Transform LeaderboardPrefabParent;
     public List<GameObject> InstantiatedLeaderboardPrefabs = new List<GameObject>();
     public TMP_Text RefreshingText;
+    public bool isFetchingLB;
+    public Button RefreshButton;
+    public TMP_Text TimeoutText;
+    public float timeoutTimer;
 
     [Header("Dont fill in")]
 
     public OfficialSongScript CurrentlySelectedSong;
-
+    public void RefreshCurrentLeaderboard()
+    {
+        GetOfficialSongScores();
+    }
     public void RefreshLeaderboardBasedOnNumber(int i)
     {
+
         if(InstantiatedLeaderboardPrefabs.Count > 0)
         {
             foreach(GameObject GO in InstantiatedLeaderboardPrefabs)
@@ -48,8 +56,13 @@ public class OfficialSongManager : MonoBehaviour
             }
             InstantiatedLeaderboardPrefabs.Clear();
         }
-
-        if(!PlayFabClientAPI.IsClientLoggedIn())
+        if (isFetchingLB)
+        {
+            RefreshingText.gameObject.SetActive(true);
+            RefreshingText.text = "Refreshing...";
+            return;
+        }
+        if (!PlayFabClientAPI.IsClientLoggedIn())
         {
             RefreshingText.text = "Log in to see leaderboards!";
             RefreshingText.gameObject.SetActive(true);
@@ -69,9 +82,10 @@ public class OfficialSongManager : MonoBehaviour
                         GameObject GO = Instantiate(LeaderboardScoreprefab);
                         LeaderboardPrefab LBP = GO.GetComponent<LeaderboardPrefab>();
                         LBP.NameText.text = LBE.LBName;
+                        if (LBE.LBName == MusicController.Instance.LoggedInPlayerName) LBP.NameText.color = Color.green;
                         LBP.ScoreText.text = "SCORE: "+LBE.LBScore;
                         LBP.RankText.text = LBE.LBRanking;
-                        LBP.AccText.text = LBE.LBAccuracy;
+                        LBP.AccText.text = LBE.LBAccuracy + "%";
                         GO.transform.SetParent(LeaderboardPrefabParent, false);
                         InstantiatedLeaderboardPrefabs.Add(GO);
 
@@ -87,28 +101,53 @@ public class OfficialSongManager : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if(timeoutTimer > 0)
+        {
+            timeoutTimer -= Time.deltaTime;
+            RefreshButton.interactable = false;
+            TimeoutText.text = ((int)timeoutTimer).ToString();
+            TimeoutText.gameObject.SetActive(true);
+        }
+        else
+        {
+            TimeoutText.gameObject.SetActive(false);
+            RefreshButton.interactable = true;
+        }
+    }
+
     void OnDestroy()
     {
       //  SerializeAndStoreData();
     }
-    void GetOfficialSongScores()
+    public void GetOfficialSongScores()
     {
+        isFetchingLB = true;
+        timeoutTimer = 5.0f;
         PlayFabClientAPI.GetTitleData(new PlayFab.ClientModels.GetTitleDataRequest
-        {
-            Keys = new List<string> { "OfficialSongScores" }
-        }, OnGetTitleDataSuccess, OnGetTitleDataFailure);
+            {
+                Keys = new List<string> { "OfficialSongScores" }
+            }, OnGetTitleDataSuccess, OnGetTitleDataFailure);
+
     }
 
     void OnGetTitleDataSuccess(PlayFab.ClientModels.GetTitleDataResult result)
     {
+        isFetchingLB = false;
         if (result.Data.TryGetValue("OfficialSongScores", out string officialSongScores))
         {
             SongLeaderboardList = JsonConvert.DeserializeObject<List<OfficialSongLeaderboard>>(officialSongScores);
+            if(CurrentlySelectedSong)
+            {
+                RefreshLeaderboardBasedOnNumber(CurrentlySelectedSong.SongID);
+            }
         }
         else
         {
             Debug.Log("OfficialSongScores not found in title data.");
         }
+
     }
     public void TryAddNewLeaderboard(string playerName, string Rank, int Score, float Acc)
     {
@@ -118,11 +157,17 @@ public class OfficialSongManager : MonoBehaviour
             {
                 foreach(LeaderboardEntry LBE in leaderboard.leaderboardEntries)
                 {
-                    if (LBE.LBName == playerName && Score > int.Parse(LBE.LBScore))
+                    if (LBE.LBName == playerName)
                     {
-                        LBE.LBScore = Score.ToSafeString();
-                        LBE.LBRanking = Rank;
-                        LBE.LBAccuracy = Acc.ToString();
+                        if (Score > int.Parse(LBE.LBScore))
+                        {
+                            LBE.LBScore = Score.ToSafeString();
+                            LBE.LBRanking = Rank;
+                            LBE.LBAccuracy = Acc.ToString();
+                            leaderboard.leaderboardEntries.Sort((a, b) => a.LBScore.CompareTo(b.LBScore));
+                            SerializeAndStoreData();
+                        }
+
                         return;
                     }
                 }
@@ -133,6 +178,10 @@ public class OfficialSongManager : MonoBehaviour
                 NewLBE.LBAccuracy = Acc.ToString();
                 leaderboard.leaderboardEntries.Add(NewLBE);
                 Debug.Log("ADDED NEW LEADERBOARD ENTRY!!!");
+
+                // Sort the list based on LBScore in ascending order
+                leaderboard.leaderboardEntries.Sort((a, b) => a.LBScore.CompareTo(b.LBScore));
+                SerializeAndStoreData();
                 return;
             }
         }
@@ -173,6 +222,8 @@ public class OfficialSongManager : MonoBehaviour
     void OnGetTitleDataFailure(PlayFabError error)
     {
         Debug.LogError("Error retrieving title data: " + error.GenerateErrorReport());
+        isFetchingLB = false;
+
     }
 
     private void Start()

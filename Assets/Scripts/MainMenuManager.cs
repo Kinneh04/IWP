@@ -34,6 +34,7 @@ public class MainMenuManager : MonoBehaviour
 
     [Header("OfficialSongs")]
     public OfficialSongManager officialSongManager;
+    public GameObject PreviewSongMenu;
 
     [Header("Shop")]
     public GameObject ShopUI;
@@ -370,6 +371,7 @@ public class MainMenuManager : MonoBehaviour
     public IEnumerator PlaydemoSequence()
     {
         BlackscreenController.Instance.FadeOut();
+        PreviewSongMenu.SetActive(false);
         StartCoroutine(FadeOutAudioSource(MainMenuAudioSource));
         yield return new WaitForSeconds(1 / BlackscreenController.Instance.fadeSpeed);
         LoadingScreen.SetActive(true);

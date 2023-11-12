@@ -42,6 +42,8 @@ public class PlayfabAccountManager : MonoBehaviour
     [Header("MainMenuTitle")]
     public TMP_Text SignedInAsText;
     public GameObject AutologinGameObject;
+
+    public OfficialSongManager SongManager;
     public void OpenAccountOptions()
     {
         if(PlayFabClientAPI.IsClientLoggedIn())
@@ -260,8 +262,10 @@ public class PlayfabAccountManager : MonoBehaviour
     private void OnGetPlayerProfileSuccess(GetPlayerProfileResult result)
     {
         string playerName = result.PlayerProfile.DisplayName;
+        MusicController.Instance.LoggedInPlayerName = playerName;
         Debug.Log("Player Name: " + playerName);
         SignedInAsText.text = "Signed in as: " + playerName;
+        SongManager.GetOfficialSongScores();
     }
 
     private void OnGetPlayerProfileFailure(PlayFabError error)

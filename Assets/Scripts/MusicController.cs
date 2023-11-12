@@ -17,6 +17,7 @@ public class MusicController : MonoBehaviour
 {
     [Header("Login")]
     public string LoggedInPlayerID;
+    public string LoggedInPlayerName;
 
     [Header("Countdown")]
     public TMP_Text countdownText;
@@ -73,7 +74,9 @@ public class MusicController : MonoBehaviour
 
     [Header("Finished")]
     public bool isFinished = false;
+    public bool canExit = false;
     public ScoreManager scoreManager;
+    public GameObject LevelClearGO;
 
     [Header("Glows")]
     public List<RawImage> Glows = new List<RawImage>();
@@ -89,6 +92,7 @@ public class MusicController : MonoBehaviour
     public void Cleanup()
     {
         isFinished = false;
+        canExit = false;
         currentShootLeeway = 0;
         canFire = false;
         StartedMatch = false;
@@ -302,6 +306,26 @@ public class MusicController : MonoBehaviour
         }
     }
 
+    IEnumerator StartFinishGameSequence()
+    {
+        EnemySpawner.Instance.Cleanup();
+        isFinished = true;
+        LevelClearGO.SetActive(true);
+        scoreManager.ChangeLevelCompleteVars(playerRating.Targetscore, playerRating.KillAmount, playerRating.HighestCombo, playerRating.MultikillAmount, playerRating.TargetAcc);
+        if (PlayFabClientAPI.IsClientLoggedIn())
+        {
+            scoreManager.LoginToSaveScoreGO.SetActive(true);
+        }
+        else
+        {
+            scoreManager.LoginToSaveScoreGO.SetActive(false);
+        }
+        yield return new WaitForSeconds(3f);
+        LevelClearGO.SetActive(false);
+        scoreManager.FinalScoreGameObject.SetActive(true);
+        canExit = true;
+    }
+
     private void Update()
     {
         if (!StartedMatch) return;
@@ -316,18 +340,7 @@ public class MusicController : MonoBehaviour
 
         if(MusicAudioSource.time >= MusicAudioSource.clip.length - EndBuffer && !isFinished)
         {
-            isFinished = true;
-            EnemySpawner.Instance.Cleanup();
-            scoreManager.FinalScoreGameObject.SetActive(true);
-            scoreManager.ChangeLevelCompleteVars(playerRating.Targetscore, playerRating.KillAmount, playerRating.HighestCombo, playerRating.MultikillAmount, playerRating.TargetAcc);
-            if(PlayFabClientAPI.IsClientLoggedIn())
-            {
-                scoreManager.LoginToSaveScoreGO.SetActive(true);
-            }
-            else
-            {
-                scoreManager.LoginToSaveScoreGO.SetActive(false);
-            }
+            StartCoroutine(StartFinishGameSequence());
         
         }
         foreach (Intervals interval in _intervals)
