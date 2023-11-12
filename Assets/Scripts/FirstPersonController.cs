@@ -186,15 +186,15 @@ using System.Collections;
 
 		private void Awake()
 		{
-		Application.targetFrameRate = 60;
-		OriginalColor = AbilityImage.color;
+			Application.targetFrameRate = 60;
+			OriginalColor = AbilityImage.color;
 			// get a reference to our main camera
 			if (_mainCamera == null)
 			{
 				_mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
 			}
-        if (!CurrentAbility) CurrentAbility = GameObject.FindAnyObjectByType<Ability>();
-    }
+			if (!CurrentAbility) CurrentAbility = GameObject.FindAnyObjectByType<Ability>();
+		}
 
 		public void UpdateAbilityCooldownText(float num)
 		{
@@ -251,10 +251,12 @@ using System.Collections;
 			Dashing();
 			Move();
 			CameraRotation();
-		
 
-		
-		if (dashCooldown > 0)
+
+        if (!CurrentAbility) CurrentAbility = GameObject.FindAnyObjectByType<Ability>();
+
+
+        if (dashCooldown > 0)
 		{
 			
 			dashCooldown -= Time.deltaTime;

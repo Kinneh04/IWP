@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Unity.VisualScripting;
+using static UnityEditor.PlayerSettings;
+
 public class StoreManager : MonoBehaviour
 {
     public List<Weapon> Weapons = new List<Weapon>();
@@ -22,6 +25,12 @@ public class StoreManager : MonoBehaviour
 
     [Header("Weapory")]
     public ShootingScript shootingScript;
+
+    [Header("Abilities")]
+    public GameObject CurrentlyEquippedAbilityObject;
+    public List<ShopAbility> AvailableAbilities = new List<ShopAbility>();
+    public List<AbilitySlotPrefab> InstantiatedAbilities;
+    public GameObject AbilityPrefab, AbilityPrefabParent;
 
     [Header("DontFIll")]
     public List<WeaponSlotPrefab> InstantiatedWeaponSlots = new List<WeaponSlotPrefab>();
@@ -122,6 +131,58 @@ public class StoreManager : MonoBehaviour
                 SelectWeapon(WSP);
             }
 
+        }
+
+        foreach(ShopAbility SA in AvailableAbilities)
+        {
+            GameObject GO = Instantiate(AbilityPrefab);
+            GO.transform.SetParent(AbilityPrefabParent.transform);
+            AbilitySlotPrefab WSP = GO.GetComponent<AbilitySlotPrefab>();
+            InstantiatedAbilities.Add(WSP);
+            WSP.HeldAbilityObject = SA.AttachedAbility;
+            WSP.IconImage.sprite = SA.AbilitySprite;
+            WSP.Cost = SA.Cost;
+            WSP.isBought = SA.bought;
+            WSP.isEquipped = SA.equipped;
+            WSP.CostText.text = SA.Cost.ToString();
+            WSP.titletext.text = SA.AbilityName;
+            WSP.DescriptionText.text = SA.abilityDesc;
+            WSP.EquipButton.onClick.AddListener(delegate { SelectAbility(WSP); });
+            WSP.BuyButton.onClick.AddListener(delegate { BuyAbility(WSP); });
+            if(WSP.isBought)
+            {
+                WSP.Lockscreen.SetActive(false);
+                if(WSP.isEquipped)
+                {
+                    SelectAbility(WSP);
+                }
+            }
+            else
+            {
+                WSP.Lockscreen.SetActive(true);
+            }
+        }
+    }
+
+    public void SelectAbility(AbilitySlotPrefab ASP)
+    {
+        foreach(AbilitySlotPrefab a in InstantiatedAbilities)
+        {
+            a.UnequipGun();
+        }
+
+        ASP.EquipGun();
+        CurrentlyEquippedAbilityObject = ASP.HeldAbilityObject;
+    }
+
+    public void BuyAbility(AbilitySlotPrefab ASP)
+    {
+        if(CurrentCoinsAmount > ASP.Cost)
+        {
+            CurrentCoinsAmount -= ASP.Cost;
+            CoinsText.text = "GP: " +CurrentCoinsAmount.ToString();
+            ASP.isBought = true;
+            ASP.Lockscreen.SetActive(false);
         }
     }
 }
