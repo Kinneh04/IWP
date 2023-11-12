@@ -21,7 +21,8 @@ public class StoreManager : MonoBehaviour
     public int maxAmmo, currentAmmo;
     public List<WeaponReloadPart> ReloadAnims = new List<WeaponReloadPart>();
     public GameObject ActiveWeapon;
-    public WeaponMovement weaponMove;   
+    public WeaponMovement weaponMove;
+    public Transform ShootPoint;
 
     [Header("Weapory")]
     public ShootingScript shootingScript;
@@ -72,7 +73,7 @@ public class StoreManager : MonoBehaviour
         ReloadAnims = W.ReloadAnims;
         ActiveWeapon = W.ActiveWeapon;
         weaponMove = W.weaponMovement;
-
+        ShootPoint = W.ShootPoint;
 
     }
     public void LoadAbilityDetails()
@@ -95,6 +96,7 @@ public class StoreManager : MonoBehaviour
         shootingScript.CurrentAmmo = currentAmmo;
         shootingScript.ReloadAnimClips = ReloadAnims;
         shootingScript.weaponMovement = weaponMove;
+        shootingScript.GunShootFrom = ShootPoint;
         ActiveWeapon.SetActive(true);
     }
     private void Awake()
@@ -215,4 +217,5 @@ public class Weapon
     public List<WeaponReloadPart> ReloadAnims = new List<WeaponReloadPart>();
     public GameObject ActiveWeapon;
     public WeaponMovement weaponMovement;
+    public Transform ShootPoint;
 }

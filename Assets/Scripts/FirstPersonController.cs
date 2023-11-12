@@ -149,7 +149,7 @@ using System.Collections;
     }
 	public void TakeDamage(int damage)
 	{
-		if (isDead || isTransitioning) return;
+		if (isDead || isTransitioning || MusicController.Instance.isFinished) return;
 		Health -= damage;
         float volume = (1.0f - (Health / 100.0f))/2f;
 		HeartbeatAudioSource.volume = volume;
