@@ -32,6 +32,8 @@ public class StoreManager : MonoBehaviour
     public List<AbilitySlotPrefab> InstantiatedAbilities;
     public GameObject AbilityPrefab, AbilityPrefabParent;
 
+    public GameObject InstantiatedAbility;
+
     [Header("DontFIll")]
     public List<WeaponSlotPrefab> InstantiatedWeaponSlots = new List<WeaponSlotPrefab>();
 
@@ -72,6 +74,17 @@ public class StoreManager : MonoBehaviour
         weaponMove = W.weaponMovement;
 
 
+    }
+    public void LoadAbilityDetails()
+    {
+        if(InstantiatedAbility)
+        {
+            Destroy(InstantiatedAbility);
+        }
+
+        GameObject GO = Instantiate(CurrentlyEquippedAbilityObject);
+        FirstPersonController.Instance.CurrentAbility = GO.GetComponent<Ability>();
+        InstantiatedAbility = GO;
     }
 
     public void LoadWeaponDetails()

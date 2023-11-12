@@ -390,7 +390,7 @@ public class MainMenuManager : MonoBehaviour
 
             GO.SetActive(true);
         }
-
+        storeManager.LoadAbilityDetails();
         officialSongManager.LoadSong();
         yield return new WaitForSeconds(0.75f);
         LoadingScreen.SetActive(false);
