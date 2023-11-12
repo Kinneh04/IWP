@@ -9,4 +9,5 @@ public class LeaderboardEntry
     public string LBAccuracy;
     public string LBRanking;
     public string LBScore;
+    public int LBPosition;
 }

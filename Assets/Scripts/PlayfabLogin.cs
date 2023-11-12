@@ -179,7 +179,6 @@ public class PlayfabLogin : MonoBehaviour
             PlayFabSettings.staticSettings.TitleId = "42";
         }
         AttemptReloginOnStart();
-     
     }
 
     public void AttemptReloginOnStart()

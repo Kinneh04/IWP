@@ -10,9 +10,13 @@ using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 using UnityEngine.Events;
 using JetBrains.Annotations;
 using System.Windows.Forms;
+using PlayFab;
+using PlayFab.ClientModels;
 
 public class MusicController : MonoBehaviour
 {
+    [Header("Login")]
+    public string LoggedInPlayerID;
 
     [Header("Countdown")]
     public TMP_Text countdownText;
@@ -56,6 +60,7 @@ public class MusicController : MonoBehaviour
     int BeatCount;
     public bool beatAlreadyHit = false;
     public bool StartedMatch = false;
+    public float EndBuffer;
 
     [Header("BPMREWORK")]
     public List<Intervals> _intervals = new List<Intervals>();
@@ -292,7 +297,6 @@ public class MusicController : MonoBehaviour
         }
     }
 
-
     private void Update()
     {
         if (!StartedMatch) return;
@@ -305,12 +309,21 @@ public class MusicController : MonoBehaviour
             RI.color = gc;
         }
 
-        if(MusicAudioSource.time >= MusicAudioSource.clip.length && !isFinished)
+        if(MusicAudioSource.time >= MusicAudioSource.clip.length - EndBuffer && !isFinished)
         {
             isFinished = true;
             EnemySpawner.Instance.Cleanup();
             scoreManager.FinalScoreGameObject.SetActive(true);
             scoreManager.ChangeLevelCompleteVars(playerRating.Targetscore, playerRating.KillAmount, playerRating.HighestCombo, playerRating.MultikillAmount, playerRating.TargetAcc);
+            if(PlayFabClientAPI.IsClientLoggedIn())
+            {
+                scoreManager.LoginToSaveScoreGO.SetActive(true);
+            }
+            else
+            {
+                scoreManager.LoginToSaveScoreGO.SetActive(false);
+            }
+        
         }
         foreach (Intervals interval in _intervals)
         {

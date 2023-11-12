@@ -8,6 +8,9 @@ using PlayFab;
 using PlayFab.ClientModels;
 using Newtonsoft.Json;
 using PlayFab.ServerModels;
+using GetPlayerProfileRequest = PlayFab.ClientModels.GetPlayerProfileRequest;
+using PlayerProfileViewConstraints = PlayFab.ClientModels.PlayerProfileViewConstraints;
+using GetPlayerProfileResult = PlayFab.ClientModels.GetPlayerProfileResult;
 
 public class OfficialSongManager : MonoBehaviour
 {
@@ -107,6 +110,33 @@ public class OfficialSongManager : MonoBehaviour
             Debug.Log("OfficialSongScores not found in title data.");
         }
     }
+    public void TryAddNewLeaderboard(string playerName, string Rank, int Score, float Acc)
+    {
+        foreach(OfficialSongLeaderboard leaderboard in SongLeaderboardList)
+        {
+            if (leaderboard.SongID == CurrentlySelectedSong.SongID)
+            {
+                foreach(LeaderboardEntry LBE in leaderboard.leaderboardEntries)
+                {
+                    if (LBE.LBName == playerName && Score > int.Parse(LBE.LBScore))
+                    {
+                        LBE.LBScore = Score.ToSafeString();
+                        LBE.LBRanking = Rank;
+                        LBE.LBAccuracy = Acc.ToString();
+                        return;
+                    }
+                }
+                LeaderboardEntry NewLBE = new LeaderboardEntry();
+                NewLBE.LBName = playerName;
+                NewLBE.LBScore = Score.ToString();
+                NewLBE.LBRanking = Rank;
+                NewLBE.LBAccuracy = Acc.ToString();
+                leaderboard.leaderboardEntries.Add(NewLBE);
+                Debug.Log("ADDED NEW LEADERBOARD ENTRY!!!");
+                return;
+            }
+        }
+    }
     void SerializeAndStoreData()
     {
         string serializedData = JsonConvert.SerializeObject(SongLeaderboardList, Formatting.Indented, new JsonSerializerSettings
@@ -154,6 +184,7 @@ public class OfficialSongManager : MonoBehaviour
     {
         musicController.BPM_Divider = CurrentlySelectedSong.BPM;
         musicController.MusicAudioSource.clip = CurrentlySelectedSong.SongAudioClip;
+        musicController.EndBuffer = CurrentlySelectedSong.EndBufferTime;
         musicController.LightColorPalette.Clear();
         foreach (Color c in CurrentlySelectedSong.colors)
         {
@@ -166,33 +197,29 @@ public class OfficialSongManager : MonoBehaviour
     public void PreviewSong(OfficialSongScript SS)
     {
 
-        if (CurrentlySelectedSong != SS)
+        StopAllCoroutines();
+        CurrentlySelectedSong = SS;
+        StartCoroutine(TransitionToNewSong());
+        PlayButton.interactable = true;
+        SongSelectText.text = "Playing: " + SS.SongAudioClip.name;
+
+        SelectedPopupMenu.SetActive(true);
+        RefreshLeaderboardBasedOnNumber(SS.SongID);
+        SongNameText.text = SS.TitleOfSong;
+        int length = (int)SS.SongAudioClip.length;
+        int minutes = length / 60;
+        int seconds = length % 60;
+
+        string formattedTime = string.Format("{0}:{1:00}", minutes, seconds);
+
+        SongTimeText.text = "TIME: " + formattedTime;
+        SongBPMText.text = "BPM: " + SS.BPM.ToString();
+        SongDifficultyText.text = "DIFFICULTY: " + SS.DifficultyOverride.ToString() + "/10";
+        if (SS.ContainsBoss)
         {
-            StopAllCoroutines();
-            CurrentlySelectedSong = SS;
-            StartCoroutine(TransitionToNewSong());
-            PlayButton.interactable = true;
-            SongSelectText.text = "Selected: " + SS.TitleOfSong;
-
-            SelectedPopupMenu.SetActive(true);
-            RefreshLeaderboardBasedOnNumber(SS.SongID);
-            SongNameText.text = SS.TitleOfSong;
-            int length = (int)SS.SongAudioClip.length;
-            int minutes = length / 60;
-            int seconds = length % 60;
-
-            string formattedTime = string.Format("{0}:{1:00}", minutes, seconds);
-
-            SongTimeText.text = "TIME: " + formattedTime;
-            SongBPMText.text = "BPM: " + SS.BPM.ToString();
-            SongDifficultyText.text = "DIFFICULTY: " + SS.DifficultyOverride.ToString() + "/10";
-            if (SS.ContainsBoss)
-            {
-                SongBossText.text = "CONTAINS BOSS";
-            }
-            else SongBossText.text = "";
-
+            SongBossText.text = "CONTAINS BOSS";
         }
+        else SongBossText.text = "";
     }
 
     public IEnumerator TransitionToNewSong()

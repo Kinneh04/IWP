@@ -60,6 +60,7 @@ public class PlayfabAccountManager : MonoBehaviour
     }
     public void AttemptReloginOnStart()
     {
+        PlayFabClientAPI.ForgetAllCredentials();
         string RecordedPassword = PlayerPrefs.GetString("Password");
         string RecordedUsername = PlayerPrefs.GetString("Username");
         int AutoLogin = PlayerPrefs.GetInt("AutoLoginStatus");
@@ -234,6 +235,7 @@ public class PlayfabAccountManager : MonoBehaviour
         SignUpPage.SetActive(false);
         FetchPlayerName(result.PlayFabId);
         AutologinGameObject.SetActive(false);
+        MusicController.Instance.LoggedInPlayerID = result.PlayFabId;
         //ShowResultText("Logged in successfully!");
         //LogoutButton.gameObject.SetActive(true);
         //GameMenu.SetActive(true);

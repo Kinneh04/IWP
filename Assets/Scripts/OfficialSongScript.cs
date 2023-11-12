@@ -17,9 +17,10 @@ public class OfficialSongScript : MonoBehaviour
     
     [Header("optional")]
     public float PreviewStartTime;
+    public float EndBufferTime;
 
-    [Header("Leaderboard")]
-    public OfficialSongLeaderboard songLeaderboard;
+    //[Header("Leaderboard")]
+    //public OfficialSongLeaderboard songLeaderboard;
 
     [Header("For Debugging only!")]
     public float OfficialStartTime;
