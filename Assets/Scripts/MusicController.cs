@@ -98,6 +98,11 @@ public class MusicController : MonoBehaviour
         MusicProgressionSlider.value = 0;
         scoreManager.FinalScoreGameObject.SetActive(false);
 
+        foreach(SongEvent SE in LoadedEvents)
+        {
+            SE.Played = false;
+        }
+
         foreach(Intervals I in _intervals)
         {
             if(I.ToBeDeleted)
@@ -331,6 +336,7 @@ public class MusicController : MonoBehaviour
             {
                 _intervals.Remove(interval);
             }
+            if (interval.ToBeDeleted) return;
             float sampledTime = (MusicAudioSource.timeSamples / (MusicAudioSource.clip.frequency * interval.GetIntervalLength(BPM_Divider)));
             // Debug.Log(sampledTime);
             bool f = interval.CheckForNewInterval(sampledTime, ShootLeeway);

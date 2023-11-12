@@ -136,6 +136,7 @@ public class BossManager : MonoBehaviour
         AttachedBossEnemyScript = null;
         if(BossStartI == null) BossStartI.ToBeDeleted = true;
         EnemySpawner.Instance.difficulty = OGDifficulty;
+        LightbeamEffect.SetActive(false);
     }
 
     public void BossEscape()
