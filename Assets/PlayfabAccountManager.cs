@@ -7,6 +7,9 @@ using PlayFab;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using GetPlayerProfileRequest = PlayFab.ClientModels.GetPlayerProfileRequest;
+using PlayerProfileViewConstraints = PlayFab.ClientModels.PlayerProfileViewConstraints;
+using GetPlayerProfileResult = PlayFab.ClientModels.GetPlayerProfileResult;
 
 public class PlayfabAccountManager : MonoBehaviour
 {
@@ -35,6 +38,10 @@ public class PlayfabAccountManager : MonoBehaviour
     [Header("Recovery")]
     public TMP_InputField RecoverEmailInputField;
     public TMP_Text RecoverEmailFeedback;
+
+    [Header("MainMenuTitle")]
+    public TMP_Text SignedInAsText;
+    public GameObject AutologinGameObject;
     public void OpenAccountOptions()
     {
         if(PlayFabClientAPI.IsClientLoggedIn())
@@ -47,6 +54,28 @@ public class PlayfabAccountManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        AttemptReloginOnStart();
+    }
+    public void AttemptReloginOnStart()
+    {
+        string RecordedPassword = PlayerPrefs.GetString("Password");
+        string RecordedUsername = PlayerPrefs.GetString("Username");
+        int AutoLogin = PlayerPrefs.GetInt("AutoLoginStatus");
+        if (RecordedPassword == "") return;
+        else if (RecordedUsername != "" && RecordedPassword != "")
+        {
+            LoginUsernameInput.text = RecordedUsername;
+            LoginPasswordInput.text = RecordedPassword;
+            RememberMeToggle.isOn = true;
+        }
+        if(AutoLogin == 1)
+        {
+            AutologinGameObject.SetActive(true);
+            AttemptLogin();
+        }
+    }
     public void OpenLoginPage()
     {
         LoginPage.SetActive(true);
@@ -110,16 +139,16 @@ public class PlayfabAccountManager : MonoBehaviour
     {
         OnRegisterSuccessMenu.SetActive(true);
     }
-    public void AttemptAutologinAfterRegister(string UN, string PW)
+    public void AttemptAutologinAfterRegister()
     {
-        if (UN.Contains("@") || UN.Contains("."))
+        if (SavedNewlyRegisteredUsername.Contains("@") || SavedNewlyRegisteredUsername.Contains("."))
         {
-            LoginViaEmailSet(UN, PW);
+            LoginViaEmailSet(SavedNewlyRegisteredUsername, savedNewlyRegisteredPassword);
             AttemptSaveLoginDetails();
         }
         else
         {
-            LoginViaPlayfabSet(UN, PW);
+            LoginViaPlayfabSet(SavedNewlyRegisteredUsername, savedNewlyRegisteredPassword);
             AttemptSaveLoginDetails();
         }
     }
@@ -130,7 +159,17 @@ public class PlayfabAccountManager : MonoBehaviour
         {
             PlayerPrefs.SetString("Username", LoginUsernameInput.text.ToString());
             PlayerPrefs.SetString("Password", LoginPasswordInput.text.ToString());
+
+            if (AutoLoginToggle.isOn)
+            {
+                PlayerPrefs.SetInt("AutoLoginStatus", 1);
+            }
+            else
+            {
+                PlayerPrefs.SetInt("AutoLoginStatus", 0);
+            }
             Debug.LogError("PasswordSaved!");
+
         }
         else
         {
@@ -191,8 +230,10 @@ public class PlayfabAccountManager : MonoBehaviour
 
     private void OnLoginSuccess(LoginResult result)
     {
-        SceneManager.LoadScene("Landing");
-
+        LoginPage.SetActive(false);
+        SignUpPage.SetActive(false);
+        FetchPlayerName(result.PlayFabId);
+        AutologinGameObject.SetActive(false);
         //ShowResultText("Logged in successfully!");
         //LogoutButton.gameObject.SetActive(true);
         //GameMenu.SetActive(true);
@@ -200,15 +241,36 @@ public class PlayfabAccountManager : MonoBehaviour
         //PFLB.GetMessageOfTheDay();
 
     }
+    public void FetchPlayerName(string playFabId)
+    {
+        var request = new GetPlayerProfileRequest
+        {
+            PlayFabId = playFabId,
+            ProfileConstraints = new PlayerProfileViewConstraints
+            {
+                ShowDisplayName = true
+            }
+        };
 
-    //private void LogoutPlayer()
-    //{
-    //    DisplayPopupText("Player logged out successfully!");
-    //    LogoutButton.gameObject.SetActive(false);
-    //    GameMenu.SetActive(false);
-    //    LoginMenu.SetActive(true);
-    //    PlayFabClientAPI.ForgetAllCredentials();
-    //}
+        PlayFabClientAPI.GetPlayerProfile(request, OnGetPlayerProfileSuccess, OnGetPlayerProfileFailure);
+    }
+
+    private void OnGetPlayerProfileSuccess(GetPlayerProfileResult result)
+    {
+        string playerName = result.PlayerProfile.DisplayName;
+        Debug.Log("Player Name: " + playerName);
+        SignedInAsText.text = "Signed in as: " + playerName;
+    }
+
+    private void OnGetPlayerProfileFailure(PlayFabError error)
+    {
+        Debug.LogError("Error getting player profile: " + error.ErrorMessage);
+    }
+    public void LogoutPlayer()
+    {
+        SignedInAsText.text = "Signed in as: Guest";
+        PlayFabClientAPI.ForgetAllCredentials();
+    }
 
     private void OnLoginFailure(PlayFabError error)
     {
@@ -216,6 +278,7 @@ public class PlayfabAccountManager : MonoBehaviour
         PlayerPrefs.SetString("Password", "");
         PlayerPrefs.SetString("Email", "");
         PlayerPrefs.SetString("Username", "");
+        AutologinGameObject.SetActive(false);
     }
 
     private void OnRegisterFailure(PlayFabError error)
