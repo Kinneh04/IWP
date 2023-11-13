@@ -1,10 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using Unity.VisualScripting;
-using static UnityEditor.PlayerSettings;
 
 public class StoreManager : MonoBehaviour
 {
