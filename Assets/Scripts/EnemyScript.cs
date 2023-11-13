@@ -6,7 +6,10 @@ using UnityEngine;
 public class EnemyScript : MonoBehaviour
 {
     public ParticleSystem BloodspurtFX;
+    public bool isStatic = false;
 
+    [Header("ForMelee")]
+    public int TouchDamage;
     [Header("ForMediumAndBoss")]
     public int Health = 100;
     public Rigidbody RB;
@@ -16,6 +19,16 @@ public class EnemyScript : MonoBehaviour
     public enum EnemyType
     {
         Small, Medium, Boss
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("PlayerHitbox"))
+        {
+
+            other.GetComponentInParent<FirstPersonController>().TakeDamage(TouchDamage);
+            Die(true);
+        }
     }
 
     public Vector3 TargetPosition;
@@ -57,7 +70,7 @@ public class EnemyScript : MonoBehaviour
 
     void Start()
     {
-        OGMatColor = EnemyMat.color;
+       if(EnemyMat)  OGMatColor = EnemyMat.color;
         player = GameObject.FindGameObjectWithTag("PlayerHitbox").transform;
         RB = GetComponent<Rigidbody>();
         FPC = FirstPersonController.Instance;
@@ -65,7 +78,7 @@ public class EnemyScript : MonoBehaviour
 
     void Update()
     {
-        if(enemyType != EnemyType.Boss)
+        if(enemyType != EnemyType.Boss && !isStatic)
             ChargeBehavior();
     }
 
@@ -123,11 +136,11 @@ public class EnemyScript : MonoBehaviour
     {
         Instantiate(Rangedball, transform.position, transform.rotation);
     }
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, bool duplicate = false)
     {
         if(enemyType == EnemyType.Small)
         {
-            Die();
+            Die(duplicate);
         }
         else if(enemyType == EnemyType.Medium)
         {
@@ -137,14 +150,14 @@ public class EnemyScript : MonoBehaviour
                 StartCoroutine(FlashDamage());
             }
             if (BloodspurtFX) Instantiate(BloodspurtFX, transform.position, Quaternion.identity);
-            if (Health <= 0) Die();
+            if (Health <= 0) Die(duplicate);
         }
         else if (enemyType == EnemyType.Boss)
         {
             Health -= damage;
             if(Health <= 0)
             {
-                Die();
+                Die(duplicate);
             }
             BossAnimator.Play(bossHitAnimClip.name);
             AttachedBossManager.UpdateHealthSlider();
@@ -166,7 +179,7 @@ public class EnemyScript : MonoBehaviour
         if(EnemyMat) EnemyMat.color = OGMatColor;
     }
 
-    public void Die()
+    public void Die(bool duplicate = false)
     {
         if (enemyType == EnemyType.Boss)
         {
@@ -174,7 +187,7 @@ public class EnemyScript : MonoBehaviour
         }
         else
         {
-            ratingController.OnKillEnemy();
+          if(!duplicate) ratingController.OnKillEnemy();
 
             Instantiate(BloodspurtFX, transform.position, Quaternion.identity);
             Instantiate(DeathParticles, transform.position, Quaternion.identity);

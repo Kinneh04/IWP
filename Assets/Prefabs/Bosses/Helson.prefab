@@ -1606,7 +1606,7 @@ MonoBehaviour:
   isAttacking: 0
   ChanceForDash: 50
   ThreeDash: 0
-  Projectile: {fileID: 4284639301828262667, guid: a7bd9435b6d99b247898acbf8c242d7a,
+  Projectile: {fileID: 4284639301828262667, guid: 91c359cb896860349b608d4936e6af3b,
     type: 3}
   SpawnOnBeat: 1
   SpawnInterval: 0
@@ -1638,6 +1638,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BloodspurtFX: {fileID: 8237142794598097314, guid: e5e16623fa576c34dbd6e2a0f62da36f,
     type: 3}
+  isStatic: 0
   Health: 1500
   RB: {fileID: 0}
   DeathParticles: {fileID: 0}

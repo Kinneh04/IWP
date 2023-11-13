@@ -94,10 +94,10 @@ public class PlayerRatingController : MonoBehaviour
         CurrentFrenzyAmount = 0;
         Rating = 0;
         currentRatingIndex = 0;
-
+        ShotsHit = 0;
         currentScore = 0;
         Targetscore = 0;
-        TargetAcc = 100;
+        TargetAcc = 100f;
         currentAcc = TargetAcc;
         ScoreTMP_Text.text = currentScore.ToString("000000");
         AccuracyTMP_Text.text = TargetAcc.ToString() + "%";
@@ -214,7 +214,6 @@ public class PlayerRatingController : MonoBehaviour
         Minscale = RatingImage.transform.localScale;
         MaxScale = Minscale * MaxScaleMultiplier;
         FrenzySlider.maxValue = AmountNeededForFrenzy;
-        IncreaseRatingBy1();
     }
 
     public void AddRating(float rating, string ShowString = null, Color? c = null)

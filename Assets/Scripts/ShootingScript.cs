@@ -42,7 +42,8 @@ public class ShootingScript : MonoBehaviour
     public int ReloadIndex = 0;
     public float reloadTime;
     public TMP_Text AmmoCountText;
-
+    public int NumberOfBulletsPerShot;
+    public float spreadAngle;
     [Header("antiSpam")]
     public bool isSpamming = false;
     private float clickCount = 0;
@@ -50,7 +51,6 @@ public class ShootingScript : MonoBehaviour
     public GameObject AntiSpamGO;
     [Header("LateEarlyRating")]
     public TMP_Text LateEarlyRatingText;
-    public float spreadAngle;
 
     [Header("Sounds")]
     public AudioSource PlayerAS;
@@ -259,50 +259,59 @@ public class ShootingScript : MonoBehaviour
         T.a = 0;
         LateEarlyRatingText.color = Color.Lerp(LateEarlyRatingText.color, T, Time.deltaTime * 3);
     }
-    
+
 
     public void FireRaycast(bool AddToAcc = true)
     {
-        RaycastHit hit;
-        if (RaycastFromCameraCenter(out hit))
+        bool first = false;
+        for (int i = 0; i < NumberOfBulletsPerShot; i++)
         {
-            if (hit.collider.CompareTag("Enemy") || hit.collider.CompareTag("Boss"))
+            
+            RaycastHit hit;
+
+            // Adjust the ray direction for shotgun spread
+            Vector3 rayDirection = Camera.main.transform.forward; // Assuming cameraTransform is your camera's transform
+            rayDirection = Quaternion.Euler(Random.Range(-spreadAngle, spreadAngle), Random.Range(-spreadAngle, spreadAngle), 0) * rayDirection;
+
+            if (RaycastFromCameraCenter(out hit, rayDirection))
             {
-                hit.collider.GetComponent<EnemyScript>().TakeDamage(SetDamage);
-                //playerRatingController.AddRating(10, "Enemy Hit!");
-                if(AddToAcc)
-                playerRatingController.AddHitShot();
-            }
-            else if (hit.collider.CompareTag("Coin"))
-            {
-                hit.collider.GetComponent<CoinScript>().Ricochet();
-                if (AddToAcc)
-                    playerRatingController.AddHitShot();
+                if (hit.collider.CompareTag("Enemy") || hit.collider.CompareTag("Boss"))
+                {
+                    hit.collider.GetComponent<EnemyScript>().TakeDamage(SetDamage, first);
+                    if (AddToAcc)
+                        playerRatingController.AddHitShot();
+                }
+                else if (hit.collider.CompareTag("Coin"))
+                {
+                    hit.collider.GetComponent<CoinScript>().Ricochet();
+                    if (AddToAcc)
+                        playerRatingController.AddHitShot();
+                }
+                else
+                {
+                    if (AddToAcc)
+                        playerRatingController.AddMissedShot();
+                }
+
+                SpawnTracer(hit.point);
             }
             else
             {
                 if (AddToAcc)
                     playerRatingController.AddMissedShot();
             }
+            first = true;
         }
-        else
-        {
-            if (AddToAcc)
-                playerRatingController.AddMissedShot();
-        }
-        SpawnTracer(hit.point);
-        
     }
-    bool RaycastFromCameraCenter(out RaycastHit hit)
+    bool RaycastFromCameraCenter(out RaycastHit hit, Vector3 direction = default)
     {
-        Camera mainCamera = Camera.main;
+        Transform cameraTransform = Camera.main.transform;
+        if (direction == default)
+            direction = cameraTransform.forward;
 
-        Vector3 rayOrigin = mainCamera.transform.position;
-        Vector3 rayDirection = mainCamera.transform.forward;
-
-        return Physics.Raycast(rayOrigin, rayDirection, out hit);
+        Ray ray = new Ray(cameraTransform.position, direction);
+        return Physics.Raycast(ray, out hit, 20);
     }
-
     public void SpawnGatlingGunTracer(Vector3 Destination)
     {
         foreach (GameObject GO in GatlingGunMuzzleFlashPoints)

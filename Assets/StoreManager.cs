@@ -23,6 +23,7 @@ public class StoreManager : MonoBehaviour
     public GameObject ActiveWeapon;
     public WeaponMovement weaponMove;
     public Transform ShootPoint;
+    public int NumberOfShotsPerShot;
 
     [Header("Weapory")]
     public ShootingScript shootingScript;
@@ -74,6 +75,7 @@ public class StoreManager : MonoBehaviour
         ActiveWeapon = W.ActiveWeapon;
         weaponMove = W.weaponMovement;
         ShootPoint = W.ShootPoint;
+        NumberOfShotsPerShot = W.NumberOfBulletsPerShot;
 
     }
     public void LoadAbilityDetails()
@@ -97,6 +99,7 @@ public class StoreManager : MonoBehaviour
         shootingScript.ReloadAnimClips = ReloadAnims;
         shootingScript.weaponMovement = weaponMove;
         shootingScript.GunShootFrom = ShootPoint;
+        shootingScript.NumberOfBulletsPerShot = NumberOfShotsPerShot;
         ActiveWeapon.SetActive(true);
     }
     private void Awake()
@@ -209,7 +212,7 @@ public class Weapon
     public Sprite GunImage;
     public int GunCost;
     public bool GunEquippedOnStart, GunUnlocked;
-
+    public int NumberOfBulletsPerShot;
     [Header("ForSelectionChange")]
     public Animator GunAnimator;
     public AnimationClip FireAnimClip;

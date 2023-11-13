@@ -61,7 +61,7 @@ Transform:
   m_GameObject: {fileID: 8934527016483769248}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.41903, y: -0.03804, z: 7.6112}
-  m_LocalScale: {x: 0.029770324, y: 0.029770324, z: 0.029770324}
+  m_LocalScale: {x: 0.03582263, y: 0.03582263, z: 0.03582263}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5222251348876432228}
@@ -96,6 +96,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BloodspurtFX: {fileID: 8237142794598097314, guid: e5e16623fa576c34dbd6e2a0f62da36f,
     type: 3}
+  isStatic: 0
   Health: 50
   RB: {fileID: 53558880}
   DeathParticles: {fileID: 4058727824660422441, guid: 0524977708a5f6b43a80a3566263623e,

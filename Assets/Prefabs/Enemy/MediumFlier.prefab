@@ -1371,7 +1371,7 @@ Transform:
   m_GameObject: {fileID: 8934527016483769248}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.41839263, y: 0.301, z: 7.62}
-  m_LocalScale: {x: 0.022229753, y: 0.022229753, z: 0.022229753}
+  m_LocalScale: {x: 0.026355596, y: 0.026355596, z: 0.026355596}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5135336404323129887}
@@ -1405,6 +1405,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BloodspurtFX: {fileID: 8237142794598097314, guid: 9deb4358763fe4441bab18f8d588a535,
     type: 3}
+  isStatic: 0
   Health: 100
   RB: {fileID: 53558880}
   DeathParticles: {fileID: 4058727824660422441, guid: fbb300cbad042f74c9c4d98ddc3d5778,
@@ -1422,6 +1423,9 @@ MonoBehaviour:
   ratingController: {fileID: 0}
   raycastCooldown: 0.2
   FPC: {fileID: 0}
+  AttachedBossManager: {fileID: 0}
+  BossAnimator: {fileID: 0}
+  bossHitAnimClip: {fileID: 0}
   chargeSpeed: 4
   flankSpeed: 3
 --- !u!95 &8934527016483769251

@@ -83,9 +83,11 @@ public class MusicController : MonoBehaviour
     public Color OriginalGlowColor, PulseGlowColor;
     public void PulseGlows()
     {
+        Color newPulseColor = PulseGlowColor;
+        newPulseColor.a += (100 - FirstPersonController.Instance.Health) / 100;
         foreach(RawImage RI in Glows)
         {
-            RI.color = PulseGlowColor;
+            RI.color = newPulseColor;
         }
     }
 
