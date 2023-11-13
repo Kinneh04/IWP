@@ -16,6 +16,7 @@ public class EnemyScript : MonoBehaviour
     public GameObject DeathParticles;
     public Material EnemyMat;
     private Color OGMatColor;
+    public bool enemyIsDead = false;
     public enum EnemyType
     {
         Small, Medium, Boss
@@ -155,12 +156,13 @@ public class EnemyScript : MonoBehaviour
         else if (enemyType == EnemyType.Boss)
         {
             Health -= damage;
-            if(Health <= 0)
+          //  BossAnimator.Play(bossHitAnimClip.name);
+            AttachedBossManager.UpdateHealthSlider();
+            if (Health <= 0)
             {
                 Die(duplicate);
             }
-            BossAnimator.Play(bossHitAnimClip.name);
-            AttachedBossManager.UpdateHealthSlider();
+          
         }
     }
 
@@ -187,7 +189,12 @@ public class EnemyScript : MonoBehaviour
         }
         else
         {
-          if(!duplicate) ratingController.OnKillEnemy();
+            if (!enemyIsDead)
+            {
+
+                PlayerRatingController.Instance.OnKillEnemy();
+                enemyIsDead = true;
+            }
 
             Instantiate(BloodspurtFX, transform.position, Quaternion.identity);
             Instantiate(DeathParticles, transform.position, Quaternion.identity);
