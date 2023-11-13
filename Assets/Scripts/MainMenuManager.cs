@@ -40,6 +40,61 @@ public class MainMenuManager : MonoBehaviour
     public GameObject ShopUI;
     public AudioSource ShopAudioSource;
     public StoreManager storeManager;
+
+    [Header("ForMunninsTrial")]
+    public GameObject OriginalDungeon;
+    public List<GameObject> UIToEnableForMunninsTrial;
+    public List<GameObject> UIToDisableForMunninsTrial;
+    public void StartMunninsTrial()
+    {
+        StartCoroutine(TransitionToMunninsTrial());
+    }
+
+    public IEnumerator TransitionToMunninsTrial()
+    {
+        BlackscreenController.Instance.FadeOut();
+        officialSongManager.CurrentlySelectedSong = MunninsTrialManager.Instance.MunninsTrialSong;
+        PreviewSongMenu.SetActive(false);
+        StartCoroutine(FadeOutAudioSource(MainMenuAudioSource));
+        yield return new WaitForSeconds(1 / BlackscreenController.Instance.fadeSpeed);
+        LoadingScreen.SetActive(true);
+        foreach (GameObject GO in GameobjectsToDisableForDemo)
+        {
+            if (!GO) continue;
+            if (GO.activeSelf)
+            {
+                GO.SetActive(false);
+                DisabledGOsBeforeEntering.Add(GO);
+            }
+        }
+        storeManager.LoadWeaponDetails();
+        yield return new WaitForSeconds(0.5f);
+        foreach (GameObject GO in GameobjectsToEnableForDemo)
+        {
+            if (!GO) continue;
+
+            GO.SetActive(true);
+        }
+        foreach(GameObject GO in UIToEnableForMunninsTrial)
+        {
+            GO.SetActive(true);
+        }
+        foreach (GameObject GO in UIToDisableForMunninsTrial)
+        {
+            GO.SetActive(false);
+        }
+        OriginalDungeon.SetActive(false);
+        MusicController.Instance.isPlayingMunninsTrial = true;
+        storeManager.LoadAbilityDetails();
+        MunninsTrialManager.Instance.StartDungeon();
+        officialSongManager.LoadSong();
+        yield return new WaitForSeconds(0.75f);
+        LoadingScreen.SetActive(false);
+        yield return new WaitForSeconds(1);
+        Cursor.lockState = CursorLockMode.Locked;
+        BlackscreenController.Instance.FadeIn();
+        StartCoroutine(MusicController.Instance.StartMatch());
+    }
     public void ToShop()
     {
         StartCoroutine(TransitionToShop());

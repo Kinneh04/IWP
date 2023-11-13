@@ -4883,6 +4883,7 @@ GameObject:
   - component: {fileID: 283157112348246491}
   - component: {fileID: 4113102120176001463}
   - component: {fileID: 4132700926300706140}
+  - component: {fileID: 7991718982937774661}
   m_Layer: 0
   m_Name: BossFireHoming
   m_TagString: Enemy
@@ -4944,6 +4945,7 @@ MonoBehaviour:
   DeathParticles: {fileID: 4058727824660422441, guid: 80c635da70fc8094cb607f09ea1b9beb,
     type: 3}
   EnemyMat: {fileID: 0}
+  enemyIsDead: 0
   TargetPosition: {x: 0, y: 0, z: 0}
   enemyBehaviour: 0
   enemyType: 0
@@ -4987,8 +4989,22 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 2, y: 2, z: 2}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &7991718982937774661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4284639301828262667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 616a1be8c5f536642a89eff6cb35c61c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SelfDestructAfterSeconds: 5
+  ParticleEffects: {fileID: 0}
 --- !u!1001 &5251814999355782611
 PrefabInstance:
   m_ObjectHideFlags: 0

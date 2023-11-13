@@ -74,6 +74,9 @@ public class MusicController : MonoBehaviour
     [Header("Glows")]
     public List<RawImage> Glows = new List<RawImage>();
     public Color OriginalGlowColor, PulseGlowColor;
+
+    [Header("MunninsTrial")]
+    public bool isPlayingMunninsTrial = false;
     public void PulseGlows()
     {
         Color newPulseColor = PulseGlowColor;

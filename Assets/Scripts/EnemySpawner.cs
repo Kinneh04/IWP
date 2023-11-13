@@ -139,6 +139,7 @@ public class EnemySpawner : MonoBehaviour
     }
     IEnumerator SpawnObjectPeriodically(Enemy E)
     {
+        if (MunninsTrialManager.Instance.isCurrentlyRunningDungeon) yield break;
         while (true)
         {
             if(!AllowedToSpawn || HitmaxEnemies())
@@ -213,7 +214,24 @@ public class EnemySpawner : MonoBehaviour
         return true;
     }
 
+    public List<EnemyScript> InstantiateRandomDungeonEnemies()
+    {
+        List<EnemyScript> DungeonEnemies = new List<EnemyScript>();
+        int EnemyCount = Random.Range(3, 10);
+        for(int i = 0; i < EnemyCount; i++)
+        {
+            Enemy E = TypesOfEnemies[Random.Range(0, TypesOfEnemies.Count)];
 
+            Vector3 spawnPosition;
+            spawnPosition = GetRandomPositionWithinRange(target.position);
+            spawnPosition.y = E.DistanceFromFloor;
+
+            GameObject GO = Instantiate(E.EnemyGO, spawnPosition, Quaternion.identity);
+            GO.GetComponent<EnemyScript>().ratingController = PRC;
+            DungeonEnemies.Add(GO.GetComponent<EnemyScript>());
+        }
+        return DungeonEnemies;
+    }
 
 }
 
