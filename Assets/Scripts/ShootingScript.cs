@@ -271,7 +271,7 @@ public class ShootingScript : MonoBehaviour
 
             // Adjust the ray direction for shotgun spread
             Vector3 rayDirection = Camera.main.transform.forward; // Assuming cameraTransform is your camera's transform
-            rayDirection = Quaternion.Euler(Random.Range(-spreadAngle, spreadAngle), Random.Range(-spreadAngle, spreadAngle), 0) * rayDirection;
+            if(i > 0) rayDirection = Quaternion.Euler(Random.Range(-spreadAngle, spreadAngle), Random.Range(-spreadAngle, spreadAngle), 0) * rayDirection;
 
             if (RaycastFromCameraCenter(out hit, rayDirection))
             {

@@ -77,7 +77,7 @@ using System.Collections;
 		public float addToDashCooldown = 5.0f;
 		private bool isDashing = false;
 		public float currentRecoil;
-
+		public bool canMove = true;
 	[Header("UI elements for abilities")]
 	public TMP_Text AbilityCountdownTMPText;
     public TMP_Text DashCountdownTMPText;
@@ -244,7 +244,7 @@ using System.Collections;
 				MainMenuManager.Instance.RetryLevel();
 			}
 		}
-		if (isTransitioning || MusicController.Instance.isFinished || isDead) return;
+		if (isTransitioning || MusicController.Instance.isFinished || isDead || !canMove) return;
 
 			JumpAndGravity();
 			GroundedCheck();

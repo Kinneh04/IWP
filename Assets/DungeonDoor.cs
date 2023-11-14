@@ -16,4 +16,17 @@ public class DungeonDoor : MonoBehaviour
             }
         }
     }
+
+    private void Awake()
+    {
+        hasHit = false;
+    }
+
+    //private void Update()
+    //{
+    //    if(!MunninsTrialManager.Instance.hasClearedThisDungeon)
+    //    {
+    //        hasHit = false;
+    //    }
+    //}
 }

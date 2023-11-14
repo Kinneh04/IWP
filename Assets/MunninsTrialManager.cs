@@ -20,6 +20,8 @@ public class MunninsTrialManager : MonoBehaviour
     public Transform DungeonTransformParent;
     public bool doneBegin = false;
     public OfficialSongScript MunninsTrialSong;
+
+    public TrialDungeon CurrentTrialDungeon;
     public static MunninsTrialManager Instance
     {
         get
@@ -43,7 +45,7 @@ public class MunninsTrialManager : MonoBehaviour
     public void StartDungeon()
     {
         CurrentlyInstantiatedDungeon = Instantiate(BeginningDungeon);
-        Player.position = new Vector3(0, 1, 0);
+        Player.position = new Vector3(0, 2, 0);
        // EnemiesInDungeon = EnemySpawner.Instance.InstantiateRandomDungeonEnemies();
         hasClearedThisDungeon = false;
         isCurrentlyRunningDungeon = true;
@@ -85,6 +87,7 @@ public class MunninsTrialManager : MonoBehaviour
             hasClearedThisDungeon = true;
             return;
         }
+        CurrentTrialDungeon.Arrow.SetActive(true);
         hasClearedThisDungeon = true;
         DungeonClearIndicator.SetActive(true);
         NumberOfClearedDungeons++;
@@ -97,6 +100,7 @@ public class MunninsTrialManager : MonoBehaviour
     {
 
         isTransitioningDungeons = true;
+        FirstPersonController.Instance.canMove = false;
         Destroy(CurrentlyInstantiatedDungeon);
         BlackscreenController.Instance.FadeOut();
         yield return new WaitForSeconds(1 / BlackscreenController.Instance.fadeSpeed);
@@ -105,10 +109,19 @@ public class MunninsTrialManager : MonoBehaviour
         DungeonClearIndicator.SetActive(false); 
         CurrentlyInstantiatedDungeon = TempDungeon;
         CurrentlyInstantiatedDungeon.transform.SetParent(DungeonTransformParent);
-        Player.position = new Vector3(0, 1, 0);
+        TrialDungeon TD = CurrentlyInstantiatedDungeon.GetComponent<TrialDungeon>();
+        CurrentTrialDungeon = TD;
+        Player.position = TD.Startposition.position;
+        Player.rotation = TD.Startposition.rotation;
+        yield return new WaitForSeconds(0.1f);
+        TD.ExitDoor.hasHit = false;
         BlackscreenController.Instance.FadeIn();
-        EnemiesInDungeon = EnemySpawner.Instance.InstantiateRandomDungeonEnemies();
+        FirstPersonController.Instance.canMove = true;
+        yield return new WaitForSeconds(0.5f);
+        //  EnemiesInDungeon = EnemySpawner.Instance.InstantiateRandomDungeonEnemies();
+        EnemiesInDungeon = TD.Enemies;
         hasClearedThisDungeon = false;
         isTransitioningDungeons = false;
+
     }
 }
