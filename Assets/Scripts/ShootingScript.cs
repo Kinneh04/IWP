@@ -138,6 +138,16 @@ public class ShootingScript : MonoBehaviour
             {
                 IncrementReload();
             }
+            else if(Input.GetKeyDown(KeyCode.R) && CurrentAmmo >= maxAmmo && musicController.canReload)
+            {
+                LateEarlyRatingText.text = "Ammo Full!";
+                LateEarlyRatingText.color = Color.yellow;
+            }
+            else if(Input.GetKeyDown(KeyCode.R) && !musicController.canReload)
+            {
+                LateEarlyRatingText.text = "Missed!";
+                LateEarlyRatingText.color = Color.yellow;
+            }
             if (CurrentAmmo > 0 && !isReloading && musicController.canFire)
             {
                 //If user taps to the beat

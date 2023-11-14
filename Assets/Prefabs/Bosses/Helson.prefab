@@ -1646,6 +1646,8 @@ MonoBehaviour:
   DeathParticles: {fileID: 0}
   EnemyMat: {fileID: 2100000, guid: 893a174022b750a4b8a323f23cf4c54b, type: 2}
   enemyIsDead: 0
+  HitAnimator: {fileID: 0}
+  HitAnimClip: {fileID: 0}
   TargetPosition: {x: 0, y: 0, z: 0}
   enemyBehaviour: 0
   enemyType: 2
@@ -1658,8 +1660,8 @@ MonoBehaviour:
   raycastCooldown: 0.2
   FPC: {fileID: 0}
   AttachedBossManager: {fileID: 0}
-  BossAnimator: {fileID: 8244322662929750985}
-  bossHitAnimClip: {fileID: 7400000, guid: 0a486fd810f62824a88445365fdff185, type: 2}
+  BossAnimator: {fileID: 3418129521633406696}
+  bossHitAnimClip: {fileID: 7400000, guid: 5d7dafa32fb503a48a9b117961bd808f, type: 2}
   chargeSpeed: 5
   flankSpeed: 3
 --- !u!135 &5053564004412479194
@@ -2304,6 +2306,7 @@ GameObject:
   - component: {fileID: 8335027723093778574}
   - component: {fileID: 5833029507756601220}
   - component: {fileID: 633068925816860585}
+  - component: {fileID: 3418129521633406696}
   m_Layer: 0
   m_Name: Rock_Boss_Body
   m_TagString: Untagged
@@ -2387,6 +2390,27 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!95 &3418129521633406696
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6490872987182860149}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: bebbc47b7aa8e134792c3301a9375691, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &6644728867692621351
 GameObject:
   m_ObjectHideFlags: 0

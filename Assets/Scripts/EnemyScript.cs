@@ -17,6 +17,10 @@ public class EnemyScript : MonoBehaviour
     public Material EnemyMat;
     private Color OGMatColor;
     public bool enemyIsDead = false;
+
+    public Animator HitAnimator;
+    public AnimationClip HitAnimClip;
+
     public enum EnemyType
     {
         Small, Medium, Boss
@@ -152,17 +156,18 @@ public class EnemyScript : MonoBehaviour
             }
             if (BloodspurtFX) Instantiate(BloodspurtFX, transform.position, Quaternion.identity);
             if (Health <= 0) Die(duplicate);
+            HitAnimator.Play(HitAnimClip.name);
         }
         else if (enemyType == EnemyType.Boss)
         {
             Health -= damage;
-          //  BossAnimator.Play(bossHitAnimClip.name);
+            BossAnimator.Play(bossHitAnimClip.name);
             AttachedBossManager.UpdateHealthSlider();
             if (Health <= 0)
             {
                 Die(duplicate);
             }
-          
+       //     HitAnimator.Play(HitAnimClip.name);
         }
     }
 

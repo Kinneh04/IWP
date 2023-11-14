@@ -749,6 +749,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9056735506290796554}
   - component: {fileID: 3842724953405445284}
+  - component: {fileID: 2645860151250765724}
   m_Layer: 0
   m_Name: Bat
   m_TagString: Untagged
@@ -859,6 +860,27 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.07965565, y: 0.0353087, z: -0.0031931698}
     m_Extent: {x: 0.14914978, y: 0.1484773, z: 0.37022242}
   m_DirtyAABB: 0
+--- !u!95 &2645860151250765724
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4820940824362938303}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: cf155c66b00106b40a69d1853afe3427, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &5172098030153891101
 GameObject:
   m_ObjectHideFlags: 0
@@ -1414,6 +1436,8 @@ MonoBehaviour:
     type: 3}
   EnemyMat: {fileID: 2100000, guid: b5eb924ec02110847bc828b1ee528636, type: 2}
   enemyIsDead: 0
+  HitAnimator: {fileID: 2645860151250765724}
+  HitAnimClip: {fileID: 7400000, guid: b7f73100575383549841ad7e4a8325dc, type: 2}
   TargetPosition: {x: 0, y: 0, z: 0}
   enemyBehaviour: 1
   enemyType: 1
@@ -1427,8 +1451,8 @@ MonoBehaviour:
   raycastCooldown: 0.2
   FPC: {fileID: 0}
   AttachedBossManager: {fileID: 0}
-  BossAnimator: {fileID: 0}
-  bossHitAnimClip: {fileID: 0}
+  BossAnimator: {fileID: 2645860151250765724}
+  bossHitAnimClip: {fileID: 7400000, guid: b7f73100575383549841ad7e4a8325dc, type: 2}
   chargeSpeed: 4
   flankSpeed: 3
 --- !u!95 &8934527016483769251
