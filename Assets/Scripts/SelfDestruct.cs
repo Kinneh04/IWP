@@ -12,6 +12,8 @@ public class SelfDestruct : MonoBehaviour
         else Destroy(gameObject, SelfDestructAfterSeconds);
     }
 
+
+
     IEnumerator SelfD()
     {
         yield return new WaitForSeconds(SelfDestructAfterSeconds);

@@ -23,6 +23,7 @@ public class ShootingScript : MonoBehaviour
     public Transform GunShootFrom;
     public GameObject Tracer;
     public GameObject MuzzleFlash;
+    public float MaxShotDistance;
 
     [Header("Frenzy mode and gatling gun")]
     public bool FrenzyMode = false;
@@ -320,7 +321,7 @@ public class ShootingScript : MonoBehaviour
             direction = cameraTransform.forward;
 
         Ray ray = new Ray(cameraTransform.position, direction);
-        return Physics.Raycast(ray, out hit, 20);
+        return Physics.Raycast(ray, out hit, MaxShotDistance);
     }
     public void SpawnGatlingGunTracer(Vector3 Destination)
     {

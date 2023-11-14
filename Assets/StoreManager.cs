@@ -97,6 +97,7 @@ public class StoreManager : MonoBehaviour
         shootingScript.weaponMovement = weaponMove;
         shootingScript.GunShootFrom = ShootPoint;
         shootingScript.NumberOfBulletsPerShot = NumberOfShotsPerShot;
+        shootingScript.MaxShotDistance = currentWeaponEquipped.RelatedWeapon.ShootDistance;
         ActiveWeapon.SetActive(true);
     }
     private void Awake()
@@ -218,4 +219,5 @@ public class Weapon
     public GameObject ActiveWeapon;
     public WeaponMovement weaponMovement;
     public Transform ShootPoint;
+    public float ShootDistance;
 }
