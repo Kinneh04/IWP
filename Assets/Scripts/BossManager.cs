@@ -179,7 +179,7 @@ public class BossManager : MonoBehaviour
     public IEnumerator SpawnBossCoroutine(Boss B)
     {
         OGDifficulty = EnemySpawner.Instance.difficulty;
-        EnemySpawner.Instance.difficulty = 2;
+        EnemySpawner.Instance.difficulty = 0;
         LightbeamEffect.SetActive(true);
         yield return new WaitForSeconds(1);
         FirstPersonController.Instance.isTransitioning = true;
@@ -192,7 +192,17 @@ public class BossManager : MonoBehaviour
         InstantiatedBoss = GO.GetComponent<BossScript>();
         AttachedBossEnemyScript = GO.GetComponent<EnemyScript>();
         AttachedBossEnemyScript.AttachedBossManager = this;
-        PlayerRoot.LookAt(GO.transform.position);
+        //PlayerRoot.LookAt(GO.transform.position);
+        float t = 0;
+        Quaternion startRotation = PlayerRoot.rotation;
+        Quaternion targetRotation = Quaternion.LookRotation(GO.transform.position - PlayerRoot.position);
+
+        while (t < 1)
+        {
+            t += Time.deltaTime; // You need to define the duration for the lerp
+            PlayerRoot.rotation = Quaternion.Lerp(startRotation, targetRotation, t);
+            yield return null; // Wait for the next frame
+        }
         AddedInterval = new Intervals();
         AddedInterval._steps = 1;
         AddedInterval._trigger = new UnityEngine.Events.UnityEvent();

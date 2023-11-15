@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MainMenuManager : MonoBehaviour
@@ -441,6 +442,11 @@ public class MainMenuManager : MonoBehaviour
         }
         storeManager.LoadWeaponDetails();
         yield return new WaitForSeconds(0.5f);
+        Light[] lights = GameObject.FindObjectsOfType<Light>();
+        foreach (Light light in lights)
+        {
+            MusicController.Instance.PulsingLights.Add(light);
+        }
         foreach (GameObject GO in GameobjectsToEnableForDemo)
         {
             if (!GO) continue; 

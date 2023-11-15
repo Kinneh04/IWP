@@ -24,7 +24,7 @@ public class MusicController : MonoBehaviour
     public bool canReload;
 
     [Header("LightsController")]
-    public Light[] PulsingLights;
+    public List<Light> PulsingLights;
     public Light[] TransitioningLights;
     public List<Color> LightColorPalette = new List<Color>();
     public Light CelingLight;
@@ -77,6 +77,14 @@ public class MusicController : MonoBehaviour
 
     [Header("MunninsTrial")]
     public bool isPlayingMunninsTrial = false;
+
+    [Header("SFX")]
+    public AudioSource SFXAudioSource;
+
+    public void PlaySFX(AudioClip AC)
+    {
+        SFXAudioSource.PlayOneShot(AC);
+    }
     public void PulseGlows()
     {
         Color newPulseColor = PulseGlowColor;

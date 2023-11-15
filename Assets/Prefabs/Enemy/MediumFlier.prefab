@@ -1392,8 +1392,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8934527016483769248}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.41839263, y: 0.301, z: 7.62}
-  m_LocalScale: {x: 0.026355596, y: 0.026355596, z: 0.026355596}
+  m_LocalPosition: {x: -0.41386, y: 0.041147, z: 7.62}
+  m_LocalScale: {x: 0.040566534, y: 0.040566534, z: 0.040566534}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5135336404323129887}
@@ -1430,7 +1430,7 @@ MonoBehaviour:
     type: 3}
   isStatic: 0
   TouchDamage: 0
-  Health: 100
+  Health: 70
   RB: {fileID: 53558880}
   DeathParticles: {fileID: 4058727824660422441, guid: fbb300cbad042f74c9c4d98ddc3d5778,
     type: 3}
@@ -1451,6 +1451,8 @@ MonoBehaviour:
   raycastCooldown: 0.2
   FPC: {fileID: 0}
   AttachedBossManager: {fileID: 0}
+  EnemyAnimator: {fileID: 0}
+  AttackAnimationClip: {fileID: 0}
   BossAnimator: {fileID: 2645860151250765724}
   bossHitAnimClip: {fileID: 7400000, guid: b7f73100575383549841ad7e4a8325dc, type: 2}
   chargeSpeed: 4

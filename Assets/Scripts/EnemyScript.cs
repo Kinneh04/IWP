@@ -56,7 +56,8 @@ public class EnemyScript : MonoBehaviour
     public float raycastCooldown = 0.2f;
     public FirstPersonController FPC;
     public BossManager AttachedBossManager;
-
+    public Animator EnemyAnimator;
+    public AnimationClip AttackAnimationClip;
     [Header("ForBossOnly")]
     public Animator BossAnimator;
     public AnimationClip bossHitAnimClip;
@@ -139,6 +140,7 @@ public class EnemyScript : MonoBehaviour
     }
     public void ShootProjectile()
     {
+        EnemyAnimator.Play(AttackAnimationClip.name);
         Instantiate(Rangedball, transform.position, transform.rotation);
     }
     public void TakeDamage(int damage, bool duplicate = false)

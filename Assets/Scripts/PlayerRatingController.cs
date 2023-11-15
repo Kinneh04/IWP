@@ -50,6 +50,7 @@ public class PlayerRatingController : MonoBehaviour
 
     [Header("Crosshair")]
     public GameObject HitmarkerGameObject;
+    public AudioClip HitmarkerAudioSource;
     public float cooldown;
     public float addToCooldown;
 
@@ -155,6 +156,7 @@ public class PlayerRatingController : MonoBehaviour
     {
         ShotsFired++; ShotsHit++;
         TargetAndRecalculateAcc();
+        MusicController.Instance.PlaySFX(HitmarkerAudioSource);
         HitmarkerGameObject.SetActive(true);
         cooldown = addToCooldown;
         Multiplier += 0.05f * killCombo;

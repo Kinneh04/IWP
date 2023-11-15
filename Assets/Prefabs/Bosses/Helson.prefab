@@ -1641,7 +1641,7 @@ MonoBehaviour:
     type: 3}
   isStatic: 0
   TouchDamage: 0
-  Health: 1500
+  Health: 900
   RB: {fileID: 0}
   DeathParticles: {fileID: 0}
   EnemyMat: {fileID: 2100000, guid: 893a174022b750a4b8a323f23cf4c54b, type: 2}
@@ -1660,6 +1660,8 @@ MonoBehaviour:
   raycastCooldown: 0.2
   FPC: {fileID: 0}
   AttachedBossManager: {fileID: 0}
+  EnemyAnimator: {fileID: 0}
+  AttackAnimationClip: {fileID: 0}
   BossAnimator: {fileID: 3418129521633406696}
   bossHitAnimClip: {fileID: 7400000, guid: 5d7dafa32fb503a48a9b117961bd808f, type: 2}
   chargeSpeed: 5

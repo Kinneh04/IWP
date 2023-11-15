@@ -342,13 +342,14 @@ public class ShootingScript : MonoBehaviour
 
     public IEnumerator MoveTracer(GameObject GO, Vector3 Destination)
     {
-        while(Vector3.Distance(GO.transform.position, Destination) > 1f)
+        
+        while(GO && Vector3.Distance(GO.transform.position, Destination) > 1f)
         {
             GO.transform.position += GO.transform.forward * Time.deltaTime * tracerMoveSpeed;
             yield return null;
 
         }
-        Destroy(GO);
+        if(GO) Destroy(GO);
     }
 }
 
