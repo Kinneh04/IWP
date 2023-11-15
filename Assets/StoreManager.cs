@@ -21,7 +21,7 @@ public class StoreManager : MonoBehaviour
     public WeaponMovement weaponMove;
     public Transform ShootPoint;
     public int NumberOfShotsPerShot;
-
+    public AudioClip GunFireAudio;
     [Header("Weapory")]
     public ShootingScript shootingScript;
 
@@ -72,6 +72,7 @@ public class StoreManager : MonoBehaviour
         ActiveWeapon = W.ActiveWeapon;
         weaponMove = W.weaponMovement;
         ShootPoint = W.ShootPoint;
+        GunFireAudio = W.GunFireAudio;
         NumberOfShotsPerShot = W.NumberOfBulletsPerShot;
 
     }
@@ -96,6 +97,7 @@ public class StoreManager : MonoBehaviour
         shootingScript.ReloadAnimClips = ReloadAnims;
         shootingScript.weaponMovement = weaponMove;
         shootingScript.GunShootFrom = ShootPoint;
+        shootingScript.ShootingAudioClip = GunFireAudio;
         shootingScript.NumberOfBulletsPerShot = NumberOfShotsPerShot;
         shootingScript.MaxShotDistance = currentWeaponEquipped.RelatedWeapon.ShootDistance;
         ActiveWeapon.SetActive(true);
@@ -105,6 +107,7 @@ public class StoreManager : MonoBehaviour
         CoinsText.text = "GP: " + CurrentCoinsAmount.ToString();
         foreach(Weapon W in Weapons)
         {
+            if (W.OnPlaceholder) continue;
             GameObject GO = Instantiate(WeaponPrefab);
             GO.transform.SetParent(WeaponPrefabParent.transform);
             WeaponSlotPrefab WSP = GO.GetComponent<WeaponSlotPrefab>();
@@ -205,12 +208,15 @@ public class StoreManager : MonoBehaviour
 [Serializable]
 public class Weapon
 {
+
+    public bool OnPlaceholder = false;
     public string GunName, GunDesc;
     public int TotalShots, ReloadCycles;
     public Sprite GunImage;
     public int GunCost;
     public bool GunEquippedOnStart, GunUnlocked;
     public int NumberOfBulletsPerShot;
+    public AudioClip GunFireAudio;
     [Header("ForSelectionChange")]
     public Animator GunAnimator;
     public AnimationClip FireAnimClip;

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4745197388928484015}
   - component: {fileID: 3032170884154370165}
+  - component: {fileID: 7302928541398192424}
   m_Layer: 0
   m_Name: TracerGameObject
   m_TagString: Untagged
@@ -140,3 +141,17 @@ TrailRenderer:
   m_MinVertexDistance: 0.02
   m_Autodestruct: 1
   m_Emitting: 1
+--- !u!114 &7302928541398192424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1188322271330627964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 616a1be8c5f536642a89eff6cb35c61c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SelfDestructAfterSeconds: 1
+  ParticleEffects: {fileID: 0}
