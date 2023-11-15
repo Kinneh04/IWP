@@ -181,7 +181,7 @@ public class BossManager : MonoBehaviour
         OGDifficulty = EnemySpawner.Instance.difficulty;
         EnemySpawner.Instance.difficulty = 0;
         LightbeamEffect.SetActive(true);
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.9f);
         FirstPersonController.Instance.isTransitioning = true;
         EnemySpawner.Instance.RemoveAllEnemies();
         EnemySpawner.Instance.AllowedToSpawn = false;
@@ -199,7 +199,7 @@ public class BossManager : MonoBehaviour
 
         while (t < 1)
         {
-            t += Time.deltaTime; // You need to define the duration for the lerp
+            t += Time.deltaTime * 10.0f; // You need to define the duration for the lerp
             PlayerRoot.rotation = Quaternion.Lerp(startRotation, targetRotation, t);
             yield return null; // Wait for the next frame
         }

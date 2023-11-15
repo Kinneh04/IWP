@@ -442,16 +442,18 @@ public class MainMenuManager : MonoBehaviour
         }
         storeManager.LoadWeaponDetails();
         yield return new WaitForSeconds(0.5f);
-        Light[] lights = GameObject.FindObjectsOfType<Light>();
-        foreach (Light light in lights)
-        {
-            MusicController.Instance.PulsingLights.Add(light);
-        }
+   
         foreach (GameObject GO in GameobjectsToEnableForDemo)
         {
             if (!GO) continue; 
 
             GO.SetActive(true);
+        }
+        MusicController.Instance.PulsingLights.Clear();
+        Light[] lights = GameObject.FindObjectsOfType<Light>();
+        foreach (Light light in lights)
+        {
+            MusicController.Instance.PulsingLights.Add(light);
         }
         storeManager.LoadAbilityDetails();
         officialSongManager.LoadSong();
