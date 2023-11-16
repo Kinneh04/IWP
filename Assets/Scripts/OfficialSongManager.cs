@@ -49,7 +49,7 @@ public class OfficialSongManager : MonoBehaviour
 
     public void LoadPR()
     {
-        if(CurrentlySelectedSong.LocalScore == null || CurrentlySelectedSong.LocalScore.LBScore == "0")
+        if(CurrentlySelectedSong.LocalScore == null || CurrentlySelectedSong.LocalScore.LBScore == "0" || CurrentlySelectedSong.LocalScore.LBScore == "")
         {
             hasPRGO.SetActive(false);
             DoesntHavePRGO.SetActive(true);
