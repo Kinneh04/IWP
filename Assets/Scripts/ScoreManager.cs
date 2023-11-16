@@ -76,10 +76,11 @@ public class ScoreManager : MonoBehaviour
         SavedRank = Grade;
         //Highscore
         NewHighScore.SetActive(true);
-
+      
         if(PlayFabClientAPI.IsClientLoggedIn())
         {
             FetchPlayerNameForLeaderboardEntry(MusicController.Instance.LoggedInPlayerID);
         }
     }
+
 }

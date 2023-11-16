@@ -14,7 +14,7 @@ public class OfficialSongScript : MonoBehaviour
     public List<SongEvent> Events = new List<SongEvent>();
     public int DifficultyOverride;
     public bool ContainsBoss;
-    
+    public LeaderboardEntry LocalScore;
     [Header("optional")]
     public float PreviewStartTime;
     public float EndBufferTime;

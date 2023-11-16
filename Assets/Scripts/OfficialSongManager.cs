@@ -38,9 +38,32 @@ public class OfficialSongManager : MonoBehaviour
     public TMP_Text TimeoutText;
     public float timeoutTimer;
 
+    [Header("PersonalRecord")]
+    public TMP_Text PR_RankText;
+    public TMP_Text PR_AccText, PR_ScoreText;
+    public GameObject hasPRGO, DoesntHavePRGO;
+
     [Header("Dont fill in")]
 
     public OfficialSongScript CurrentlySelectedSong;
+
+    public void LoadPR()
+    {
+        if(CurrentlySelectedSong.LocalScore == null || CurrentlySelectedSong.LocalScore.LBScore == "0")
+        {
+            hasPRGO.SetActive(false);
+            DoesntHavePRGO.SetActive(true);
+        }
+        else
+        {
+            hasPRGO.SetActive(true);
+            DoesntHavePRGO.SetActive(false);
+
+            PR_RankText.text = CurrentlySelectedSong.LocalScore.LBRanking;
+            PR_AccText.text = "ACC: " + CurrentlySelectedSong.LocalScore.LBAccuracy + "%";
+            PR_ScoreText.text = "SCORE: " + CurrentlySelectedSong.LocalScore.LBScore;
+        }
+    }
     public void RefreshCurrentLeaderboard()
     {
         GetOfficialSongScores();
@@ -149,6 +172,15 @@ public class OfficialSongManager : MonoBehaviour
         }
 
     }
+
+    public void AddNewLocalLeaderboard(string Rank, int score, float acc)
+    {
+        LeaderboardEntry newLBE = new LeaderboardEntry();
+        newLBE.LBScore = score.ToString();
+        newLBE.LBAccuracy = acc.ToString();
+        newLBE.LBRanking = Rank;
+        CurrentlySelectedSong.LocalScore = newLBE;
+    }
     public void TryAddNewLeaderboard(string playerName, string Rank, int Score, float Acc)
     {
         foreach(OfficialSongLeaderboard leaderboard in SongLeaderboardList)
@@ -253,7 +285,7 @@ public class OfficialSongManager : MonoBehaviour
         StartCoroutine(TransitionToNewSong());
         PlayButton.interactable = true;
         SongSelectText.text = "Playing: " + SS.SongAudioClip.name;
-
+        LoadPR();
         SelectedPopupMenu.SetActive(true);
         RefreshLeaderboardBasedOnNumber(SS.SongID);
         SongNameText.text = SS.TitleOfSong;
