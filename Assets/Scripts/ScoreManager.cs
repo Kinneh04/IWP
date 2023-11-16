@@ -76,10 +76,18 @@ public class ScoreManager : MonoBehaviour
         SavedRank = Grade;
         //Highscore
         NewHighScore.SetActive(true);
-      
+        TryAddNewPersonalRecord();
         if(PlayFabClientAPI.IsClientLoggedIn())
         {
             FetchPlayerNameForLeaderboardEntry(MusicController.Instance.LoggedInPlayerID);
+        }
+    }
+    public void TryAddNewPersonalRecord()
+    {
+        if(SongManager.CurrentlySelectedSong.LocalScore == null || int.Parse(SongManager.CurrentlySelectedSong.LocalScore.LBScore) < SavedScore)
+        {
+            // Add new local leaderboard
+            SongManager.AddNewLocalLeaderboard(SavedRank, SavedScore, SavedAcc);
         }
     }
 
