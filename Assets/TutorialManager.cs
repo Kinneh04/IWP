@@ -53,7 +53,7 @@ public class TutorialManager : MonoBehaviour
             Name = "Sigrun:";
         }
         NameText.text = Name;
-        StartCoroutine(FadeOut(mc.MusicAudioSource, 1.0f));
+        StartCoroutine(FadeOut(mc.MusicAudioSource, 3.0f));
         TC.hasBeenDisplayed = true;
         CurrentlyDisplayingTutorialChunk = TC;
         isDisplaying = true;
@@ -70,6 +70,7 @@ public class TutorialManager : MonoBehaviour
             StopAllCoroutines();
             TutorialTextbox.text = CurrentlyDisplayingTutorialChunk.textStrings[index];
             mc.MusicAudioSource.volume = 0;
+            Nextbutton.SetActive(true);
         }
         else
         {
@@ -79,7 +80,7 @@ public class TutorialManager : MonoBehaviour
                 TutorialGameObject.SetActive(false);
                 isDisplaying = false;
                 isTyping = false;
-                Nextbutton.SetActive(true);
+                Nextbutton.SetActive(false);
                 StartCoroutine(FadeIn(mc.MusicAudioSource, 2.0f));
             }
             else
@@ -111,12 +112,14 @@ public class TutorialManager : MonoBehaviour
     {
         float startVolume = audioSource.volume;
         float i = 0;
+        FirstPersonController.Instance.canMove = false;
+        Cursor.lockState = CursorLockMode.None;
         while (audioSource.volume > 0)
         {
-            i += Time.deltaTime;
-            Time.timeScale = Mathf.Lerp(Time.timeScale, 0, i);
-            audioSource.volume -= startVolume * Time.deltaTime / fadeDuration;
-            yield return null;
+            i += Time.deltaTime * fadeDuration;
+            Time.timeScale = Mathf.Lerp(1, 0, i);
+            audioSource.volume -= Time.deltaTime * fadeDuration;
+            yield return new WaitForSecondsRealtime(0.016f);
         }
 
         audioSource.Pause();
@@ -128,12 +131,14 @@ public class TutorialManager : MonoBehaviour
         audioSource.volume = 0;
         audioSource.Play();
         float i = 0;
+        FirstPersonController.Instance.canMove = true;
+        Cursor.lockState = CursorLockMode.Locked;
         while (audioSource.volume < 1)
         {
-            i += Time.deltaTime;
+            i += Time.deltaTime * fadeDuration;
             Time.timeScale = Mathf.Lerp(0, 1, i);
-            audioSource.volume += Time.deltaTime / fadeDuration;
-            yield return null;
+            audioSource.volume += Time.deltaTime * fadeDuration;
+            yield return new WaitForSecondsRealtime(0.016f);
         }
 
         audioSource.volume = 1;
