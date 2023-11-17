@@ -53,7 +53,7 @@ public class TutorialManager : MonoBehaviour
             Name = "Sigrun:";
         }
         NameText.text = Name;
-        StartCoroutine(FadeOut(mc.MusicAudioSource, 3.0f));
+        StartCoroutine(FadeOut(mc.MusicAudioSource, 5.0f));
         TC.hasBeenDisplayed = true;
         CurrentlyDisplayingTutorialChunk = TC;
         isDisplaying = true;
@@ -71,6 +71,7 @@ public class TutorialManager : MonoBehaviour
             TutorialTextbox.text = CurrentlyDisplayingTutorialChunk.textStrings[index];
             mc.MusicAudioSource.volume = 0;
             Nextbutton.SetActive(true);
+            isTyping = false;
         }
         else
         {
@@ -81,7 +82,7 @@ public class TutorialManager : MonoBehaviour
                 isDisplaying = false;
                 isTyping = false;
                 Nextbutton.SetActive(false);
-                StartCoroutine(FadeIn(mc.MusicAudioSource, 2.0f));
+                StartCoroutine(FadeIn(mc.MusicAudioSource, 8.0f));
             }
             else
             {
@@ -136,7 +137,7 @@ public class TutorialManager : MonoBehaviour
         while (audioSource.volume < 1)
         {
             i += Time.deltaTime * fadeDuration;
-            Time.timeScale = Mathf.Lerp(0, 1, i);
+            Time.timeScale = Mathf.Lerp(0.3f, 1, i);
             audioSource.volume += Time.deltaTime * fadeDuration;
             yield return new WaitForSecondsRealtime(0.016f);
         }
