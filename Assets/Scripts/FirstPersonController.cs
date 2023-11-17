@@ -198,6 +198,7 @@ using System.Collections;
 
 		public void UpdateAbilityCooldownText(float num)
 		{
+		if (!AbilityCooldownSlider) return;
 		AbilityCooldownSlider.maxValue = 12;
 		AbilityCooldownSlider.value = num;
 		if (num > 0)

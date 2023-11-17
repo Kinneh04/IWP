@@ -18,6 +18,7 @@ public class OfficialSongScript : MonoBehaviour
     [Header("optional")]
     public float PreviewStartTime;
     public float EndBufferTime;
+    public bool CanContainTutorial = false;
 
     //[Header("Leaderboard")]
     //public OfficialSongLeaderboard songLeaderboard;

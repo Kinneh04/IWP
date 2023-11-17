@@ -140,7 +140,7 @@ public class EnemyScript : MonoBehaviour
     }
     public void ShootProjectile()
     {
-        EnemyAnimator.Play(AttackAnimationClip.name);
+      if(AttackAnimationClip && EnemyAnimator) EnemyAnimator.Play(AttackAnimationClip.name);
         Instantiate(Rangedball, transform.position, transform.rotation);
     }
     public void TakeDamage(int damage, bool duplicate = false)

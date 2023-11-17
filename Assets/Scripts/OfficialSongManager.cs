@@ -26,6 +26,7 @@ public class OfficialSongManager : MonoBehaviour
     [Header("Popupmenu")]
     public GameObject SelectedPopupMenu;
     public TMP_Text SongNameText, SongTimeText, SongBPMText, SongDifficultyText, SongBossText;
+    public GameObject AllowForTutorialToggle;
 
 
     [Header("LeaderboardThings")]
@@ -43,9 +44,15 @@ public class OfficialSongManager : MonoBehaviour
     public TMP_Text PR_AccText, PR_ScoreText;
     public GameObject hasPRGO, DoesntHavePRGO;
 
+    [Header("TutorialThings")]
+    public bool hasTutorial;
+    public TutorialManager TM;
+    public Toggle TutorialToggle;
+
     [Header("Dont fill in")]
 
     public OfficialSongScript CurrentlySelectedSong;
+    
 
     public void LoadPR()
     {
@@ -273,8 +280,14 @@ public class OfficialSongManager : MonoBehaviour
         {
             musicController.LightColorPalette.Add(c);
         }
+        TM.DoTutorialChecking = hasTutorial;
         musicController.LoadNewEventsFromOfficialSong(CurrentlySelectedSong);
         musicController.MusicAudioSource.time = CurrentlySelectedSong.OfficialStartTime;
+    }
+
+    public void ToggleTutorial()
+    {
+        hasTutorial = TutorialToggle.isOn;
     }
 
     public void PreviewSong(OfficialSongScript SS)
@@ -292,8 +305,17 @@ public class OfficialSongManager : MonoBehaviour
         int length = (int)SS.SongAudioClip.length;
         int minutes = length / 60;
         int seconds = length % 60;
-
-        string formattedTime = string.Format("{0}:{1:00}", minutes, seconds);
+        if (SS.CanContainTutorial)
+        {
+            AllowForTutorialToggle.SetActive(true);
+            ToggleTutorial();
+        }
+        else
+        {
+            AllowForTutorialToggle.SetActive(false);
+            hasTutorial = false;
+        }
+            string formattedTime = string.Format("{0}:{1:00}", minutes, seconds);
 
         SongTimeText.text = "TIME: " + formattedTime;
         SongBPMText.text = "BPM: " + SS.BPM.ToString();
