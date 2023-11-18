@@ -80,7 +80,8 @@ public class MusicController : MonoBehaviour
 
     [Header("SFX")]
     public AudioSource SFXAudioSource;
-
+    public AudioClip DisplayScoreAudioClip;
+    public AudioClip ApplauseAudioClip;
     public void PlaySFX(AudioClip AC)
     {
         SFXAudioSource.PlayOneShot(AC);
@@ -317,6 +318,8 @@ public class MusicController : MonoBehaviour
         EnemySpawner.Instance.Cleanup();
         isFinished = true;
         LevelClearGO.SetActive(true);
+        SFXAudioSource.PlayOneShot(ApplauseAudioClip);
+     
         scoreManager.ChangeLevelCompleteVars(playerRating.Targetscore, playerRating.KillAmount, playerRating.HighestCombo, playerRating.MultikillAmount, playerRating.TargetAcc);
         if (PlayFabClientAPI.IsClientLoggedIn())
         {
@@ -329,6 +332,11 @@ public class MusicController : MonoBehaviour
         yield return new WaitForSeconds(3f);
         LevelClearGO.SetActive(false);
         scoreManager.FinalScoreGameObject.SetActive(true);
+        for (int i = 0; i < 5; i++)
+        {
+            SFXAudioSource.PlayOneShot(DisplayScoreAudioClip);
+            yield return new WaitForSeconds(0.1f);
+        }
         canExit = true;
     }
 

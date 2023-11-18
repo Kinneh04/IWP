@@ -122,6 +122,8 @@ using System.Collections;
 	public AudioSource SFXAudioSource;
 	public AudioClip DashingSFX;
 	public List<AudioClip> HurtAudioClips = new List<AudioClip>();
+
+	public List<ParticleSystem> DashingParticleSystems = new List<ParticleSystem>();
 	public void Cleanup()
     {
 		Health = 100;
@@ -311,6 +313,10 @@ using System.Collections;
 		IEnumerator Dash()
 		{
 			isDashing = true;
+		foreach(ParticleSystem PS in DashingParticleSystems)
+        {
+			PS.Play();
+        }
 		if (!SFXAudioSource) SFXAudioSource = GameObject.FindGameObjectWithTag("SFX").GetComponent<AudioSource>();
 		SFXAudioSource.PlayOneShot(DashingSFX);
 			// Get the camera's forward and right vectors

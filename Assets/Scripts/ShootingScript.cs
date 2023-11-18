@@ -152,7 +152,7 @@ public class ShootingScript : MonoBehaviour
             if (CurrentAmmo > 0 && !isReloading && musicController.canFire)
             {
                 //If user taps to the beat
-                if (Input.GetMouseButtonDown(0)&& !isReloading)
+                if (Input.GetMouseButtonDown(0)&& !isReloading && FirstPersonController.Instance.canMove)
                 {
 
                     float currentTime = Time.time;
