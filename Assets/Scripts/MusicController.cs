@@ -231,6 +231,7 @@ public class MusicController : MonoBehaviour
 
     public void SpawnCorrectCrosshairPulses()
     {
+        if (!FirstPersonController.Instance.canMove) return;
         beat++;
         CrosshairOuterImage.color = Color.white;
         if(beat == 2)

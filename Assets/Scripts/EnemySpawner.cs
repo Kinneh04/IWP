@@ -122,7 +122,7 @@ public class EnemySpawner : MonoBehaviour
     IEnumerator SpawnEnemyGroup(GameObject Enemy, int numEnemies, Vector3 SpawnPosition)
     {
             float angleStep = 360f / numEnemies;
-            float radius = 2f; // Adjust the radius as needed
+            float radius = 1f; // Adjust the radius as needed
 
             for (int i = 0; i < numEnemies; i++)
             {
@@ -149,12 +149,17 @@ public class EnemySpawner : MonoBehaviour
             }
             Vector3 spawnPosition;
             spawnPosition = GetRandomPositionWithinRange(target.position);
+            if(spawnPosition == Vector3.zero)
+            {
+                yield return new WaitForSeconds(2);
+                continue;
+            }
             spawnPosition.y = E.DistanceFromFloor;
 
 
             if (Random.Range(0, 10) < difficulty && E.canSpawninGroup)
             {
-                int numEnemiesInGroup = Random.Range(3, difficulty); // Adjust the range as needed
+                int numEnemiesInGroup = Random.Range(2, difficulty); // Adjust the range as needed
                 StartCoroutine(SpawnEnemyGroup(E.EnemyGO, numEnemiesInGroup, spawnPosition));
             }
             else
@@ -166,49 +171,50 @@ public class EnemySpawner : MonoBehaviour
             }
 
             float randomInterval = Random.Range(E.minSpawnInterval, E.maxSpawnInterval);
-            yield return new WaitForSeconds(randomInterval);
+            yield return new WaitForSeconds(randomInterval * ((11 - difficulty) / 3));
         }
     }
 
-    Vector3 GetRandomPositionWithinRange(Vector3 playerPosition)
+    public Vector3 GetRandomPositionWithinRange(Vector3 playerPosition)
     {
-        Vector3 randomPosition = GetRandomPosition(playerPosition, minDistance, maxDistance);
         int tries = 10;
-        while (!IsOnValidSurface(randomPosition) && tries > 0 || !IsClearPath(playerPosition, randomPosition) &&tries > 0) 
+        while (tries > 0)
         {
-            randomPosition = GetRandomPosition(playerPosition, minDistance, maxDistance);
             tries--;
-        }
+            // Get a random direction
+            Vector3 randomDirection = Random.onUnitSphere;
 
-        return randomPosition;
-    }
+            // Calculate random distance within the range
+            float randomDistance = Random.Range(minDistance, maxDistance);
 
+            // Calculate the target position
+            Vector3 targetPosition = playerPosition + randomDirection * randomDistance;
 
-    Vector3 GetRandomPosition(Vector3 playerPosition, float minDistance, float maxDistance)
-    {
-        Vector3 randomDirection = Random.insideUnitSphere.normalized;
-        float randomDistance = Random.Range(minDistance, maxDistance);
-        return playerPosition + randomDirection * randomDistance;
-    }
+            // Raycast downwards from the target position
 
-    bool IsOnValidSurface(Vector3 position)
-    {
-        RaycastHit hit;
-        if (Physics.Raycast(position, -Vector3.up, out hit) && hit.transform.CompareTag("Floor"))
-        {
-            return true;
-        }
-        return false;
-    }
-
-    bool IsClearPath(Vector3 from, Vector3 to)
-    {
-        RaycastHit hit;
-        if (Physics.Raycast(from, to - from, out hit, Vector3.Distance(from, to)))
-        {
-            if (hit.collider.tag != "Player" && hit.collider.tag != "PlayerHitbox")
+            if(isOnValidSurface(targetPosition))
             {
+                return targetPosition;
+            }
+        }
+        return Vector3.zero;
+      
+    }
+
+    public bool isOnValidSurface(Vector3 targetPosition)
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(targetPosition, Vector3.down, out hit, 100))
+        {
+            // Check if the hit surface is not tagged "ClearFloor"
+            if (hit.collider.CompareTag("ClearFloor"))
+            {
+            //    Debug.Log("Hit the invalid surface!");
                 return false;
+            }
+            else
+            {
+              //  Debug.Log("Hit:  " + hit.collider.name);
             }
         }
         return true;

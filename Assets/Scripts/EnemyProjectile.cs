@@ -16,7 +16,7 @@ public class EnemyProjectile : MonoBehaviour
         }
         else if(!other.CompareTag("Enemy"))
         {
-            Debug.Log("ProjectileHit: " + other.gameObject.name);
+          //  Debug.Log("ProjectileHit: " + other.gameObject.name);
             Destroy(gameObject);
         }
     }

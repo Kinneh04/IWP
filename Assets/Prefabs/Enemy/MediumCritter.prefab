@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 8934527016483769250}
   - component: {fileID: 53558880}
   - component: {fileID: 8257445948070663236}
+  - component: {fileID: 6852330167784005459}
   m_Layer: 0
   m_Name: MediumCritter
   m_TagString: Enemy
@@ -97,7 +98,7 @@ MonoBehaviour:
   BloodspurtFX: {fileID: 8237142794598097314, guid: e5e16623fa576c34dbd6e2a0f62da36f,
     type: 3}
   isStatic: 0
-  TouchDamage: 0
+  TouchDamage: 25
   Health: 50
   RB: {fileID: 53558880}
   DeathParticles: {fileID: 4058727824660422441, guid: 0524977708a5f6b43a80a3566263623e,
@@ -106,6 +107,7 @@ MonoBehaviour:
   enemyIsDead: 0
   HitAnimator: {fileID: 5927084381933010046}
   HitAnimClip: {fileID: 7400000, guid: cfe963566e320d047a50be003291f895, type: 2}
+  BounceForce: 5
   TargetPosition: {x: 0, y: 0, z: 0}
   enemyBehaviour: 1
   enemyType: 1
@@ -119,10 +121,17 @@ MonoBehaviour:
   raycastCooldown: 0.2
   FPC: {fileID: 0}
   AttachedBossManager: {fileID: 0}
+  EnemyAnimator: {fileID: 0}
+  AttackAnimationClip: {fileID: 0}
+  NumberOfProjectiles: 1
+  SpreadAngle: 0
+  cooldownBeforeShooting: 2
   BossAnimator: {fileID: 5927084381933010046}
   bossHitAnimClip: {fileID: 7400000, guid: cfe963566e320d047a50be003291f895, type: 2}
   chargeSpeed: 6
   flankSpeed: 3
+  IntroAudio: {fileID: 0}
+  HitAudio: {fileID: 0}
 --- !u!54 &53558880
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -152,6 +161,20 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 18.77
   m_Center: {x: -0.004181495, y: 11.2, z: -0.0019711312}
+--- !u!114 &6852330167784005459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8934527016483769248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 616a1be8c5f536642a89eff6cb35c61c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SelfDestructAfterSeconds: 15
+  ParticleEffects: {fileID: 0}
 --- !u!1001 &3097104358231457670
 PrefabInstance:
   m_ObjectHideFlags: 0

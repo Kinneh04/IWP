@@ -44,7 +44,7 @@ public class HomingBullet : MonoBehaviour
         else
         {
             target = GameObject.FindGameObjectWithTag("PlayerHitbox").transform;
-            Debug.LogWarning("No target assigned to the missile.");
+         //   Debug.LogWarning("No target assigned to the missile.");
         }
     }
 }

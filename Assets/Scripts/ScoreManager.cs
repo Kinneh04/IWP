@@ -40,14 +40,14 @@ public class ScoreManager : MonoBehaviour
     private void OnGetPlayerProfileSuccess(GetPlayerProfileResult result)
     {
         string playerName = result.PlayerProfile.DisplayName;
-        Debug.Log("Player Name: " + playerName);
+      //  Debug.Log("Player Name: " + playerName);
 
         SongManager.TryAddNewLeaderboard(playerName, SavedRank, SavedScore, SavedAcc);
     }
 
     private void OnGetPlayerProfileFailure(PlayFabError error)
     {
-        Debug.LogError("Error getting player profile: " + error.ErrorMessage);
+       // Debug.LogError("Error getting player profile: " + error.ErrorMessage);
     }
     public void ChangeLevelCompleteVars(int Score, int Kills, int HighestCombo, int Multikills, float Accuracy, bool bosskilled = false)
     {

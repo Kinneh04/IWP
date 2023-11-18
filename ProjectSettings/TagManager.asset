@@ -14,6 +14,7 @@ TagManager:
   - Wall
   - Boss
   - SFX
+  - ClearFloor
   layers:
   - Default
   - TransparentFX

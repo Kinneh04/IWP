@@ -17,25 +17,15 @@ public class EnemyScript : MonoBehaviour
     public Material EnemyMat;
     private Color OGMatColor;
     public bool enemyIsDead = false;
-
+    float onTouchCooldown = 0;
     public Animator HitAnimator;
     public AnimationClip HitAnimClip;
+    public float BounceForce;
 
     public enum EnemyType
     {
         Small, Medium, Boss
     }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if(other.CompareTag("PlayerHitbox"))
-        {
-
-            other.GetComponentInParent<FirstPersonController>().TakeDamage(TouchDamage);
-            Die(true);
-        }
-    }
-
     public Vector3 TargetPosition;
 
     public enum EnemyBehaviour
@@ -58,6 +48,9 @@ public class EnemyScript : MonoBehaviour
     public BossManager AttachedBossManager;
     public Animator EnemyAnimator;
     public AnimationClip AttackAnimationClip;
+    public int NumberOfProjectiles;
+    public float SpreadAngle;
+    public float cooldownBeforeShooting = 2.0f;
     [Header("ForBossOnly")]
     public Animator BossAnimator;
     public AnimationClip bossHitAnimClip;
@@ -69,8 +62,39 @@ public class EnemyScript : MonoBehaviour
     //    }
     //} // Dont need trigger enter as we using raycast only;
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("PlayerHitbox"))
+        {
+            if (enemyType == EnemyType.Small)
+            {
+                other.GetComponentInParent<FirstPersonController>().TakeDamage(TouchDamage);
+                Die(true);
+            }
+            else if (enemyType == EnemyType.Medium && onTouchCooldown <= 0)
+            {
+                FirstPersonController playerController = other.GetComponentInParent<FirstPersonController>();
+                if (playerController != null)
+                {
+                    playerController.TakeDamage(TouchDamage);
 
-     public float chargeSpeed = 5f;
+                    onTouchCooldown = 2.0f;
+
+                    Rigidbody enemyRigidbody = GetComponent<Rigidbody>();
+                    if (enemyRigidbody != null)
+                    {
+                        // Apply a force to push the enemy backward
+                        Vector3 direction = transform.position - playerController.transform.position;
+                        direction.Normalize();
+                        enemyRigidbody.AddForce(direction * BounceForce, ForceMode.Impulse);
+                    }
+                }
+            }
+        }
+    }
+
+
+    public float chargeSpeed = 5f;
     public float flankSpeed = 3f;
     private Transform player;
 
@@ -92,6 +116,12 @@ public class EnemyScript : MonoBehaviour
     {
         if(enemyType != EnemyType.Boss && !isStatic)
             ChargeBehavior();
+
+        if(!isOnValidSurface(transform.position))
+        {
+            Die(true);
+        }
+        if (onTouchCooldown > 0) onTouchCooldown -= Time.deltaTime;
     }
 
 
@@ -127,27 +157,41 @@ public class EnemyScript : MonoBehaviour
         }
         else if(enemyBehaviour == EnemyBehaviour.Ranged)
         {
-            if (Vector3.Distance(transform.position, player.position) > range)
-            {
-                transform.LookAt(player.transform);
-                RB.AddForce(transform.forward * chargeSpeed);
-            }
+            if (cooldownBeforeShooting > 0) cooldownBeforeShooting -= Time.deltaTime;
             else
             {
-                transform.LookAt(player.transform);
+                if (Vector3.Distance(transform.position, player.position) > range)
+                {
+                    transform.LookAt(player.transform);
+                    RB.AddForce(transform.forward * chargeSpeed);
+                }
+                else
+                {
+                    transform.LookAt(player.transform);
+                }
+                if (cooldown <= 0)
+                {
+                    cooldown = AddToCooldown;
+                    ShootProjectile();
+                }
+                if (cooldown > 0) cooldown -= Time.deltaTime;
             }
-            if(cooldown <= 0)
-            {
-                cooldown = AddToCooldown;
-                ShootProjectile();
-            }
-            if (cooldown > 0) cooldown -= Time.deltaTime;
         }
     }
     public void ShootProjectile()
     {
       if(AttackAnimationClip && EnemyAnimator) EnemyAnimator.Play(AttackAnimationClip.name);
-        Instantiate(Rangedball, transform.position, transform.rotation);
+        if (NumberOfProjectiles < 1) return; // Ensure at least one projectile is fired
+
+        float angleIncrement = SpreadAngle / (NumberOfProjectiles - 1);
+        float startingAngle = -SpreadAngle / 2f;
+
+        for (int i = 0; i < NumberOfProjectiles; i++)
+        {
+            Quaternion spreadRotation = Quaternion.Euler(0f, 0f, startingAngle + i * angleIncrement);
+            Quaternion finalRotation = transform.rotation * spreadRotation;
+            Instantiate(Rangedball, transform.position, finalRotation);
+        }
     }
     public void TakeDamage(int damage, bool duplicate = false)
     {
@@ -188,6 +232,24 @@ public class EnemyScript : MonoBehaviour
             yield return new WaitForSeconds(0.2f);
             EnemyMat.color = OGMatColor;
         }
+    }
+    public bool isOnValidSurface(Vector3 targetPosition)
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(targetPosition, Vector3.down, out hit, 100))
+        {
+            // Check if the hit surface is not tagged "ClearFloor"
+            if (hit.collider.CompareTag("ClearFloor"))
+            {
+             //   Debug.Log("Hit the invalid surface!");
+                return false;
+            }
+            else
+            {
+               // Debug.Log("Hit:  " + hit.collider.name);
+            }
+        }
+        return true;
     }
 
     private void OnDestroy()

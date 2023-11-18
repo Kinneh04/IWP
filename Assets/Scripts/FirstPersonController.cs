@@ -85,6 +85,7 @@ using System.Collections;
 		public Image AbilityImage, DashImage;
 	private Color OriginalColor;
 	public Slider AbilityCooldownSlider, DashCooldownSlider;
+	public GameObject HealGlow;
 	[Header("Set Ability")]
 	bool OnAbilityCooldown = false;
 	public Ability CurrentAbility;
@@ -154,6 +155,16 @@ using System.Collections;
             return _instance;
         }
     }
+
+	public void HealPlayer(int damage)
+    {
+		Health += damage;
+		if (Health > 100) Health = 100;
+		float volume = (1.0f - (Health / 100.0f)) / 2f;
+		HeartbeatAudioSource.volume = volume;
+		if (Health <= 80) isLow = true;
+		else isLow = false;
+	}
 	public void TakeDamage(int damage)
 	{
 		if(isDashing)
@@ -312,13 +323,15 @@ using System.Collections;
     }
 		IEnumerator Dash()
 		{
-			isDashing = true;
-		foreach(ParticleSystem PS in DashingParticleSystems)
-        {
-			PS.Play();
-        }
-		if (!SFXAudioSource) SFXAudioSource = GameObject.FindGameObjectWithTag("SFX").GetComponent<AudioSource>();
-		SFXAudioSource.PlayOneShot(DashingSFX);
+				isDashing = true;
+		HealPlayer(10);
+			HealGlow.SetActive(true);
+			foreach(ParticleSystem PS in DashingParticleSystems)
+			{
+				PS.Play();
+			}
+			if (!SFXAudioSource) SFXAudioSource = GameObject.FindGameObjectWithTag("SFX").GetComponent<AudioSource>();
+			SFXAudioSource.PlayOneShot(DashingSFX);
 			// Get the camera's forward and right vectors
 			Vector3 cameraForward = Camera.main.transform.forward;
 			Vector3 cameraRight = Camera.main.transform.right;
@@ -348,12 +361,14 @@ using System.Collections;
 				yield return null;
 			}
 
-		//UI
-		DashImage.color = new Color(OriginalColor.r, OriginalColor.g, OriginalColor.b, 0.2f);
-		DashCountdownTMPText.gameObject.SetActive(true);
-		//End UI
-
+			//UI
+			DashImage.color = new Color(OriginalColor.r, OriginalColor.g, OriginalColor.b, 0.2f);
+			DashCountdownTMPText.gameObject.SetActive(true);
+			//End UI
+				
 			isDashing = false;
+		yield return new WaitForSeconds(0.35f);
+		HealGlow.SetActive(false);
 		}
 		private void CameraRotation()
 		{

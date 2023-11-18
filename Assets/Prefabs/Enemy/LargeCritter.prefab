@@ -9681,10 +9681,14 @@ MonoBehaviour:
   AttachedBossManager: {fileID: 0}
   EnemyAnimator: {fileID: 6118091900749825038}
   AttackAnimationClip: {fileID: 7400000, guid: 0cd7fc45eba495f44b55101cacc50fc6, type: 2}
+  NumberOfProjectiles: 5
+  SpreadAngle: 8
   BossAnimator: {fileID: 0}
   bossHitAnimClip: {fileID: 7400000, guid: cfe963566e320d047a50be003291f895, type: 2}
   chargeSpeed: 6
   flankSpeed: 3
+  IntroAudio: {fileID: 0}
+  HitAudio: {fileID: 0}
 --- !u!54 &53558880
 Rigidbody:
   m_ObjectHideFlags: 0

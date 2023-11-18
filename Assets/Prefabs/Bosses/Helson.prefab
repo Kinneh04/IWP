@@ -1625,6 +1625,9 @@ MonoBehaviour:
   lerpSpeed: 3.5
   isWarning: 0
   Bosslight: {fileID: 1773035665}
+  BeamAudioClip: {fileID: 8300000, guid: c51832daab4fbca46b1fe56ca758ed68, type: 3}
+  WarningBeamAudioClip: {fileID: 8300000, guid: efb3aef4c3946ab44bc56ea678da0b2b,
+    type: 3}
 --- !u!114 &8806054703625487222
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1648,6 +1651,7 @@ MonoBehaviour:
   enemyIsDead: 0
   HitAnimator: {fileID: 0}
   HitAnimClip: {fileID: 0}
+  BounceForce: 0
   TargetPosition: {x: 0, y: 0, z: 0}
   enemyBehaviour: 0
   enemyType: 2
@@ -1662,6 +1666,9 @@ MonoBehaviour:
   AttachedBossManager: {fileID: 0}
   EnemyAnimator: {fileID: 0}
   AttackAnimationClip: {fileID: 0}
+  NumberOfProjectiles: 0
+  SpreadAngle: 0
+  cooldownBeforeShooting: 2
   BossAnimator: {fileID: 3418129521633406696}
   bossHitAnimClip: {fileID: 7400000, guid: 5d7dafa32fb503a48a9b117961bd808f, type: 2}
   chargeSpeed: 5
