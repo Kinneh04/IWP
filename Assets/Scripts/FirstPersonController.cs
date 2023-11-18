@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine.UI;
 using TMPro;
 using Unity.VisualScripting;
+using System.Collections.Generic;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 #endif
@@ -117,6 +118,10 @@ using System.Collections;
 	[Header("EnemyBehindIndicator")]
 	public GameObject BehindIndicator;
 
+	[Header("AudioAndSFX")]
+	public AudioSource SFXAudioSource;
+	public AudioClip DashingSFX;
+	public List<AudioClip> HurtAudioClips = new List<AudioClip>();
 	public void Cleanup()
     {
 		Health = 100;
@@ -149,11 +154,18 @@ using System.Collections;
     }
 	public void TakeDamage(int damage)
 	{
+		if(isDashing)
+        {
+			PlayerRatingController.Instance.AddRating(15, "DASH BLOCK!", Color.green);
+			return;
+		}
 		if (isDead || isTransitioning || MusicController.Instance.isFinished || isDashing) return;
 		Health -= damage;
         float volume = (1.0f - (Health / 100.0f))/2f;
 		HeartbeatAudioSource.volume = volume;
-	
+
+		SFXAudioSource.PlayOneShot(HurtAudioClips[Random.Range(0, HurtAudioClips.Count)]);
+
 		if (Health <= 80) isLow = true;
 		else isLow = false;
 
@@ -299,7 +311,8 @@ using System.Collections;
 		IEnumerator Dash()
 		{
 			isDashing = true;
-
+		if (!SFXAudioSource) SFXAudioSource = GameObject.FindGameObjectWithTag("SFX").GetComponent<AudioSource>();
+		SFXAudioSource.PlayOneShot(DashingSFX);
 			// Get the camera's forward and right vectors
 			Vector3 cameraForward = Camera.main.transform.forward;
 			Vector3 cameraRight = Camera.main.transform.right;

@@ -13,6 +13,7 @@ TagManager:
   - Floor
   - Wall
   - Boss
+  - SFX
   layers:
   - Default
   - TransparentFX

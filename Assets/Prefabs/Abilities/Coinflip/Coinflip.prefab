@@ -46,6 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   addToCooldown: 12
   firstPersonController: {fileID: 0}
+  AbilityAudio: {fileID: 8300000, guid: dcacb2494b171e74d984d428e8d12c47, type: 3}
   Coinobject: {fileID: 8571999251770446268, guid: 9c682319ea3d54a43a1bad2bf4e592be,
     type: 3}
   tossForce: 8

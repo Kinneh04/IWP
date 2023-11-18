@@ -11,6 +11,9 @@ public class CoinScript : MonoBehaviour
     private LineRenderer lineRenderer;
     public GameObject SparksParticles;
 
+    public AudioSource SFXAudioSource;
+    public AudioClip RicochetSFX;
+
     void Start()
     {
     
@@ -32,9 +35,12 @@ public class CoinScript : MonoBehaviour
             lineRenderer.SetPosition(0, transform.position);
             lineRenderer.SetPosition(1, nearestEnemy.transform.position);
             lineRenderer.enabled = true; // Show the line
-            nearestEnemy.GetComponent<EnemyScript>().TakeDamage(100);
+            nearestEnemy.GetComponent<EnemyScript>().Die();
             Destroy(lineRenderer, 3.0f);
         }
+        PlayerRatingController.Instance.AddRating(25, "RICOCHET KILL", Color.green);
+        if (!SFXAudioSource) SFXAudioSource = GameObject.FindGameObjectWithTag("SFX").GetComponent<AudioSource>();
+        SFXAudioSource.PlayOneShot(RicochetSFX);
         Instantiate(SparksParticles,transform.position,Quaternion.identity);
         Destroy(gameObject);
     }

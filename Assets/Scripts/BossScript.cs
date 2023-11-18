@@ -45,6 +45,11 @@ public class BossScript : MonoBehaviour
     [Header("Lighting")]
     public Light Bosslight;
 
+    [Header("Audio")]
+     AudioSource AS;
+    public AudioClip BeamAudioClip, WarningBeamAudioClip;
+
+    
     
     public void ChooseRandomAttack()
     {
@@ -109,6 +114,7 @@ public class BossScript : MonoBehaviour
     public IEnumerator BeamAttack()
     {
         isBeaming = true;
+        AS.PlayOneShot(BeamAudioClip);
         Beam.SetActive(true);
         yield return new WaitForSeconds(beamTime);
         Beam.SetActive(false);
@@ -155,10 +161,12 @@ public class BossScript : MonoBehaviour
     private void Awake()
     {
         player = GameObject.FindGameObjectWithTag("PlayerHitbox").transform;
+        AS = GameObject.FindGameObjectWithTag("SFX").GetComponent<AudioSource>();
     }
 
     public void WarnPlayerOnBeam()
     {
+        AS.PlayOneShot(WarningBeamAudioClip);
         Bosslight.intensity = WarningEmissionIntensity;
         CurrentWarningFlashes--;
         if (CurrentWarningFlashes <= 0) isWarning = false;

@@ -1666,6 +1666,8 @@ MonoBehaviour:
   bossHitAnimClip: {fileID: 7400000, guid: 5d7dafa32fb503a48a9b117961bd808f, type: 2}
   chargeSpeed: 5
   flankSpeed: 3
+  IntroAudio: {fileID: 8300000, guid: e70ee70cdd1df194b9230fb32d150d34, type: 3}
+  HitAudio: {fileID: 8300000, guid: 96ff96db4ea43af44a148aed43eb8a0e, type: 3}
 --- !u!135 &5053564004412479194
 SphereCollider:
   m_ObjectHideFlags: 0

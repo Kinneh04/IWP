@@ -304,3 +304,5 @@ MonoBehaviour:
   maxRicochetDistance: 100
   SparksParticles: {fileID: 4058727824660422441, guid: 5c251f66bc75c4f48b98f348aad4b524,
     type: 3}
+  SFXAudioSource: {fileID: 0}
+  RicochetSFX: {fileID: 8300000, guid: 449b9122189742042a149192051eec83, type: 3}

@@ -74,12 +74,18 @@ public class EnemyScript : MonoBehaviour
     public float flankSpeed = 3f;
     private Transform player;
 
+    [Header("SoundEffects")]
+    AudioSource AS;
+    public AudioClip IntroAudio, HitAudio;
     void Start()
     {
        if(EnemyMat)  OGMatColor = EnemyMat.color;
         player = GameObject.FindGameObjectWithTag("PlayerHitbox").transform;
         RB = GetComponent<Rigidbody>();
         FPC = FirstPersonController.Instance;
+        AS = GameObject.FindGameObjectWithTag("SFX").GetComponent<AudioSource>();
+
+        if (AS && IntroAudio) AS.PlayOneShot(IntroAudio);
     }
 
     void Update()
@@ -169,6 +175,7 @@ public class EnemyScript : MonoBehaviour
             {
                 Die(duplicate);
             }
+            if (AS && HitAudio) AS.PlayOneShot(HitAudio);
        //     HitAnimator.Play(HitAnimClip.name);
         }
     }
