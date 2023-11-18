@@ -23,7 +23,7 @@ public class CoinScript : MonoBehaviour
     {
         // Find the nearest enemy
         GameObject nearestEnemy = FindNearestEnemy();
-        Debug.Log("PEW!");
+     //   Debug.Log("PEW!");
         if (nearestEnemy != null)
         {
             lineRenderer = Instantiate(linePrefab, transform.position, Quaternion.identity, transform).GetComponent<LineRenderer>();
