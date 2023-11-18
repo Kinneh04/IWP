@@ -52,6 +52,8 @@ public class OfficialSongManager : MonoBehaviour
     [Header("Dont fill in")]
 
     public OfficialSongScript CurrentlySelectedSong;
+
+
     
 
     public void LoadPR()
@@ -337,7 +339,7 @@ public class OfficialSongManager : MonoBehaviour
         MainMenuAudioSource.clip = CurrentlySelectedSong.SongAudioClip;
         MainMenuAudioSource.time = CurrentlySelectedSong.PreviewStartTime;
         MainMenuAudioSource.Play();
-        while (MainMenuAudioSource.volume < 1)
+        while (MainMenuAudioSource.volume < MainMenuManager.Instance.musicSlider.value)
         {
             MainMenuAudioSource.volume += Time.deltaTime;
             yield return null;

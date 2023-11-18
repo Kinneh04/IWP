@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MainMenuManager : MonoBehaviour
 {
@@ -46,6 +48,25 @@ public class MainMenuManager : MonoBehaviour
     public GameObject OriginalDungeon;
     public List<GameObject> UIToEnableForMunninsTrial;
     public List<GameObject> UIToDisableForMunninsTrial;
+
+    [Header("Settings")]
+    public Slider musicSlider, sfxSlider;
+    public TMP_Text musicAmountText, sfxAmountText;
+    public AudioSource SFXAudioSource;
+
+    public void ChangeMusicVolume()
+    {
+        musicAmountText.text = musicSlider.value.ToString("f1");
+        MainMenuAudioSource.volume = musicSlider.value;
+        MusicController.Instance.MusicAudioSource.volume = musicSlider.value;
+    }
+
+    public void ChangeSFXVolume()
+    {
+        sfxAmountText.text = sfxSlider.value.ToString("f1");
+        MusicController.Instance.SFXAudioSource.volume = sfxSlider.value;
+    }
+
     public void StartMunninsTrial()
     {
         StartCoroutine(TransitionToMunninsTrial());
@@ -217,10 +238,10 @@ public class MainMenuManager : MonoBehaviour
         AS.volume = 0.0f;
         AS.Play();
 
-        while (AS.volume < 0.8f)
+        while (AS.volume < musicSlider.value)
         {
             yield return null;
-            AS.volume = Mathf.Lerp(AS.volume, 1, 3 * Time.deltaTime);
+            AS.volume = Mathf.Lerp(AS.volume, musicSlider.value, 3 * Time.deltaTime);
         }
         AS.volume = 1;
         
