@@ -23,6 +23,10 @@ public class TutorialManager : MonoBehaviour
     public TMP_Text NameText;
     public string Name = "Sigrun";
     public GameObject Nextbutton;
+
+    [Header("Audio")]
+    public AudioSource SFXAudioSource;
+    public AudioClip ClickAudioClip;
     
 
 
@@ -35,6 +39,7 @@ public class TutorialManager : MonoBehaviour
         foreach (char c in text)
         {
             TutorialTextbox.text += c;
+            SFXAudioSource.PlayOneShot(ClickAudioClip);
             yield return new WaitForSecondsRealtime(speed);
         }
         isTyping = false;
@@ -59,7 +64,7 @@ public class TutorialManager : MonoBehaviour
         isDisplaying = true;
         index = 0;
         TutorialGameObject.SetActive(true);
-        StartCoroutine(TypeText(TC.textStrings[index], 0.05f));
+        StartCoroutine(TypeText(TC.textStrings[index], 0.02f));
         //TutorialTextbox.text = TC.textStrings[index];
     }
 
@@ -104,6 +109,7 @@ public class TutorialManager : MonoBehaviour
         {
             if (mc.MusicAudioSource.time >= TC.TimeShown && !TC.hasBeenDisplayed)
             {
+                Debug.Log("CurrentSourceTime: " + mc.MusicAudioSource.time);
                 LoadTutorialChunk(TC);
             }
         }
@@ -130,7 +136,7 @@ public class TutorialManager : MonoBehaviour
     public IEnumerator FadeIn(AudioSource audioSource, float fadeDuration)
     {
         audioSource.volume = 0;
-        audioSource.Play();
+        audioSource.UnPause();
         float i = 0;
         FirstPersonController.Instance.canMove = true;
         Cursor.lockState = CursorLockMode.Locked;

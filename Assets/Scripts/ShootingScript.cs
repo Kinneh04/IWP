@@ -34,7 +34,7 @@ public class ShootingScript : MonoBehaviour
     public AnimationClip UziShootAnimClip;
 
     public GameObject Minigun, Revolver;
-
+    public bool freefire = false;
     [Header("Ammo")]
     public int maxAmmo;
     public int CurrentAmmo;
@@ -55,7 +55,10 @@ public class ShootingScript : MonoBehaviour
 
     [Header("Sounds")]
     public AudioSource PlayerAS;
-    public AudioClip ShootingAudioClip, ClickAudioClip;
+    public AudioClip ShootingAudioClip, ClickAudioClip, FrenzyAudioClip;
+
+    public GameObject FrenzyUI;
+    public GameObject[] ShitToDisableForFrenzy;
    
     //public void ShowTimingRating()
     //{
@@ -71,6 +74,15 @@ public class ShootingScript : MonoBehaviour
     //    yield return new WaitForSeconds(0.3f);
     //    LateEarlyRatingText.gameObject.SetActive(false);
     //}
+
+    public void cleanup()
+    {
+        if(FrenzyMode)
+        {
+            EndFrenzyMode();
+            CurrentAmmo = maxAmmo;
+        }
+    }
 
     private void Start()
     {
@@ -104,6 +116,11 @@ public class ShootingScript : MonoBehaviour
         Revolver.SetActive(false);
         Minigun.SetActive(true);
         FrenzyMode = true;
+        FrenzyUI.SetActive(true);
+        foreach(GameObject GO in ShitToDisableForFrenzy)
+        {
+            GO.SetActive(false);
+        }
     }
 
     public void EndFrenzyMode()
@@ -111,6 +128,11 @@ public class ShootingScript : MonoBehaviour
         Revolver.SetActive(true);
         Minigun.SetActive(false);
         FrenzyMode = false;
+        FrenzyUI.SetActive(false);
+        foreach (GameObject GO in ShitToDisableForFrenzy)
+        {
+            GO.SetActive(true);
+        }
     }
 
     public void IncrementReload()
@@ -132,143 +154,166 @@ public class ShootingScript : MonoBehaviour
 
     private void Update()
     {
-        if (!FrenzyMode)
+        if (freefire)
         {
-            if(Input.GetKeyDown(KeyCode.R) && musicController.canReload && CurrentAmmo < maxAmmo
-                || Input.GetMouseButtonDown(1) && musicController.canReload && CurrentAmmo < maxAmmo)
+            if (Input.GetKeyDown(KeyCode.R) && CurrentAmmo < maxAmmo
+                     || Input.GetMouseButtonDown(1) && CurrentAmmo < maxAmmo)
             {
                 IncrementReload();
             }
-            else if(Input.GetKeyDown(KeyCode.R) && CurrentAmmo >= maxAmmo && musicController.canReload)
+            if (Input.GetMouseButtonDown(0) && !isReloading && FirstPersonController.Instance.canMove)
             {
-                LateEarlyRatingText.text = "Ammo Full!";
-                LateEarlyRatingText.color = Color.yellow;
-            }
-            else if(Input.GetKeyDown(KeyCode.R) && !musicController.canReload)
-            {
-                LateEarlyRatingText.text = "Missed!";
-                LateEarlyRatingText.color = Color.yellow;
-            }
-            if (CurrentAmmo > 0 && !isReloading && musicController.canFire)
-            {
-                //If user taps to the beat
-                if (Input.GetMouseButtonDown(0)&& !isReloading && FirstPersonController.Instance.canMove)
+                weaponMovement.TryShootVisual();
+                FireRaycast();
+                DispenseAmmo();
+                //  ShowTimingRating();
+                if (FireAnimClip)
                 {
-
-                    float currentTime = Time.time;
-
-                    // If it's been more than 1 second since the last click, reset the click count
-                    if (currentTime - lastClickTime > 0.20f)
-                    {
-                        clickCount = 1;
-                    }
-                    else
-                    {
-                        clickCount++;
-                    }
-
-                    lastClickTime = currentTime;
-
-                    // Check if the click count is over 4
-                    if (clickCount > 6)
-                    {
-                        clickCount = 6;
-                        isSpamming = true;
-                        playerRatingController.AddRating(-5, "Spam Detected!");
-                        AntiSpamGO.SetActive(true);
-                    }
-                    else
-                    {
-                        isSpamming = false;
-                        AntiSpamGO.SetActive(false);
-                    }
-                    if(!isSpamming)
-                    {
-                        playerRatingController.AddRating(1);
-                    }
-                    Holdfire = false;
-                    weaponMovement.TryShootVisual();
-                    FireRaycast();
-                    DispenseAmmo();
-                    //  ShowTimingRating();
-                    if (FireAnimClip)
-                    {
-                        MainWeaponAnimator.Play(FireAnimClip.name);
-                    }
-                    musicController.beatAlreadyHit = true;
-                    //if (musicController.isLate())
-                    //{
-                    //    Debug.Log("Late!");
-                    //    playerRatingController.AddRating(5, "Late Beat!");
-                    //}
-                    //else
-                    //{
-                    //    playerRatingController.AddRating(10, "On Beat!");
-                    //}
-                    GameObject GO = Instantiate(MuzzleFlash, GunShootFrom.transform.position, Quaternion.identity);
-                    GO.transform.SetParent(GunShootFrom.transform);
-                    musicController.canFire = false;
-                    musicController.hasFired = true;
-                    musicController.canReload = false;
-                  //  musicController.canFireButEarly = false;
-                }
-                //If user presses and holds, grant less score for kill.
-                //else if (Input.GetMouseButton(0) && musicController.canFire && !isReloading)
-                //{
-                //    clickCount--;
-                //    if (clickCount < 5)
-                //    {
-                //        isSpamming = false;
-                //        AntiSpamGO.SetActive(false);
-                //    }
-                //    Holdfire = true;
-                //    PistolAnimator.Play(PistolFireAnimClip.name);
-                //    weaponMovement.TryShootVisual();
-                //    DispenseAmmo();
-                //    musicController.canFire = false;
-                //    FireRaycast();
-                //    GameObject GO = Instantiate(MuzzleFlash, GunShootFrom.transform.position, Quaternion.identity);
-                //    GO.transform.SetParent(GunShootFrom.transform);
-                //}
-                else if (Input.GetMouseButtonUp(0)) Holdfire = false;
-            }
-            else
-            {
-                if(Input.GetMouseButtonDown(0) && !musicController.canFire && CurrentAmmo > 0 && !FirstPersonController.Instance.isTransitioning)
-                {
-                    LateEarlyRatingText.text = "Missed!";
-                    LateEarlyRatingText.color = Color.yellow;
-                    PlayerAS.PlayOneShot(ClickAudioClip);
-                    playerRatingController.AddMissedShot();
-                }
-                else if(Input.GetMouseButtonDown(0) && CurrentAmmo <= 0)
-                {
-                    LateEarlyRatingText.text = "No Ammo!";
-                    LateEarlyRatingText.color = Color.yellow;
-                    PlayerAS.PlayOneShot(ClickAudioClip);
+                    MainWeaponAnimator.Play(FireAnimClip.name);
                 }
             }
         }
         else
         {
-            if (Input.GetMouseButton(0) && gatlingGunCooldown <= 0 && !FirstPersonController.Instance.isTransitioning)
+            if (!FrenzyMode)
             {
-                UziWeaponMovement.TryShootVisual();
-                FireRaycast(false);
-                gatlingGunCooldown = AddToGatlingGunCooldown;
-                foreach (GameObject GO in GatlingGunMuzzleFlashPoints)
+                if (Input.GetKeyDown(KeyCode.R) && musicController.canReload && CurrentAmmo < maxAmmo
+                    || Input.GetMouseButtonDown(1) && musicController.canReload && CurrentAmmo < maxAmmo)
                 {
-                    GameObject MFGO = Instantiate(MuzzleFlash, GO.transform.position, Quaternion.identity);
-                    MFGO.transform.SetParent(GO.transform);
-                    GatlingGunAnimator.Play(UziShootAnimClip.name);
+                    IncrementReload();
+                }
+                else if (Input.GetKeyDown(KeyCode.R) && CurrentAmmo >= maxAmmo && musicController.canReload)
+                {
+                    LateEarlyRatingText.text = "Ammo Full!";
+                    LateEarlyRatingText.color = Color.yellow;
+                }
+                else if (Input.GetKeyDown(KeyCode.R) && !musicController.canReload)
+                {
+                    LateEarlyRatingText.text = "Missed!";
+                    LateEarlyRatingText.color = Color.yellow;
+                }
+                if (CurrentAmmo > 0 && !isReloading && musicController.canFire)
+                {
+                    //If user taps to the beat
+                    if (Input.GetMouseButtonDown(0) && !isReloading && FirstPersonController.Instance.canMove)
+                    {
+
+                        float currentTime = Time.time;
+
+                        // If it's been more than 1 second since the last click, reset the click count
+                        if (currentTime - lastClickTime > 0.20f)
+                        {
+                            clickCount = 1;
+                        }
+                        else
+                        {
+                            clickCount++;
+                        }
+
+                        lastClickTime = currentTime;
+
+                        // Check if the click count is over 4
+                        if (clickCount > 6)
+                        {
+                            clickCount = 6;
+                            isSpamming = true;
+                            playerRatingController.AddRating(-5, "Spam Detected!");
+                            AntiSpamGO.SetActive(true);
+                        }
+                        else
+                        {
+                            isSpamming = false;
+                            AntiSpamGO.SetActive(false);
+                        }
+                        if (!isSpamming)
+                        {
+                            playerRatingController.AddRating(1);
+                        }
+                        Holdfire = false;
+                        weaponMovement.TryShootVisual();
+                        FireRaycast();
+                        DispenseAmmo();
+                        //  ShowTimingRating();
+                        if (FireAnimClip)
+                        {
+                            MainWeaponAnimator.Play(FireAnimClip.name);
+                        }
+                        musicController.beatAlreadyHit = true;
+                        //if (musicController.isLate())
+                        //{
+                        //    Debug.Log("Late!");
+                        //    playerRatingController.AddRating(5, "Late Beat!");
+                        //}
+                        //else
+                        //{
+                        //    playerRatingController.AddRating(10, "On Beat!");
+                        //}
+                        GameObject GO = Instantiate(MuzzleFlash, GunShootFrom.transform.position, Quaternion.identity);
+                        GO.transform.SetParent(GunShootFrom.transform);
+                        musicController.canFire = false;
+                        musicController.hasFired = true;
+                        musicController.canReload = false;
+                        //  musicController.canFireButEarly = false;
+                    }
+                    //If user presses and holds, grant less score for kill.
+                    //else if (Input.GetMouseButton(0) && musicController.canFire && !isReloading)
+                    //{
+                    //    clickCount--;
+                    //    if (clickCount < 5)
+                    //    {
+                    //        isSpamming = false;
+                    //        AntiSpamGO.SetActive(false);
+                    //    }
+                    //    Holdfire = true;
+                    //    PistolAnimator.Play(PistolFireAnimClip.name);
+                    //    weaponMovement.TryShootVisual();
+                    //    DispenseAmmo();
+                    //    musicController.canFire = false;
+                    //    FireRaycast();
+                    //    GameObject GO = Instantiate(MuzzleFlash, GunShootFrom.transform.position, Quaternion.identity);
+                    //    GO.transform.SetParent(GunShootFrom.transform);
+                    //}
+                    else if (Input.GetMouseButtonUp(0)) Holdfire = false;
+                }
+                else
+                {
+                    if (Input.GetMouseButtonDown(0) && !musicController.canFire && CurrentAmmo > 0 && !FirstPersonController.Instance.isTransitioning)
+                    {
+                        LateEarlyRatingText.text = "Missed!";
+                        LateEarlyRatingText.color = Color.yellow;
+                        PlayerAS.PlayOneShot(ClickAudioClip);
+                        playerRatingController.AddMissedShot();
+                    }
+                    else if (Input.GetMouseButtonDown(0) && CurrentAmmo <= 0)
+                    {
+                        LateEarlyRatingText.text = "No Ammo!";
+                        LateEarlyRatingText.color = Color.yellow;
+                        PlayerAS.PlayOneShot(ClickAudioClip);
+                    }
                 }
             }
-            else if (gatlingGunCooldown > 0) gatlingGunCooldown -= Time.deltaTime;
-            
+            else
+            {
+                if (Input.GetMouseButton(0) && gatlingGunCooldown <= 0 && !FirstPersonController.Instance.isTransitioning)
+                {
+                    UziWeaponMovement.TryShootVisual();
+                    PlayerAS.PlayOneShot(FrenzyAudioClip);
+                    FireRaycast(false);
+                    gatlingGunCooldown = AddToGatlingGunCooldown;
+                    foreach (GameObject GO in GatlingGunMuzzleFlashPoints)
+                    {
+                        GameObject MFGO = Instantiate(MuzzleFlash, GO.transform.position, Quaternion.identity);
+                        MFGO.transform.SetParent(GO.transform);
+                        GatlingGunAnimator.Play(UziShootAnimClip.name);
+                    }
+                }
+                else if (gatlingGunCooldown > 0) gatlingGunCooldown -= Time.deltaTime;
+
+            }
+            Color T = Color.red;
+            T.a = 0;
+            LateEarlyRatingText.color = Color.Lerp(LateEarlyRatingText.color, T, Time.deltaTime * 3);
         }
-        Color T = Color.red;
-        T.a = 0;
-        LateEarlyRatingText.color = Color.Lerp(LateEarlyRatingText.color, T, Time.deltaTime * 3);
     }
 
 

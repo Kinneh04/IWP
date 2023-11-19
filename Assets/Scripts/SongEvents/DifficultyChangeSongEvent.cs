@@ -6,6 +6,7 @@ public class DifficultyChangeSongEvent : SongEvent
 {
     public EnemySpawner enemyController;
     public int newDifficulty;
+    public bool isCauseOfbeatDrop = false;
     public override void CastEvent()
     {
         if (enemyController == null)
@@ -13,6 +14,7 @@ public class DifficultyChangeSongEvent : SongEvent
             enemyController = GameObject.FindObjectOfType<EnemySpawner>();
         }
         enemyController.difficulty = newDifficulty;
+        MusicController.Instance.isDrop = isCauseOfbeatDrop;
         base.CastEvent();
     }
 }

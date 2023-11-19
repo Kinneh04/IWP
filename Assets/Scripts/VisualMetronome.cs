@@ -17,6 +17,11 @@ public class VisualMetronome : MonoBehaviour
         GameObject GOR = Instantiate(Bar, RBarSpawner.position, Quaternion.identity);
         TranslateBar TranslateBarL = GOL.GetComponent<TranslateBar>();
         TranslateBar TranslateBarR = GOR.GetComponent<TranslateBar>();
+        if(MusicController.Instance.isDrop)
+        {
+            GOL.GetComponent<Image>().color = Color.red;
+            GOR.GetComponent<Image>().color = Color.red;
+        }
         TranslateBarL.Target = Target;
         TranslateBarL.speed = MoveInSpeed;
         TranslateBarR.Target = Target;

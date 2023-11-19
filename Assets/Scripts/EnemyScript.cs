@@ -54,6 +54,8 @@ public class EnemyScript : MonoBehaviour
     [Header("ForBossOnly")]
     public Animator BossAnimator;
     public AnimationClip bossHitAnimClip;
+
+   
     //public void OnTriggerEnter(Collider other)
     //{
     //    if(other.CompareTag("Bullet"))
@@ -110,6 +112,11 @@ public class EnemyScript : MonoBehaviour
         AS = GameObject.FindGameObjectWithTag("SFX").GetComponent<AudioSource>();
 
         if (AS && IntroAudio) AS.PlayOneShot(IntroAudio);
+        if (!isOnValidSurface(transform.position) && enemyType != EnemyType.Boss)
+        {
+            Destroy(gameObject);
+        }
+
     }
 
     void Update()
@@ -117,10 +124,7 @@ public class EnemyScript : MonoBehaviour
         if(enemyType != EnemyType.Boss && !isStatic)
             ChargeBehavior();
 
-        if(!isOnValidSurface(transform.position) && enemyType != EnemyType.Boss)
-        {
-            Destroy(gameObject);
-        }
+
         if (onTouchCooldown > 0) onTouchCooldown -= Time.deltaTime;
     }
 
@@ -157,10 +161,7 @@ public class EnemyScript : MonoBehaviour
         }
         else if(enemyBehaviour == EnemyBehaviour.Ranged)
         {
-            if (cooldownBeforeShooting > 0) cooldownBeforeShooting -= Time.deltaTime;
-            else
-            {
-                if (Vector3.Distance(transform.position, player.position) > range)
+              if (Vector3.Distance(transform.position, player.position) > range)
                 {
                     transform.LookAt(player.transform);
                     RB.AddForce(transform.forward * chargeSpeed);
@@ -169,6 +170,10 @@ public class EnemyScript : MonoBehaviour
                 {
                     transform.LookAt(player.transform);
                 }
+            if (cooldownBeforeShooting > 0) cooldownBeforeShooting -= Time.deltaTime;
+            else
+            {
+              
                 if (cooldown <= 0)
                 {
                     cooldown = AddToCooldown;
@@ -180,10 +185,14 @@ public class EnemyScript : MonoBehaviour
     }
     public void ShootProjectile()
     {
-      if(AttackAnimationClip && EnemyAnimator) EnemyAnimator.Play(AttackAnimationClip.name);
         if (NumberOfProjectiles < 1) return; // Ensure at least one projectile is fired
 
-        float angleIncrement = SpreadAngle / (NumberOfProjectiles - 1);
+        if (AttackAnimationClip && EnemyAnimator)
+        {
+            EnemyAnimator.Play(AttackAnimationClip.name);
+        }
+
+        float angleIncrement = SpreadAngle / NumberOfProjectiles;
         float startingAngle = -SpreadAngle / 2f;
 
         for (int i = 0; i < NumberOfProjectiles; i++)
@@ -217,7 +226,12 @@ public class EnemyScript : MonoBehaviour
             AttachedBossManager.UpdateHealthSlider();
             if (Health <= 0)
             {
-                Die(duplicate);
+                if(AttachedBossManager.InstantiatedBoss.finisher)
+                {
+                    AttachedBossManager.InstantiatedBoss.FinishHim();
+                }
+                else
+                    Die(duplicate);
             }
             if (AS && HitAudio) AS.PlayOneShot(HitAudio);
        //     HitAnimator.Play(HitAnimClip.name);
@@ -261,7 +275,7 @@ public class EnemyScript : MonoBehaviour
     {
         if (enemyType == EnemyType.Boss)
         {
-            AttachedBossManager.KillBoss();
+            AttachedBossManager.StartFinisher();
         }
         else
         {

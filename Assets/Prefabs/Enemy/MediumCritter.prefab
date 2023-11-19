@@ -124,7 +124,7 @@ MonoBehaviour:
   EnemyAnimator: {fileID: 0}
   AttackAnimationClip: {fileID: 0}
   NumberOfProjectiles: 1
-  SpreadAngle: 0
+  SpreadAngle: 1
   cooldownBeforeShooting: 2
   BossAnimator: {fileID: 5927084381933010046}
   bossHitAnimClip: {fileID: 7400000, guid: cfe963566e320d047a50be003291f895, type: 2}

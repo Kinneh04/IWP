@@ -1607,12 +1607,13 @@ MonoBehaviour:
   isAttacking: 0
   ChanceForDash: 50
   ThreeDash: 0
-  Projectile: {fileID: 4284639301828262667, guid: 91c359cb896860349b608d4936e6af3b,
-    type: 3}
-  SpawnOnBeat: 1
-  SpawnInterval: 0
-  minSpawnAmount: 3
-  maxSpawnAmount: 4
+  Projectiles:
+  - {fileID: 4284639301828262667, guid: 61d9016079bb6e343aaac086871863b0, type: 3}
+  - {fileID: 4284639301828262667, guid: 91c359cb896860349b608d4936e6af3b, type: 3}
+  SpawnOnBeat: 0
+  SpawnInterval: 0.2
+  minSpawnAmount: 4
+  maxSpawnAmount: 5
   isSpawning: 0
   chosenAmountToSpawn: 0
   isAttackingBeam: 0
@@ -1624,10 +1625,12 @@ MonoBehaviour:
   WarningEmissionIntensity: 50
   lerpSpeed: 3.5
   isWarning: 0
+  hasComplimented: 0
   Bosslight: {fileID: 1773035665}
   BeamAudioClip: {fileID: 8300000, guid: c51832daab4fbca46b1fe56ca758ed68, type: 3}
   WarningBeamAudioClip: {fileID: 8300000, guid: efb3aef4c3946ab44bc56ea678da0b2b,
     type: 3}
+  ProjectileSpawnAudioClip: {fileID: 0}
   TrailGameObject: {fileID: 4051880182437411862, guid: 4cdb5389479941f48af46cebb3787ae3,
     type: 3}
   TrailCooldown: 0.025

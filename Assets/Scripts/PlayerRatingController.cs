@@ -110,6 +110,7 @@ public class PlayerRatingController : MonoBehaviour
             Destroy(GO);
         }
         InstantiatedKillFeedPrefabs.Clear();
+        shootingScript.cleanup();
     }
 
     public void TargetAndRecalculateAcc()

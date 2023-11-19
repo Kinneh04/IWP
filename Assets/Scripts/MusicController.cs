@@ -78,21 +78,39 @@ public class MusicController : MonoBehaviour
     [Header("MunninsTrial")]
     public bool isPlayingMunninsTrial = false;
 
+    [Header("Drop")]
+    public bool isDrop = false;
+
     [Header("SFX")]
     public AudioSource SFXAudioSource;
     public AudioClip DisplayScoreAudioClip;
     public AudioClip ApplauseAudioClip;
+
+    [Header("Fireworks")]
+    public List<ParticleSystem> Fireworks = new List<ParticleSystem>();
+    public ShootingScript SS;
     public void PlaySFX(AudioClip AC)
     {
         SFXAudioSource.PlayOneShot(AC);
     }
     public void PulseGlows()
     {
+
         Color newPulseColor = PulseGlowColor;
-        newPulseColor.a += (100 - FirstPersonController.Instance.Health) / 100;
-        foreach(RawImage RI in Glows)
+        
+        if (isDrop) newPulseColor.a = 0.65f;
+        else newPulseColor.a += (100 - FirstPersonController.Instance.Health) / 100;
+        foreach (RawImage RI in Glows)
         {
             RI.color = newPulseColor;
+        }
+    }
+
+    public void CastFireworks()
+    {
+        foreach(ParticleSystem PS in Fireworks)
+        {
+            PS.Play();
         }
     }
 
@@ -185,6 +203,16 @@ public class MusicController : MonoBehaviour
         GO.GetComponent<CrosshairFadeBPM>().Speed = 1 / (BPM / BPM_Divider);
 
   
+    }
+
+    public IEnumerator FadeOutMusic()
+    {
+        while(MusicAudioSource.volume > 0)
+        {
+            MusicAudioSource.volume -= Time.deltaTime;
+            yield return null;
+        }
+        MusicAudioSource.Pause();
     }
     public static MusicController Instance
     {
@@ -314,13 +342,17 @@ public class MusicController : MonoBehaviour
         }
     }
 
-    IEnumerator StartFinishGameSequence()
+    public IEnumerator StartFinishGameSequence()
     {
+        
         EnemySpawner.Instance.Cleanup();
         isFinished = true;
         LevelClearGO.SetActive(true);
         SFXAudioSource.PlayOneShot(ApplauseAudioClip);
-     
+        SS.weaponMovement.gameObject.SetActive(false);
+        SS.freefire = false;
+        canFire = false;
+
         scoreManager.ChangeLevelCompleteVars(playerRating.Targetscore, playerRating.KillAmount, playerRating.HighestCombo, playerRating.MultikillAmount, playerRating.TargetAcc);
         if (PlayFabClientAPI.IsClientLoggedIn())
         {

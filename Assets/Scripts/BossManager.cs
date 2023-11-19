@@ -33,6 +33,14 @@ public class BossManager : MonoBehaviour
     public float TimeLeftToKill = 0;
     private static BossManager _instance;
 
+    public void StartFinisher()
+    {
+        MusicController.Instance.MusicAudioSource.Pause();
+        InstantiatedBoss.canStartAttacking = false;
+        BossKilledFX.SetActive(false);
+        BossKilledUIElements.SetActive(false);
+        PlayerRatingController.Instance.shootingScript.freefire = true;
+    }
     private void Awake()
     {
         // Ensure there's only one instance of this object
@@ -71,7 +79,7 @@ public class BossManager : MonoBehaviour
         {
             CVC.m_Lens.FieldOfView = Mathf.Lerp(CVC.m_Lens.FieldOfView, TargetFOV, 7.0f * Time.deltaTime);
         }
-        if (InstantiatedBoss && TimeLeftToKill > 0)
+        if (InstantiatedBoss && TimeLeftToKill > 0 && !InstantiatedBoss.finisher)
         {
             TimeLeftToKill -= Time.deltaTime;
             TimeLeftToKillText.text = "TIME TO KILL: " + TimeLeftToKill.ToString("F1");
@@ -175,6 +183,8 @@ public class BossManager : MonoBehaviour
         yield return new WaitForSeconds(2);
         BossKilledFX.SetActive(false);
         BossKilledUIElements.SetActive(false);
+        yield return new WaitForSeconds(3);
+        StartCoroutine(MusicController.Instance.StartFinishGameSequence());
     }
     public IEnumerator SpawnBossCoroutine(Boss B)
     {

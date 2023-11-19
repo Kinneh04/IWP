@@ -22,7 +22,8 @@ public class BossScript : MonoBehaviour
     public bool ThreeDash = false;
 
     [Header("Attack1_Projectiles")]
-    public GameObject Projectile;
+    public List<GameObject> Projectiles = new List<GameObject>();
+    private GameObject CurrentlyChosenProjectile;
     public bool SpawnOnBeat;
     public float SpawnInterval;
     public int minSpawnAmount, maxSpawnAmount;
@@ -48,15 +49,19 @@ public class BossScript : MonoBehaviour
 
     [Header("Audio")]
      AudioSource AS;
-    public AudioClip BeamAudioClip, WarningBeamAudioClip;
+    public AudioClip BeamAudioClip, WarningBeamAudioClip, ProjectileSpawnAudioClip;
 
     [Header("Trail")]
     public GameObject TrailGameObject;
     public float TrailCooldown;
     float currentTrailCooldown;
 
-    
-    
+    [Header("Finisher")]
+    public List<AudioClip> FinishHimAudioClips = new List<AudioClip>();
+    int finishHimIndex = 0;
+    public bool finisher = false;
+    public Animator FinisherAnimation;
+    public GameObject FinishedParticleEffects;
     public void ChooseRandomAttack()
     {
         if (!canStartAttacking) return;
@@ -95,13 +100,15 @@ public class BossScript : MonoBehaviour
                 }
                 else if(isSpawningOnBeat && isSpawning)
                 {
-                    ShootProjectile();
+                    CurrentlyChosenProjectile = Projectiles[Random.Range(0, Projectiles.Count)];
+                    ShootProjectile(transform.position);
                 }
                 else
                 {
                     int i = Random.Range(0, 100);
                     if(i < 50)
                     {
+                        CurrentlyChosenProjectile = Projectiles[Random.Range(0, Projectiles.Count)];
                         TryShootAttack1();
                     }
                     else
@@ -147,16 +154,27 @@ public class BossScript : MonoBehaviour
 
     IEnumerator ShootProjectilesWithDelay()
     {
-        for(int i = 0; i < chosenAmountToSpawn; i++)
+        float angleStep = 360f / chosenAmountToSpawn; // Calculate angle step for equal spread
+        float currentAngle = 0f; // Start from 0 degrees
+
+        for (int i = 0; i < chosenAmountToSpawn; i++)
         {
-            ShootProjectile();
+            float spawnX = transform.position.x + Mathf.Sin(Mathf.Deg2Rad * currentAngle); // Calculate x position
+            float spawnY = transform.position.y + Mathf.Cos(Mathf.Deg2Rad * currentAngle); // Calculate y position
+
+            Vector3 spawnPosition = new Vector3(spawnX, spawnY, transform.position.z); // Set spawn position
+
+            // Instantiate and spawn projectile at the calculated position
+            ShootProjectile(spawnPosition);
+
+            currentAngle += angleStep; // Move to the next angle for the next spawn
             yield return new WaitForSeconds(SpawnInterval);
         }
     }
-    public void ShootProjectile()
+    public void ShootProjectile(Vector3 spawnPosition)
     {
-        
-        Instantiate(Projectile, transform.position, transform.rotation);
+        AS.PlayOneShot(ProjectileSpawnAudioClip);
+        Instantiate(CurrentlyChosenProjectile, spawnPosition, transform.rotation);
         chosenAmountToSpawn--;
         if(chosenAmountToSpawn <= 0)
         {
@@ -165,6 +183,22 @@ public class BossScript : MonoBehaviour
             isSpawning = false;
         }
     }
+
+    public void FinishHim()
+    {
+        if(finishHimIndex < FinishHimAudioClips.Count)
+        {
+            AS.PlayOneShot(FinishHimAudioClips[finishHimIndex]);
+            finishHimIndex++;
+        }
+        else
+        {
+            AS.PlayOneShot(FinishHimAudioClips[finishHimIndex]);
+            Instantiate(FinishedParticleEffects, transform.position, Quaternion.identity);
+            BossManager.Instance.KillBoss();
+        }
+    }
+
     private void Awake()
     {
         player = GameObject.FindGameObjectWithTag("PlayerHitbox").transform;
