@@ -89,6 +89,7 @@ public class MusicController : MonoBehaviour
     [Header("Fireworks")]
     public List<ParticleSystem> Fireworks = new List<ParticleSystem>();
     public ShootingScript SS;
+    public AudioClip FireworksAC;
     public void PlaySFX(AudioClip AC)
     {
         SFXAudioSource.PlayOneShot(AC);
@@ -108,6 +109,7 @@ public class MusicController : MonoBehaviour
 
     public void CastFireworks()
     {
+        SFXAudioSource.PlayOneShot(FireworksAC);
         foreach(ParticleSystem PS in Fireworks)
         {
             PS.Play();

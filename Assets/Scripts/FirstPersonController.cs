@@ -121,8 +121,11 @@ using System.Collections;
 
 	[Header("AudioAndSFX")]
 	public AudioSource SFXAudioSource;
-	public AudioClip DashingSFX;
+	public AudioClip DashingSFX, Jump_1_SFX, Jump_2_SFX, JumpLandSFX; 
 	public List<AudioClip> HurtAudioClips = new List<AudioClip>();
+	public float addToWalkCooldown;
+	float walkCooldown;
+	public List<AudioClip> WalkSFX = new List<AudioClip>();
 
 	public List<ParticleSystem> DashingParticleSystems = new List<ParticleSystem>();
 	public void Cleanup()
@@ -264,6 +267,7 @@ using System.Collections;
 			if (Input.GetKeyDown(KeyCode.Escape))
 			{
 				MainMenuManager.Instance.ReturnToMainMenuFromGame();
+				MusicController.Instance.SFXAudioSource.Stop();
 			}
 			if (Input.GetKeyDown(KeyCode.R))
 			{
@@ -426,7 +430,15 @@ using System.Collections;
 			//{
 				_speed = targetSpeed;
 			//}
-
+			if(targetSpeed > 0)
+			{
+			walkCooldown -= Time.deltaTime;
+			if(walkCooldown <= 0)
+			{
+				walkCooldown = addToWalkCooldown;
+				SFXAudioSource.PlayOneShot(WalkSFX[Random.Range(0, WalkSFX.Count)]);
+			}
+			}
 			// normalise input direction
 			Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
 
@@ -446,10 +458,15 @@ using System.Collections;
     {
         if (Grounded && !isJumping)
         {
+			if(_jumpCount > 0)
+			{
+                SFXAudioSource.PlayOneShot(JumpLandSFX);
+            }
             _jumpCount = 0;
             _canDoubleJump = true;
             _fallTimeoutDelta = FallTimeout;
             _verticalVelocity = (_verticalVelocity < 0.0f) ? -2f : _verticalVelocity;
+
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -459,6 +476,8 @@ using System.Collections;
                 isJumping = true;
                 _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
                 _jumpCount++;
+				if(_jumpCount == 0) SFXAudioSource.PlayOneShot(Jump_1_SFX);
+				else SFXAudioSource.PlayOneShot(Jump_2_SFX);
                 if (_jumpCount == 2) _canDoubleJump = false;
             }
         }

@@ -49,7 +49,7 @@ public class BossScript : MonoBehaviour
 
     [Header("Audio")]
      AudioSource AS;
-    public AudioClip BeamAudioClip, WarningBeamAudioClip, ProjectileSpawnAudioClip;
+    public AudioClip BeamAudioClip, WarningBeamAudioClip, ProjectileSpawnAudioClip, IntroAudioClip;
 
     [Header("Trail")]
     public GameObject TrailGameObject;
@@ -60,7 +60,9 @@ public class BossScript : MonoBehaviour
     public List<AudioClip> FinishHimAudioClips = new List<AudioClip>();
     int finishHimIndex = 0;
     public bool finisher = false;
-    public Animator FinisherAnimation;
+    public Animator BossAnimator;
+    public AnimationClip HurtAnimation;
+    public AnimationClip FinisherAnimation;
     public GameObject FinishedParticleEffects;
     public void ChooseRandomAttack()
     {
@@ -186,16 +188,16 @@ public class BossScript : MonoBehaviour
 
     public void FinishHim()
     {
-        if(finishHimIndex < FinishHimAudioClips.Count)
+
+        AS.Stop();
+        AS.PlayOneShot(FinishHimAudioClips[finishHimIndex]);
+        finishHimIndex++;
+        BossAnimator.Play(FinisherAnimation.name);
+        if(finishHimIndex >= FinishHimAudioClips.Count)
         {
-            AS.PlayOneShot(FinishHimAudioClips[finishHimIndex]);
-            finishHimIndex++;
-        }
-        else
-        {
-            AS.PlayOneShot(FinishHimAudioClips[finishHimIndex]);
             Instantiate(FinishedParticleEffects, transform.position, Quaternion.identity);
             BossManager.Instance.KillBoss();
+           // GetComponent<EnemyScript>().Die();
         }
     }
 
@@ -203,6 +205,7 @@ public class BossScript : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("PlayerHitbox").transform;
         AS = GameObject.FindGameObjectWithTag("SFX").GetComponent<AudioSource>();
+        AS.PlayOneShot(IntroAudioClip);
     }
 
     public void WarnPlayerOnBeam()

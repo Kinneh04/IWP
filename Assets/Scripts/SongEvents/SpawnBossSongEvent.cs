@@ -14,6 +14,7 @@ public class SpawnBossSongEvent : SongEvent
             bossController = GameObject.FindObjectOfType<BossManager>();
         }
         bossController.SpawnBossByName(bossName, TimeInSecondsLeftToKill);
+        MusicController.Instance.isDrop = true;
         base.CastEvent();
     }
 }

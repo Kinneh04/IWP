@@ -26,7 +26,6 @@ public class BossManager : MonoBehaviour
     public TMP_Text BossNameText;
     public Slider BossHealthSlider;
     public TMP_Text TimeLeftToKillText;
-    public GameObject BossKilledFX;
     public GameObject BossKilledUIElements;
     public GameObject BossEscapedUIElements;
     Intervals BossStartI = new Intervals();
@@ -35,11 +34,17 @@ public class BossManager : MonoBehaviour
 
     public void StartFinisher()
     {
+        EnemySpawner.Instance.RemoveAllEnemies();
+        EnemySpawner.Instance.AllowedToSpawn = false;
         MusicController.Instance.MusicAudioSource.Pause();
         InstantiatedBoss.canStartAttacking = false;
-        BossKilledFX.SetActive(false);
-        BossKilledUIElements.SetActive(false);
         PlayerRatingController.Instance.shootingScript.freefire = true;
+        //     BossKilledFX.SetActive(false);
+        //BossKilledUIElements.SetActive(false);
+        BossHealth.SetActive(false);
+        InstantiatedBoss.BossAnimator.Play(InstantiatedBoss.HurtAnimation.name);
+        InstantiatedBoss.finisher = true;
+
     }
     private void Awake()
     {
@@ -133,7 +138,7 @@ public class BossManager : MonoBehaviour
         StartCoroutine(KillbossEffects());
         PlayerRatingController.Instance.AddRating(100, "Boss Slain", Color.cyan);
         BossStartI.ToBeDeleted = true;
-        EnemySpawner.Instance.difficulty = OGDifficulty;
+     //   EnemySpawner.Instance.difficulty = OGDifficulty;
     }
 
     public void Cleanup()
@@ -171,20 +176,15 @@ public class BossManager : MonoBehaviour
     }
     public IEnumerator KillbossEffects()
     {
-        if (BossKilledFX)
-        {
-            BossKilledFX.SetActive(true);
-        }
-        if (BossKilledUIElements)
-        {
-            BossKilledUIElements.SetActive(true);
-        }
 
-        yield return new WaitForSeconds(2);
-        BossKilledFX.SetActive(false);
-        BossKilledUIElements.SetActive(false);
+        BossKilledUIElements.SetActive(true);
+        
+        MusicController.Instance.CastFireworks();
         yield return new WaitForSeconds(3);
+
         StartCoroutine(MusicController.Instance.StartFinishGameSequence());
+        yield return new WaitForSeconds(3);
+        BossKilledUIElements.SetActive(false);
     }
     public IEnumerator SpawnBossCoroutine(Boss B)
     {
