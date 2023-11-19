@@ -117,9 +117,9 @@ public class EnemyScript : MonoBehaviour
         if(enemyType != EnemyType.Boss && !isStatic)
             ChargeBehavior();
 
-        if(!isOnValidSurface(transform.position))
+        if(!isOnValidSurface(transform.position) && enemyType != EnemyType.Boss)
         {
-            Die(true);
+            Destroy(gameObject);
         }
         if (onTouchCooldown > 0) onTouchCooldown -= Time.deltaTime;
     }

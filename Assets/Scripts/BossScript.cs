@@ -41,6 +41,7 @@ public class BossScript : MonoBehaviour
     public float WarningEmissionIntensity = 1.0f;
     public float lerpSpeed = 3.5f;
     public bool isWarning = false;
+    public bool hasComplimented = false;
 
     [Header("Lighting")]
     public Light Bosslight;
@@ -48,6 +49,11 @@ public class BossScript : MonoBehaviour
     [Header("Audio")]
      AudioSource AS;
     public AudioClip BeamAudioClip, WarningBeamAudioClip;
+
+    [Header("Trail")]
+    public GameObject TrailGameObject;
+    public float TrailCooldown;
+    float currentTrailCooldown;
 
     
     
@@ -120,6 +126,7 @@ public class BossScript : MonoBehaviour
         Beam.SetActive(false);
         isWarning = false;
         isBeaming = false;
+        hasComplimented = false;
         isAttackingBeam = false;
     }
 
@@ -182,6 +189,13 @@ public class BossScript : MonoBehaviour
         }
         if (isDashing)
         {
+
+            if (currentTrailCooldown <= 0)
+            {
+                Instantiate(TrailGameObject, transform.position, transform.rotation);
+                currentTrailCooldown = TrailCooldown;
+            }
+            else currentTrailCooldown -= Time.deltaTime;
             float step = dashSpeed * Time.deltaTime;
             transform.position = Vector3.Lerp(transform.position, targetPosition, step);
 
@@ -191,7 +205,12 @@ public class BossScript : MonoBehaviour
                 isDashing = false;
             }
         }
-
+        else currentTrailCooldown = TrailCooldown;
+        if(isBeaming && !hasComplimented && FirstPersonController.Instance.isDashing)
+        {
+            hasComplimented = true;
+            PlayerRatingController.Instance.GoodDodge();
+        }
        if(Bosslight.intensity != OriginalEmission)
         {
             Bosslight.intensity = Mathf.Lerp(Bosslight.intensity, OriginalEmission, lerpSpeed * Time.deltaTime);

@@ -1,6 +1,6 @@
 
 using System;
-
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -57,6 +57,7 @@ public class PlayerRatingController : MonoBehaviour
     [Header("Scoring")]
     public int KillAmount = 0;
     public int MultikillAmount = 0;
+    public GameObject GoodDodgeGO;
 
     [Header("Components")]
     public ShootingScript shootingScript;
@@ -215,6 +216,14 @@ public class PlayerRatingController : MonoBehaviour
         Minscale = RatingImage.transform.localScale;
         MaxScale = Minscale * MaxScaleMultiplier;
         FrenzySlider.maxValue = AmountNeededForFrenzy;
+    }
+
+    public IEnumerator GoodDodge()
+    {
+        GoodDodgeGO.SetActive(true);
+        yield return new WaitForSeconds(0.3f);
+        GoodDodgeGO.SetActive(false);
+        AddRating(10, "Good Dodge!", Color.green);
     }
 
     public void AddRating(float rating, string ShowString = null, Color? c = null)

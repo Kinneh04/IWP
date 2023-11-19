@@ -1628,6 +1628,9 @@ MonoBehaviour:
   BeamAudioClip: {fileID: 8300000, guid: c51832daab4fbca46b1fe56ca758ed68, type: 3}
   WarningBeamAudioClip: {fileID: 8300000, guid: efb3aef4c3946ab44bc56ea678da0b2b,
     type: 3}
+  TrailGameObject: {fileID: 4051880182437411862, guid: 4cdb5389479941f48af46cebb3787ae3,
+    type: 3}
+  TrailCooldown: 0.025
 --- !u!114 &8806054703625487222
 MonoBehaviour:
   m_ObjectHideFlags: 0

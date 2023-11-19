@@ -76,7 +76,7 @@ using System.Collections;
 		public float dashDuration = 0.2f;
 		public float dashCooldown = 0.0f;
 		public float addToDashCooldown = 5.0f;
-		private bool isDashing = false;
+		public bool isDashing = false;
 		public float currentRecoil;
 		public bool canMove = true;
 	[Header("UI elements for abilities")]
