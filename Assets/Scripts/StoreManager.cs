@@ -17,6 +17,12 @@ public class StoreManager : MonoBehaviour
     public AnimationClip FireAnimClip;
     public int maxAmmo, currentAmmo;
     public List<WeaponReloadPart> ReloadAnims = new List<WeaponReloadPart>();
+
+    [Header("ForRevolverBasedReloads")]
+    public WeaponReloadPart StartingReloadAnim, EndingReloadAnim, repeatingReloadAnim;
+    public bool isRevolverReloadType = false;
+    int revolverReloadTypeIndex = 0;
+
     public GameObject ActiveWeapon;
     public WeaponMovement weaponMove;
     public Transform ShootPoint;
@@ -69,6 +75,10 @@ public class StoreManager : MonoBehaviour
         maxAmmo = W.maxAmmo;
         currentAmmo = W.currentAmmo;
         ReloadAnims = W.ReloadAnims;
+        isRevolverReloadType = W.isRevolverReloadType;
+        StartingReloadAnim = W.StartingReloadAnim;
+        EndingReloadAnim = W.EndingReloadAnim;
+        repeatingReloadAnim = W.repeatingReloadAnim;
         ActiveWeapon = W.ActiveWeapon;
         weaponMove = W.weaponMovement;
         ShootPoint = W.ShootPoint;
@@ -100,6 +110,13 @@ public class StoreManager : MonoBehaviour
         shootingScript.ShootingAudioClip = GunFireAudio;
         shootingScript.NumberOfBulletsPerShot = NumberOfShotsPerShot;
         shootingScript.MaxShotDistance = currentWeaponEquipped.RelatedWeapon.ShootDistance;
+        if(isRevolverReloadType)
+        {
+            shootingScript.isRevolverReloadType = isRevolverReloadType;
+            shootingScript.StartingReloadAnim = StartingReloadAnim;
+            shootingScript.EndingReloadAnim = EndingReloadAnim;
+            shootingScript.repeatingReloadAnim = repeatingReloadAnim;
+        }
         ActiveWeapon.SetActive(true);
     }
     private void Awake()
@@ -222,6 +239,12 @@ public class Weapon
     public AnimationClip FireAnimClip;
     public int maxAmmo, currentAmmo;
     public List<WeaponReloadPart> ReloadAnims = new List<WeaponReloadPart>();
+
+    [Header("ForRevolverBasedReloads")]
+    public WeaponReloadPart StartingReloadAnim, EndingReloadAnim, repeatingReloadAnim;
+    public bool isRevolverReloadType = false;
+    int revolverReloadTypeIndex = 0;
+
     public GameObject ActiveWeapon;
     public WeaponMovement weaponMovement;
     public Transform ShootPoint;

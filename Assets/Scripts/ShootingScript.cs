@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 
 
@@ -40,6 +41,12 @@ public class ShootingScript : MonoBehaviour
     public int CurrentAmmo;
     public bool isReloading;
     public List<WeaponReloadPart> ReloadAnimClips = new List<WeaponReloadPart>();
+
+    [Header("ForRevolverBasedReloads")]
+    public WeaponReloadPart StartingReloadAnim, EndingReloadAnim, repeatingReloadAnim;
+    public bool isRevolverReloadType = false;
+    public int revolverReloadTypeIndex = 0;
+
     public int ReloadIndex = 0;
     public float reloadTime;
     public TMP_Text AmmoCountText;
@@ -137,18 +144,52 @@ public class ShootingScript : MonoBehaviour
 
     public void IncrementReload()
     {
-        isReloading = true;
         musicController.hasFired = true;
-        MainWeaponAnimator.Play(ReloadAnimClips[ReloadIndex].animClip.name);
-        PlayerAS.PlayOneShot(ReloadAnimClips[ReloadIndex].audioClip);
-        ReloadIndex++;
-        if(ReloadIndex >= ReloadAnimClips.Count)
+        if (isRevolverReloadType)
         {
-            ReloadIndex = 0;
-            CurrentAmmo = maxAmmo;
-            isReloading = false;
-            musicController.canFire = false;
-            AmmoCountText.text = CurrentAmmo.ToString() + "/" + maxAmmo.ToString();
+
+            if(revolverReloadTypeIndex == 0)
+            {
+                MainWeaponAnimator.Play(StartingReloadAnim.animClip.name);
+                revolverReloadTypeIndex++;
+                PlayerAS.PlayOneShot(StartingReloadAnim.audioClip);
+            }
+            else if(revolverReloadTypeIndex == 1)
+            {
+                if(CurrentAmmo >= maxAmmo)
+                {
+                    revolverReloadTypeIndex++;
+                }
+                else
+                {
+                    MainWeaponAnimator.Play(repeatingReloadAnim.animClip.name);
+                    PlayerAS.PlayOneShot(repeatingReloadAnim.audioClip);
+                    CurrentAmmo++;
+                    AmmoCountText.text = CurrentAmmo.ToString() + "/" + maxAmmo.ToString();
+                }
+            }
+            if(revolverReloadTypeIndex >= 2)
+            {
+                revolverReloadTypeIndex = 0;
+                MainWeaponAnimator.Play(EndingReloadAnim.animClip.name);
+                PlayerAS.PlayOneShot(EndingReloadAnim.audioClip);
+                AmmoCountText.text = CurrentAmmo.ToString() + "/" + maxAmmo.ToString();
+            }
+        }
+        else
+        {
+            isReloading = true;
+            MainWeaponAnimator.Play(ReloadAnimClips[ReloadIndex].animClip.name);
+            PlayerAS.PlayOneShot(ReloadAnimClips[ReloadIndex].audioClip);
+            ReloadIndex++;
+            if (ReloadIndex >= ReloadAnimClips.Count)
+            {
+                ReloadIndex = 0;
+                CurrentAmmo = maxAmmo;
+                isReloading = false;
+                musicController.canFire = false;
+                AmmoCountText.text = CurrentAmmo.ToString() + "/" + maxAmmo.ToString();
+            }
         }
     }
 
@@ -156,13 +197,15 @@ public class ShootingScript : MonoBehaviour
     {
         if (freefire)
         {
-            if (Input.GetKeyDown(KeyCode.R) && CurrentAmmo < maxAmmo
-                     || Input.GetMouseButtonDown(1) && CurrentAmmo < maxAmmo)
+            if (Input.GetKeyDown(KeyCode.R)
+                     || Input.GetMouseButtonDown(1))
             {
-                IncrementReload();
+                if(CurrentAmmo < maxAmmo || isRevolverReloadType)
+                    IncrementReload();
             }
             if (Input.GetMouseButtonDown(0) && !isReloading && FirstPersonController.Instance.canMove)
             {
+                revolverReloadTypeIndex = 0;
                 weaponMovement.TryShootVisual();
                 FireRaycast();
                 DispenseAmmo();
@@ -177,10 +220,11 @@ public class ShootingScript : MonoBehaviour
         {
             if (!FrenzyMode)
             {
-                if (Input.GetKeyDown(KeyCode.R) && musicController.canReload && CurrentAmmo < maxAmmo
-                    || Input.GetMouseButtonDown(1) && musicController.canReload && CurrentAmmo < maxAmmo)
+                if (Input.GetKeyDown(KeyCode.R) && musicController.canReload
+                    || Input.GetMouseButtonDown(1) && musicController.canReload)
                 {
-                    IncrementReload();
+                    if (CurrentAmmo < maxAmmo || isRevolverReloadType)
+                        IncrementReload();
                 }
                 else if (Input.GetKeyDown(KeyCode.R) && CurrentAmmo >= maxAmmo && musicController.canReload)
                 {
@@ -231,6 +275,7 @@ public class ShootingScript : MonoBehaviour
                         }
                         Holdfire = false;
                         weaponMovement.TryShootVisual();
+                        revolverReloadTypeIndex = 0;
                         FireRaycast();
                         DispenseAmmo();
                         //  ShowTimingRating();
