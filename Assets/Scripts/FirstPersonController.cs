@@ -128,6 +128,20 @@ using System.Collections;
 	public List<AudioClip> WalkSFX = new List<AudioClip>();
 
 	public List<ParticleSystem> DashingParticleSystems = new List<ParticleSystem>();
+
+	[Header("ChestAndUpgrades")]
+	public GameObject ChestInteractUIPopup;
+
+	[Header("Notif")]
+	public TMP_Text NotifText;
+	public Animator NotifAnimator;
+	public AnimationClip NotifAnimationClip;
+
+	public void PopupNotif(string s)
+    {
+		NotifText.text = s;
+		NotifAnimator.Play(NotifAnimationClip.name);
+    }
 	public void Cleanup()
     {
 		Health = 100;
@@ -305,7 +319,21 @@ using System.Collections;
 			HealthText.text = ((int)VisualHealth).ToString();
 			HealthSlider.value = VisualHealth;
 		}
-    }
+
+		RaycastHit hit;
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+		if (Physics.Raycast(ray, out hit,10f))
+		{
+
+			ChestInteractUIPopup.SetActive(hit.transform.CompareTag("Chest") && !hit.transform.GetComponent<ChestScript>().isOpen);
+
+			if(Input.GetKeyDown(KeyCode.F))
+            {
+				hit.transform.GetComponent<ChestScript>().OpenChest();
+            }
+		}
+	}
 		private void GroundedCheck()
 		{
 			// set sphere position, with offset

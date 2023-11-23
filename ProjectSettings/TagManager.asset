@@ -15,6 +15,7 @@ TagManager:
   - Boss
   - SFX
   - ClearFloor
+  - Chest
   layers:
   - Default
   - TransparentFX
