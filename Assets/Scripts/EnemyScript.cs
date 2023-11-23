@@ -134,7 +134,7 @@ public class EnemyScript : MonoBehaviour
         if (enemyBehaviour == EnemyBehaviour.Melee)
         {
             transform.LookAt(player.transform);
-            RB.AddForce(transform.forward * chargeSpeed);
+            RB.AddForce(transform.forward * chargeSpeed * Time.deltaTime);
             //if (raycastCooldown > 0)
             //{
             //    raycastCooldown -= Time.deltaTime;
