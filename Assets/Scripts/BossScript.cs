@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class BossScript : MonoBehaviour
 {
@@ -43,6 +44,12 @@ public class BossScript : MonoBehaviour
     public float lerpSpeed = 3.5f;
     public bool isWarning = false;
     public bool hasComplimented = false;
+    public GameObject HolyParticles;
+    public Transform ParticleSpawner;
+
+    [Header("Attack3_Ring")]
+    public GameObject RingObject;
+    public Vector3 Offset;
 
     [Header("Lighting")]
     public Light Bosslight;
@@ -64,6 +71,28 @@ public class BossScript : MonoBehaviour
     public AnimationClip HurtAnimation;
     public AnimationClip FinisherAnimation;
     public GameObject FinishedParticleEffects;
+
+    public void CastRingAttack()
+    {
+        RaycastHit hit;
+
+        // Raycast downwards from the current position of this GameObject
+        if (Physics.Raycast(transform.position, Vector3.down, out hit))
+        {
+            // Check if the ray hits an object tagged as "floor"
+            if (hit.collider.CompareTag("Floor"))
+            {
+                // Instantiate RingObject at the hit point with default rotation
+                GameObject GO = Instantiate(RingObject, hit.point + Offset, Quaternion.identity);
+                ExpandingRingAttack ERA = GO.GetComponent<ExpandingRingAttack>();
+                Intervals I = new Intervals();
+                I._steps = 2;
+                I._trigger.AddListener(delegate { ERA.ExpandObject(); });
+                MusicController.Instance._intervals.Add(I);
+                ERA.recordedInterval = I;
+            }
+        }
+    }
     public void ChooseRandomAttack()
     {
         if (!canStartAttacking) return;
@@ -108,16 +137,25 @@ public class BossScript : MonoBehaviour
                 else
                 {
                     int i = Random.Range(0, 100);
-                    if(i < 50)
+                    if (i < 50)
                     {
                         CurrentlyChosenProjectile = Projectiles[Random.Range(0, Projectiles.Count)];
                         TryShootAttack1();
                     }
                     else
                     {
-                        isAttackingBeam = true;
-                        isWarning = true;
-                        CurrentWarningFlashes = WarningFlashes;
+                        int p = Random.Range(1, 2);
+                        if (p == 1)
+                        {
+                            Debug.Log("Attack 3!!!");
+                            CastRingAttack();
+                        }
+                        else
+                        {
+                            isAttackingBeam = true;
+                            isWarning = true;
+                            CurrentWarningFlashes = WarningFlashes;
+                        }
                     }
                 }
                 AvailableDashes = 3;
@@ -213,6 +251,7 @@ public class BossScript : MonoBehaviour
         AS.PlayOneShot(WarningBeamAudioClip);
         Bosslight.intensity = WarningEmissionIntensity;
         CurrentWarningFlashes--;
+        Instantiate(HolyParticles, ParticleSpawner.position, transform.rotation);
         if (CurrentWarningFlashes <= 0) isWarning = false;
     }
 
