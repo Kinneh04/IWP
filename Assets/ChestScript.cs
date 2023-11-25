@@ -11,7 +11,6 @@ public class ChestScript : MonoBehaviour
     public Animator ChestAnimator;
     public AudioSource ChestAudioSource;
     public AudioClip ChestOpenAudioClip;
-    public AudioClip ChestPopupItemAudioClip;
     public GameObject ChestEffects;
     public AudioClip CollectItemAudioClip;
     GameObject SpawnedItem;
@@ -19,6 +18,7 @@ public class ChestScript : MonoBehaviour
     bool readyForCollection = false;
     public ChestSpawner RelatedChestSpawner;
     public AudioClip SpawnedAC;
+    bool collected = false;
 
     private void Start()
     {
@@ -37,7 +37,7 @@ public class ChestScript : MonoBehaviour
     {
         GameObject GO = RandomAvailableStuff[Random.Range(0, RandomAvailableStuff.Count)];
         SpawnedItem = Instantiate(GO, ChestSpawnPos.position, GO.transform.rotation);
-        ChestAudioSource.PlayOneShot(ChestPopupItemAudioClip);
+
         readyForCollection = true;
         Instantiate(ChestEffects, ChestSpawnPos.position, Quaternion.identity);
     }
@@ -59,6 +59,8 @@ public class ChestScript : MonoBehaviour
 
     public void CollectItem()
     {
+        if (collected) return;
+        collected = true;
         ChestAudioSource.PlayOneShot(CollectItemAudioClip);
         SpawnedItem.GetComponent<Potion>().UsePotion();
         RelatedChestSpawner.resetValue();
