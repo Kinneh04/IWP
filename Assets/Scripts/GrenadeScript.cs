@@ -11,6 +11,9 @@ public class GrenadeScript : MonoBehaviour
     Intervals I = new Intervals();
     public GameObject ExplosionEffects;
     public PlayerRatingController playerRatingController;
+    public AudioSource AS;
+    public AudioClip BeepAudioClip;
+    public AudioClip ExplodeAudioClip;
     public void Start()
     {
         musicController = GameObject.FindObjectOfType<MusicController>();
@@ -19,7 +22,7 @@ public class GrenadeScript : MonoBehaviour
         I._steps = 1;
         I._trigger = new UnityEngine.Events.UnityEvent();
         I._trigger.AddListener(delegate { DecrementBeat(); });
-        I._lastInterval = 0;
+        I._lastInterval = 1;
         musicController._intervals.Add(I);
      
     }
@@ -31,9 +34,11 @@ public class GrenadeScript : MonoBehaviour
     public void DecrementBeat()
     {
         beatsToexplode--;
+        AS.PlayOneShot(BeepAudioClip);
         if(beatsToexplode <= 0)
         {
             Explode();
+       
         }
     }
 
@@ -51,7 +56,8 @@ public class GrenadeScript : MonoBehaviour
                 playerRatingController.AddRating(10, "Grenade Kill", Color.yellow);
             }
         }
-        Destroy(gameObject, 0.05f);
+        AS.PlayOneShot(ExplodeAudioClip);
+        Destroy(gameObject, 0.1f);
 
     }
 }
