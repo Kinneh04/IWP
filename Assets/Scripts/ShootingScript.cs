@@ -13,6 +13,8 @@ public class ShootingScript : MonoBehaviour
     public PlayerRatingController playerRatingController;
     public bool Holdfire;
     public int SetDamage = 25;
+    public int BurstShotCount = 1;
+    public float burstShotInterval = 0.05f;
 
     [Header("Animations")]
     public Animator MainWeaponAnimator;
@@ -28,8 +30,6 @@ public class ShootingScript : MonoBehaviour
 
     [Header("Frenzy mode and gatling gun")]
     public bool FrenzyMode = false;
-    public float gatlingGunCooldown;
-    public float AddToGatlingGunCooldown = 0.1f;
     public GameObject[] GatlingGunMuzzleFlashPoints;
     public Animator GatlingGunAnimator;
     public AnimationClip UziShootAnimClip;
@@ -62,11 +62,52 @@ public class ShootingScript : MonoBehaviour
 
     [Header("Sounds")]
     public AudioSource PlayerAS;
-    public AudioClip ShootingAudioClip, ClickAudioClip, FrenzyAudioClip;
+    public AudioClip ShootingAudioClip, ClickAudioClip, FrenzyAudioClip, FrenzyShootAudioClip;
 
+    [Header("Frenzy")]
     public GameObject FrenzyUI;
     public GameObject[] ShitToDisableForFrenzy;
-   
+    public int FrenzyShotsFired;
+    public bool holdingFrenzy;
+    public Intervals FrenzyInterval;
+
+    private static ShootingScript _instance;
+    public static ShootingScript Instance
+    {
+        get
+        {
+            // If the instance doesn't exist, find it in the scene
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<ShootingScript>();
+
+                // If it still doesn't exist, create a new instance
+                if (_instance == null)
+                {
+                    GameObject singletonObject = new GameObject("MusicController");
+                    _instance = singletonObject.AddComponent<ShootingScript>();
+                }
+            }
+
+            return _instance;
+        }
+    }
+    private void Awake()
+    {
+        // Ensure there's only one instance of this object
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+
+        _instance = this;
+
+        FrenzyInterval._steps = 2;
+        FrenzyInterval._trigger.AddListener(delegate { ShootGatlingGun(); });
+
+        MusicController.Instance._intervals.Add(FrenzyInterval);
+    }
     //public void ShowTimingRating()
     //{
     //    StopCoroutine(ShowTimingRatingCoroutine());
@@ -193,6 +234,16 @@ public class ShootingScript : MonoBehaviour
         }
     }
 
+    IEnumerator burstShot()
+    {
+        for(int i = 0; i < BurstShotCount; i++)
+        {
+            FireRaycast();
+            DispenseAmmo();
+            yield return new WaitForSeconds(burstShotInterval);
+        }
+    }
+
     private void Update()
     {
         if (freefire)
@@ -220,6 +271,7 @@ public class ShootingScript : MonoBehaviour
         {
             if (!FrenzyMode)
             {
+
                 if (Input.GetKeyDown(KeyCode.R) && musicController.canReload
                     || Input.GetMouseButtonDown(1) && musicController.canReload)
                 {
@@ -276,9 +328,15 @@ public class ShootingScript : MonoBehaviour
                         Holdfire = false;
                         weaponMovement.TryShootVisual();
                         revolverReloadTypeIndex = 0;
-                        FireRaycast();
-                        DispenseAmmo();
-                        //  ShowTimingRating();
+                        if (BurstShotCount > 1)
+                        {
+                            StartCoroutine(burstShot());
+                        }
+                        else
+                        {
+                            FireRaycast();
+                            DispenseAmmo();
+                        }//  ShowTimingRating();
                         if (FireAnimClip)
                         {
                             MainWeaponAnimator.Play(FireAnimClip.name);
@@ -339,25 +397,58 @@ public class ShootingScript : MonoBehaviour
             }
             else
             {
-                if (Input.GetMouseButton(0) && gatlingGunCooldown <= 0 && !FirstPersonController.Instance.isTransitioning)
+                if (Input.GetMouseButton(0))
                 {
-                    UziWeaponMovement.TryShootVisual();
-                    PlayerAS.PlayOneShot(FrenzyAudioClip);
-                    FireRaycast(false);
-                    gatlingGunCooldown = AddToGatlingGunCooldown;
-                    foreach (GameObject GO in GatlingGunMuzzleFlashPoints)
-                    {
-                        GameObject MFGO = Instantiate(MuzzleFlash, GO.transform.position, Quaternion.identity);
-                        MFGO.transform.SetParent(GO.transform);
-                        GatlingGunAnimator.Play(UziShootAnimClip.name);
-                    }
+                    holdingFrenzy = true;
                 }
-                else if (gatlingGunCooldown > 0) gatlingGunCooldown -= Time.deltaTime;
+                else
+                {
+                    holdingFrenzy = false;
+                    FrenzyShotsFired = 0;
+                }
 
             }
             Color T = Color.red;
             T.a = 0;
             LateEarlyRatingText.color = Color.Lerp(LateEarlyRatingText.color, T, Time.deltaTime * 3);
+        }
+    }
+
+    public void ShootGatlingGun()
+    {
+        if (holdingFrenzy && FrenzyMode)
+        {
+            UziWeaponMovement.TryShootVisual();
+            PlayerAS.PlayOneShot(FrenzyAudioClip);
+            FireRaycast(false);
+            MusicController.Instance.SFXAudioSource.PlayOneShot(FrenzyAudioClip);
+            foreach (GameObject GO in GatlingGunMuzzleFlashPoints)
+            {
+                GameObject MFGO = Instantiate(MuzzleFlash, GO.transform.position, Quaternion.identity);
+                MFGO.transform.SetParent(GO.transform);
+                GatlingGunAnimator.Play(UziShootAnimClip.name);
+            }
+            FrenzyShotsFired++;
+            if (FrenzyShotsFired >= 17)
+            {
+                FrenzyInterval._steps = 8;
+              //  FrenzyInterval._lastInterval++;
+            }
+            else if (FrenzyShotsFired >= 8)
+            {
+                FrenzyInterval._steps = 4;
+             //   FrenzyInterval._lastInterval++;
+            }
+            else if (FrenzyShotsFired >= 3)
+            {
+                FrenzyInterval._steps = 2;
+               // FrenzyInterval._lastInterval++;
+            }
+        }
+        else
+        {
+            FrenzyShotsFired = 0;
+            FrenzyInterval._steps = 1 ;
         }
     }
 

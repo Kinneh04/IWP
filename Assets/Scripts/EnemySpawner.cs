@@ -44,6 +44,13 @@ public class EnemySpawner : MonoBehaviour
         StopAllCoroutines();
     }
 
+    public void CleanMissingEnemies()
+    {
+       for(int i = 0; i < SpawnedEnemyScripts.Count; i++) { 
+            if (SpawnedEnemyScripts[i]) SpawnedEnemyScripts.RemoveAt(i);
+        }
+    }
+
     private void Awake()
     {
       //  player = GameObject.FindGameObjectWithTag("PlayerHitbox").transform;
@@ -142,6 +149,7 @@ public class EnemySpawner : MonoBehaviour
         if (MunninsTrialManager.Instance.isCurrentlyRunningDungeon) yield break;
         while (true)
         {
+            CleanMissingEnemies();
             if(!AllowedToSpawn || HitmaxEnemies())
             {
                 yield return new WaitForSeconds(1);

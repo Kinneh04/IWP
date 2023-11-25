@@ -25,7 +25,7 @@ public class ChestSpawner : MonoBehaviour
         FirstPersonController.Instance.PopupNotif("A chest spawned");
         Transform T = AvailablePositions[Random.Range(0, AvailablePositions.Count)];
         Vector3 Pos = T.position;
-        Pos.y += 0.1f;
+        Pos.y += 0.2f;
         CurrentlySpawnedChest = Instantiate(ChestPrefab,Pos, ChestPrefab.transform.rotation);
 
         CurrentlySpawnedChest.GetComponent<ChestScript>().RelatedChestSpawner = this;

@@ -36,7 +36,7 @@ public class StoreManager : MonoBehaviour
     public List<ShopAbility> AvailableAbilities = new List<ShopAbility>();
     public List<AbilitySlotPrefab> InstantiatedAbilities;
     public GameObject AbilityPrefab, AbilityPrefabParent;
-
+    public int BurstShotCount;
     public GameObject InstantiatedAbility;
 
     [Header("DontFIll")]
@@ -84,6 +84,7 @@ public class StoreManager : MonoBehaviour
         ShootPoint = W.ShootPoint;
         GunFireAudio = W.GunFireAudio;
         NumberOfShotsPerShot = W.NumberOfBulletsPerShot;
+        BurstShotCount = W.BurstShotCount;
 
     }
     public void LoadAbilityDetails()
@@ -110,6 +111,7 @@ public class StoreManager : MonoBehaviour
         shootingScript.ShootingAudioClip = GunFireAudio;
         shootingScript.NumberOfBulletsPerShot = NumberOfShotsPerShot;
         shootingScript.MaxShotDistance = currentWeaponEquipped.RelatedWeapon.ShootDistance;
+        shootingScript.BurstShotCount = BurstShotCount;
         if(isRevolverReloadType)
         {
             shootingScript.isRevolverReloadType = isRevolverReloadType;
@@ -239,7 +241,7 @@ public class Weapon
     public AnimationClip FireAnimClip;
     public int maxAmmo, currentAmmo;
     public List<WeaponReloadPart> ReloadAnims = new List<WeaponReloadPart>();
-
+    public int BurstShotCount = 1;
     [Header("ForRevolverBasedReloads")]
     public WeaponReloadPart StartingReloadAnim, EndingReloadAnim, repeatingReloadAnim;
     public bool isRevolverReloadType = false;

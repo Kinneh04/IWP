@@ -27,7 +27,10 @@ public class TutorialManager : MonoBehaviour
     [Header("Audio")]
     public AudioSource SFXAudioSource;
     public AudioClip ClickAudioClip;
-    
+
+
+    [Header("Input")]
+    public StarterAssetsInputs SAI;
 
 
     IEnumerator TypeText(string text, float speed)
@@ -48,6 +51,7 @@ public class TutorialManager : MonoBehaviour
 
     public void LoadTutorialChunk(TutorialChunk TC)
     {
+        SAI.cursorLocked = false;
         Nextbutton.SetActive(false);
         if (mc.LoggedInPlayerName != "")
         {
@@ -83,6 +87,7 @@ public class TutorialManager : MonoBehaviour
             index++;
             if (index >= CurrentlyDisplayingTutorialChunk.textStrings.Count)
             {
+                SAI.cursorLocked = true;
                 TutorialGameObject.SetActive(false);
                 isDisplaying = false;
                 isTyping = false;
