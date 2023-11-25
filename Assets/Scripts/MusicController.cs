@@ -141,6 +141,8 @@ public class MusicController : MonoBehaviour
                 _intervals.Remove(I);
             }
         }
+
+        isDrop = false;
     }
 
     public void LoadNewEventsFromOfficialSong(OfficialSongScript OSS)

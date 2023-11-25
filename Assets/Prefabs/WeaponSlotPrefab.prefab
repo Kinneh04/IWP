@@ -1132,6 +1132,7 @@ MonoBehaviour:
   isPurchased: 0
   isEquipped: 0
   RelatedWeapon:
+    OnPlaceholder: 0
     GunName: 
     GunDesc: 
     TotalShots: 0
@@ -1141,14 +1142,27 @@ MonoBehaviour:
     GunEquippedOnStart: 0
     GunUnlocked: 0
     NumberOfBulletsPerShot: 0
+    GunFireAudio: {fileID: 0}
     GunAnimator: {fileID: 0}
     FireAnimClip: {fileID: 0}
     maxAmmo: 0
     currentAmmo: 0
     ReloadAnims: []
+    BurstShotCount: 1
+    StartingReloadAnim:
+      animClip: {fileID: 0}
+      audioClip: {fileID: 0}
+    EndingReloadAnim:
+      animClip: {fileID: 0}
+      audioClip: {fileID: 0}
+    repeatingReloadAnim:
+      animClip: {fileID: 0}
+      audioClip: {fileID: 0}
+    isRevolverReloadType: 0
     ActiveWeapon: {fileID: 0}
     weaponMovement: {fileID: 0}
     ShootPoint: {fileID: 0}
+    ShootDistance: 0
 --- !u!1 &5094660913399546759
 GameObject:
   m_ObjectHideFlags: 0
@@ -1556,7 +1570,7 @@ RectTransform:
   m_GameObject: {fileID: 6914740048634695070}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.1843858, y: 1.0235434, z: 1.049292}
+  m_LocalScale: {x: 1.02736, y: 0.887842, z: 0.9101769}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7598042574654013215}
@@ -1564,8 +1578,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.0000038147, y: 222.5}
-  m_SizeDelta: {x: 274.434, y: 68.6085}
+  m_AnchoredPosition: {x: -0.0000044393, y: 222.5}
+  m_SizeDelta: {x: 354.3768, y: 68.6085}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8563729604987727052
 CanvasRenderer:

@@ -418,31 +418,35 @@ public class ShootingScript : MonoBehaviour
     {
         if (holdingFrenzy && FrenzyMode)
         {
-            UziWeaponMovement.TryShootVisual();
-            PlayerAS.PlayOneShot(FrenzyAudioClip);
-            FireRaycast(false);
-            MusicController.Instance.SFXAudioSource.PlayOneShot(FrenzyAudioClip);
-            foreach (GameObject GO in GatlingGunMuzzleFlashPoints)
-            {
-                GameObject MFGO = Instantiate(MuzzleFlash, GO.transform.position, Quaternion.identity);
-                MFGO.transform.SetParent(GO.transform);
-                GatlingGunAnimator.Play(UziShootAnimClip.name);
-            }
+           
             FrenzyShotsFired++;
-            if (FrenzyShotsFired >= 17)
-            {
-                FrenzyInterval._steps = 8;
-              //  FrenzyInterval._lastInterval++;
-            }
-            else if (FrenzyShotsFired >= 8)
+            //if (FrenzyShotsFired >= 17)
+            //{
+            //    FrenzyInterval._steps = 8;
+            //  //  FrenzyInterval._lastInterval++;
+            //}
+            if (FrenzyShotsFired == 8)
             {
                 FrenzyInterval._steps = 4;
              //   FrenzyInterval._lastInterval++;
             }
-            else if (FrenzyShotsFired >= 3)
+            else if (FrenzyShotsFired == 3)
             {
                 FrenzyInterval._steps = 2;
                // FrenzyInterval._lastInterval++;
+            }
+            else
+            {
+                UziWeaponMovement.TryShootVisual();
+                PlayerAS.PlayOneShot(FrenzyAudioClip);
+                FireRaycast(false);
+                MusicController.Instance.SFXAudioSource.PlayOneShot(FrenzyAudioClip);
+                foreach (GameObject GO in GatlingGunMuzzleFlashPoints)
+                {
+                    GameObject MFGO = Instantiate(MuzzleFlash, GO.transform.position, Quaternion.identity);
+                    MFGO.transform.SetParent(GO.transform);
+                    GatlingGunAnimator.Play(UziShootAnimClip.name);
+                }
             }
         }
         else

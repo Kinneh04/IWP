@@ -11412,6 +11412,8 @@ MonoBehaviour:
   HolyParticles: {fileID: 1003908389128766111, guid: c081614684d3e634a997f935298da060,
     type: 3}
   ParticleSpawner: {fileID: 1773035667}
+  RingObject: {fileID: 0}
+  Offset: {x: 0, y: 0, z: 0}
   Bosslight: {fileID: 1773035665}
   BeamAudioClip: {fileID: 8300000, guid: c51832daab4fbca46b1fe56ca758ed68, type: 3}
   WarningBeamAudioClip: {fileID: 8300000, guid: efb3aef4c3946ab44bc56ea678da0b2b,
@@ -18219,7 +18221,7 @@ PrefabInstance:
     - target: {fileID: 3852412312265507756, guid: 95aaa7a3b07c8644b823ad0dc0243b72,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3852412312265507758, guid: 95aaa7a3b07c8644b823ad0dc0243b72,
         type: 3}

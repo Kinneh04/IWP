@@ -503,9 +503,10 @@ using System.Collections;
             {
                 isJumping = true;
                 _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
+                if (_jumpCount == 0) SFXAudioSource.PlayOneShot(Jump_1_SFX);
+                else SFXAudioSource.PlayOneShot(Jump_2_SFX);
                 _jumpCount++;
-				if(_jumpCount == 0) SFXAudioSource.PlayOneShot(Jump_1_SFX);
-				else SFXAudioSource.PlayOneShot(Jump_2_SFX);
+				
                 if (_jumpCount == 2) _canDoubleJump = false;
             }
         }

@@ -101,6 +101,7 @@ public class StoreManager : MonoBehaviour
 
     public void LoadWeaponDetails()
     {
+        shootingScript.Revolver = ActiveWeapon;
         shootingScript.MainWeaponAnimator = GunAnimator;
         shootingScript.FireAnimClip = FireAnimClip;
         shootingScript.maxAmmo = maxAmmo;
