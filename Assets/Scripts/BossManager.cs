@@ -31,13 +31,21 @@ public class BossManager : MonoBehaviour
     Intervals BossStartI = new Intervals();
     public float TimeLeftToKill = 0;
     private static BossManager _instance;
+    public AudioClip BossFinisherAudioClip;
 
     public void StartFinisher()
     {
         EnemySpawner.Instance.RemoveAllEnemies();
+        MusicController.Instance.SFXAudioSource.PlayOneShot(BossFinisherAudioClip);
+        InstantiatedBoss.ClearAllProjectiles();
         EnemySpawner.Instance.AllowedToSpawn = false;
         MusicController.Instance.MusicAudioSource.Pause();
         InstantiatedBoss.canStartAttacking = false;
+
+        if(ShootingScript.Instance.FrenzyMode)
+        {
+            ShootingScript.Instance.EndFrenzyMode();
+        }
         PlayerRatingController.Instance.shootingScript.freefire = true;
         //     BossKilledFX.SetActive(false);
         //BossKilledUIElements.SetActive(false);
@@ -182,7 +190,7 @@ public class BossManager : MonoBehaviour
         MusicController.Instance.CastFireworks();
         yield return new WaitForSeconds(3);
 
-        StartCoroutine(MusicController.Instance.StartFinishGameSequence());
+        StartCoroutine(MusicController.Instance.StartFinishGameSequence(true));
         yield return new WaitForSeconds(3);
         BossKilledUIElements.SetActive(false);
     }

@@ -71,6 +71,11 @@ public class BossScript : MonoBehaviour
     public AnimationClip HurtAnimation;
     public AnimationClip FinisherAnimation;
     public GameObject FinishedParticleEffects;
+    public GameObject AboutToDieParticles;
+
+    [Header("RecordedProjectiles")]
+    public List<GameObject> SpawnedGameobjects = new List<GameObject>();
+
 
     public void CastRingAttack()
     {
@@ -82,6 +87,7 @@ public class BossScript : MonoBehaviour
             // Check if the ray hits an object tagged as "floor"
             if (hit.collider.CompareTag("Floor"))
             {
+                Debug.Log("SpawnedRing!");
                 // Instantiate RingObject at the hit point with default rotation
                 GameObject GO = Instantiate(RingObject, hit.point + Offset, Quaternion.identity);
                 ExpandingRingAttack ERA = GO.GetComponent<ExpandingRingAttack>();
@@ -137,15 +143,15 @@ public class BossScript : MonoBehaviour
                 else
                 {
                     int i = Random.Range(0, 100);
-                    if (i < 50)
+                    if (i < 33)
                     {
                         CurrentlyChosenProjectile = Projectiles[Random.Range(0, Projectiles.Count)];
                         TryShootAttack1();
                     }
                     else
                     {
-                        int p = Random.Range(1, 2);
-                        if (p == 1)
+                        int p = Random.Range(1, 3);
+                        if (p == 2)
                         {
                             Debug.Log("Attack 3!!!");
                             CastRingAttack();
@@ -214,14 +220,25 @@ public class BossScript : MonoBehaviour
     public void ShootProjectile(Vector3 spawnPosition)
     {
         AS.PlayOneShot(ProjectileSpawnAudioClip);
-        Instantiate(CurrentlyChosenProjectile, spawnPosition, transform.rotation);
+       
         chosenAmountToSpawn--;
-        if(chosenAmountToSpawn <= 0)
+        SpawnedGameobjects.Add(Instantiate(CurrentlyChosenProjectile, spawnPosition, transform.rotation));
+        if (chosenAmountToSpawn <= 0)
         {
             chosenAmountToSpawn = 0;
             isSpawningOnBeat = false;
             isSpawning = false;
         }
+    }
+
+    public void ClearAllProjectiles()
+    {
+        Beam.SetActive(false);
+        foreach(GameObject GO in SpawnedGameobjects)
+        {
+            Destroy(GO);
+        }
+        AboutToDieParticles.SetActive(true);
     }
 
     public void FinishHim()

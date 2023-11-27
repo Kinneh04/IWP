@@ -223,11 +223,11 @@ public class MainMenuManager : MonoBehaviour
     }
     public IEnumerator FadeOutAudioSource(AudioSource AS)
     {
-        
+        StopCoroutine(FadeOutAudioSource(AS));
         while(AS.volume > 0.05f)
         {
             yield return null;
-            AS.volume = Mathf.Lerp(AS.volume, 0, 2 * Time.deltaTime);
+            AS.volume = Mathf.Lerp(AS.volume, 0, 6 * Time.deltaTime);
         }
         AS.volume = 0;
         AS.Pause();
@@ -235,16 +235,18 @@ public class MainMenuManager : MonoBehaviour
 
     public IEnumerator FadeInAudioSource(AudioSource AS)
     {
+        StopCoroutine(FadeOutAudioSource(AS));
         AS.volume = 0.0f;
         AS.Play();
 
         while (AS.volume < musicSlider.value)
         {
             yield return null;
-            AS.volume = Mathf.Lerp(AS.volume, musicSlider.value, 3 * Time.deltaTime);
+            AS.volume += 0.035f;
         }
-        AS.volume = 1;
-        
+        AS.volume = musicSlider.value;
+
+
     }
 
     public void MakeNewCustomSongButton()

@@ -356,7 +356,7 @@ using System.Collections;
 		IEnumerator Dash()
 		{
 				isDashing = true;
-		HealPlayer(10);
+		HealPlayer(5);
 			HealGlow.SetActive(true);
 			foreach(ParticleSystem PS in DashingParticleSystems)
 			{
@@ -497,7 +497,7 @@ using System.Collections;
 
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && MusicController.Instance.canFire)
         {
             if (_jumpCount == 0 || (_jumpCount == 1 && _canDoubleJump))
             {

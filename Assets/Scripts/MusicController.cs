@@ -346,7 +346,7 @@ public class MusicController : MonoBehaviour
         }
     }
 
-    public IEnumerator StartFinishGameSequence()
+    public IEnumerator StartFinishGameSequence(bool bossKilled = false)
     {
         
         EnemySpawner.Instance.Cleanup();
@@ -357,7 +357,7 @@ public class MusicController : MonoBehaviour
         SS.freefire = false;
         canFire = false;
 
-        scoreManager.ChangeLevelCompleteVars(playerRating.Targetscore, playerRating.KillAmount, playerRating.HighestCombo, playerRating.MultikillAmount, playerRating.TargetAcc);
+        scoreManager.ChangeLevelCompleteVars(playerRating.Targetscore, playerRating.KillAmount, playerRating.HighestCombo, playerRating.MultikillAmount, playerRating.TargetAcc, bossKilled);
         if (PlayFabClientAPI.IsClientLoggedIn())
         {
             scoreManager.LoginToSaveScoreGO.SetActive(true);
