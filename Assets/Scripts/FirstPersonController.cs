@@ -497,7 +497,7 @@ using System.Collections;
 
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && MusicController.Instance.canFire)
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             if (_jumpCount == 0 || (_jumpCount == 1 && _canDoubleJump))
             {

@@ -48,9 +48,10 @@ public class BossScript : MonoBehaviour
     public Transform ParticleSpawner;
 
     [Header("Attack3_Ring")]
+    public Transform SpawnFromTransform;
     public GameObject RingObject;
     public Vector3 Offset;
-
+    Intervals I;
     [Header("Lighting")]
     public Light Bosslight;
 
@@ -72,6 +73,7 @@ public class BossScript : MonoBehaviour
     public AnimationClip FinisherAnimation;
     public GameObject FinishedParticleEffects;
     public GameObject AboutToDieParticles;
+    public AudioClip AboutToDieAC;
 
     [Header("RecordedProjectiles")]
     public List<GameObject> SpawnedGameobjects = new List<GameObject>();
@@ -82,7 +84,7 @@ public class BossScript : MonoBehaviour
         RaycastHit hit;
 
         // Raycast downwards from the current position of this GameObject
-        if (Physics.Raycast(transform.position, Vector3.down, out hit))
+        if (Physics.Raycast(SpawnFromTransform.position, Vector3.down, out hit))
         {
             // Check if the ray hits an object tagged as "floor"
             if (hit.collider.CompareTag("Floor"))
@@ -91,8 +93,9 @@ public class BossScript : MonoBehaviour
                 // Instantiate RingObject at the hit point with default rotation
                 GameObject GO = Instantiate(RingObject, hit.point + Offset, Quaternion.identity);
                 ExpandingRingAttack ERA = GO.GetComponent<ExpandingRingAttack>();
-                Intervals I = new Intervals();
-                I._steps = 2;
+                I = new Intervals();
+                I._steps = 0.5f;
+                I._trigger = new UnityEngine.Events.UnityEvent();
                 I._trigger.AddListener(delegate { ERA.ExpandObject(); });
                 MusicController.Instance._intervals.Add(I);
                 ERA.recordedInterval = I;
@@ -108,6 +111,7 @@ public class BossScript : MonoBehaviour
             if(AvailableDashes <= 0)
             {
                 ThreeDash = false;
+                AvailableDashes = 3;
             }
         }
         else
@@ -239,6 +243,7 @@ public class BossScript : MonoBehaviour
             Destroy(GO);
         }
         AboutToDieParticles.SetActive(true);
+        MusicController.Instance.SFXAudioSource.PlayOneShot(AboutToDieAC);
     }
 
     public void FinishHim()

@@ -15,10 +15,13 @@ public class ExpandingRingAttack : MonoBehaviour
     {
         if (expandCount < expandCap)
         {
-            targetScale = transform.localScale * expandFactor; // Calculate the target scale
+            Vector3 ogscale = transform.localScale;
+            ogscale.x *= expandFactor;
+            ogscale.z *= expandFactor;
+            targetScale = ogscale; // Calculate the target scale
 
             // Smoothly lerp to the target scale
-            StartCoroutine(ScaleOverTime(transform.localScale, targetScale, 0.2f));
+            StartCoroutine(ScaleOverTime(transform.localScale, targetScale, 0.35f));
 
             expandCount++;
             canDamage = true; // Set the canDamage flag to true after expansion

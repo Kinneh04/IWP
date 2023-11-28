@@ -6296,6 +6296,37 @@ Transform:
   m_Father: {fileID: 8968756510375814880}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3712277613801069665
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5415853026944550628}
+  m_Layer: 0
+  m_Name: RaycastDownward
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5415853026944550628
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3712277613801069665}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -3.379, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4051880182437411865}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3822931575484303000
 GameObject:
   m_ObjectHideFlags: 0
@@ -11367,6 +11398,7 @@ Transform:
   - {fileID: 8244322662929750982}
   - {fileID: 3690795613897155067}
   - {fileID: 4676903668627976461}
+  - {fileID: 5415853026944550628}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -11389,7 +11421,7 @@ MonoBehaviour:
   maxDistance: 10
   AvailableDashes: 3
   isAttacking: 0
-  ChanceForDash: 35
+  ChanceForDash: 55
   ThreeDash: 0
   Projectiles:
   - {fileID: 4284639301828262667, guid: 61d9016079bb6e343aaac086871863b0, type: 3}
@@ -11413,8 +11445,10 @@ MonoBehaviour:
   HolyParticles: {fileID: 1003908389128766111, guid: c081614684d3e634a997f935298da060,
     type: 3}
   ParticleSpawner: {fileID: 1773035667}
-  RingObject: {fileID: 0}
-  Offset: {x: 0, y: 0, z: 0}
+  SpawnFromTransform: {fileID: 5415853026944550628}
+  RingObject: {fileID: 4284639301828262667, guid: d276da50ad9566746991b9c8fed2c97e,
+    type: 3}
+  Offset: {x: 0, y: -0.05, z: 0}
   Bosslight: {fileID: 1773035665}
   BeamAudioClip: {fileID: 8300000, guid: c51832daab4fbca46b1fe56ca758ed68, type: 3}
   WarningBeamAudioClip: {fileID: 8300000, guid: efb3aef4c3946ab44bc56ea678da0b2b,
@@ -11423,7 +11457,7 @@ MonoBehaviour:
   IntroAudioClip: {fileID: 8300000, guid: fea943488bd0eb24b8083c2f8dc6d102, type: 3}
   TrailGameObject: {fileID: 4051880182437411862, guid: 4cdb5389479941f48af46cebb3787ae3,
     type: 3}
-  TrailCooldown: 0.025
+  TrailCooldown: 0.016
   FinishHimAudioClips:
   - {fileID: 8300000, guid: 9d52b7b5d137ce74bbc816bc58c295d4, type: 3}
   - {fileID: 8300000, guid: 2992802f0f7551f4a9c6f3c76fe81cda, type: 3}
@@ -11437,6 +11471,7 @@ MonoBehaviour:
   FinishedParticleEffects: {fileID: 9131207411153164205, guid: 07dc850f43065df4485d725d27a474d8,
     type: 3}
   AboutToDieParticles: {fileID: 4676903668627976458}
+  AboutToDieAC: {fileID: 8300000, guid: 05075cb1c3ed2814e901830f97331652, type: 3}
   SpawnedGameobjects: []
 --- !u!114 &8806054703625487222
 MonoBehaviour:
