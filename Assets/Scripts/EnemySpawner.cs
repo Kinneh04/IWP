@@ -19,6 +19,17 @@ public class EnemySpawner : MonoBehaviour
     public FirstPersonController FPC;
     public Transform player;
     public int maxEnemies = 10;
+
+    public void CheckForBurnDamage()
+    {
+        foreach(EnemyScript ES in SpawnedEnemyScripts)
+        {
+            if(ES && ES.onFire)
+            {
+                ES.TakeDamage(ES.FireDamage, fireDamage: true);
+            }
+        }
+    }
     public void CheckForBehindPlayer()
     {
        

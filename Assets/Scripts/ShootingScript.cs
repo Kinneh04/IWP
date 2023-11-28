@@ -140,6 +140,7 @@ public class ShootingScript : MonoBehaviour
 
     void DispenseAmmo()
     {
+        if (!FirstPersonController.Instance.canMove) return;
         CurrentAmmo -= 1;
         PlayerAS.PlayOneShot(ShootingAudioClip);
         AmmoCountText.text = CurrentAmmo.ToString() + "/" + maxAmmo.ToString();
@@ -236,6 +237,7 @@ public class ShootingScript : MonoBehaviour
 
     IEnumerator burstShot()
     {
+        
         for(int i = 0; i < BurstShotCount; i++)
         {
             FireRaycast();
@@ -254,11 +256,11 @@ public class ShootingScript : MonoBehaviour
                 if(CurrentAmmo < maxAmmo || isRevolverReloadType)
                     IncrementReload();
             }
-            if (Input.GetMouseButtonDown(0) && !isReloading && FirstPersonController.Instance.canMove)
+            if (Input.GetMouseButtonDown(0) && !isReloading && FirstPersonController.Instance.canMove && CurrentAmmo > 0)
             {
                 revolverReloadTypeIndex = 0;
                 weaponMovement.TryShootVisual();
-                FireRaycast();
+                FireRaycast(forcedOneBullet: true);
                 DispenseAmmo();
                 //  ShowTimingRating();
                 if (FireAnimClip)
@@ -457,8 +459,9 @@ public class ShootingScript : MonoBehaviour
     }
 
 
-    public void FireRaycast(bool AddToAcc = true)
+    public void FireRaycast(bool AddToAcc = true, bool forcedOneBullet = false)
     {
+        if (!FirstPersonController.Instance.canMove) return;
         bool first = false;
         for (int i = 0; i < NumberOfBulletsPerShot; i++)
         {
@@ -497,6 +500,7 @@ public class ShootingScript : MonoBehaviour
                     playerRatingController.AddMissedShot();
             }
             first = true;
+            if (forcedOneBullet) return;
         }
     }
     bool RaycastFromCameraCenter(out RaycastHit hit, Vector3 direction = default)

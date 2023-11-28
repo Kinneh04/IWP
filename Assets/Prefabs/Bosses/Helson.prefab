@@ -11453,8 +11453,10 @@ MonoBehaviour:
   BeamAudioClip: {fileID: 8300000, guid: c51832daab4fbca46b1fe56ca758ed68, type: 3}
   WarningBeamAudioClip: {fileID: 8300000, guid: efb3aef4c3946ab44bc56ea678da0b2b,
     type: 3}
-  ProjectileSpawnAudioClip: {fileID: 0}
+  ProjectileSpawnAudioClip: {fileID: 8300000, guid: 44f52c5649332f44aa5e4501c97de703,
+    type: 3}
   IntroAudioClip: {fileID: 8300000, guid: fea943488bd0eb24b8083c2f8dc6d102, type: 3}
+  dashingAudioClip: {fileID: 8300000, guid: 4634da28fe4366344ad0ba14af8f0e5e, type: 3}
   TrailGameObject: {fileID: 4051880182437411862, guid: 4cdb5389479941f48af46cebb3787ae3,
     type: 3}
   TrailCooldown: 0.02

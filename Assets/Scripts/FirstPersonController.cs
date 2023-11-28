@@ -137,7 +137,13 @@ using System.Collections;
 	public Animator NotifAnimator;
 	public AnimationClip NotifAnimationClip;
 
-	public void PopupNotif(string s)
+	[Header("Ground Pound")]
+	public AudioClip GroundPoundSFX;
+    bool hasPerformedGroundPound = false;
+	public GameObject GroundPoundEffects;
+
+
+    public void PopupNotif(string s)
     {
 		NotifText.text = s;
 		NotifAnimator.Play(NotifAnimationClip.name);
@@ -518,6 +524,48 @@ using System.Collections;
         {
             _verticalVelocity += Gravity * Time.deltaTime;
         }
+
+		if (Input.GetKey(KeyCode.LeftControl) && !Grounded && MusicController.Instance.canFire && !hasPerformedGroundPound)
+		{
+            StartCoroutine(PerformGroundPoundPushback());
+            // Optional: Play ground pound SFX
+            SFXAudioSource.PlayOneShot(Jump_1_SFX);
+            hasPerformedGroundPound = true;
+		}
+
+    }
+
+
+
+	IEnumerator PerformGroundPoundPushback()
+	{
+		while(!Grounded && canMove)
+		{
+            // Apply ground pound force
+            transform.position -= transform.up * 15 * Time.deltaTime;
+            yield return null;
+        }
+		if (!canMove) yield break;
+        SFXAudioSource.PlayOneShot(GroundPoundSFX);
+        Debug.Log("Player grounded after ground pound");
+        hasPerformedGroundPound = false; // Reset the flag
+        GroundPoundEffects.SetActive(true);
+        foreach (GameObject GO in EnemySpawner.Instance.SpawnedEnemies)
+		{
+			if (GO)
+			{
+                Rigidbody otherObjectRB = GO.GetComponent<Rigidbody>(); // Replace OtherGameObject with the target GameObject
+                if (otherObjectRB != null && Vector3.Distance(GO.transform.position, transform.position) <= 5.0f)
+                {
+                    Vector3 direction = otherObjectRB.transform.position - transform.position;
+                    direction.Normalize();
+                    otherObjectRB.AddForce(direction * 15.0f, ForceMode.Impulse);
+                }
+				GO.GetComponent<EnemyScript>().TakeDamage(10);
+            }
+		}
+		yield return new WaitForSeconds(0.5f);
+        GroundPoundEffects.SetActive(false);
     }
 
 

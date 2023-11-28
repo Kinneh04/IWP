@@ -57,7 +57,7 @@ public class BossScript : MonoBehaviour
 
     [Header("Audio")]
      AudioSource AS;
-    public AudioClip BeamAudioClip, WarningBeamAudioClip, ProjectileSpawnAudioClip, IntroAudioClip;
+    public AudioClip BeamAudioClip, WarningBeamAudioClip, ProjectileSpawnAudioClip, IntroAudioClip, dashingAudioClip;
 
     [Header("Trail")]
     public GameObject TrailGameObject;
@@ -321,6 +321,7 @@ public class BossScript : MonoBehaviour
         targetPosition = destination;
         isDashing = true;
         AvailableDashes--;
+        AS.PlayOneShot(dashingAudioClip);
     }
 
     public void DashToRandomLocation()

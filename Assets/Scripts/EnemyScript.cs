@@ -54,6 +54,9 @@ public class EnemyScript : MonoBehaviour
     [Header("ForBossOnly")]
     public Animator BossAnimator;
     public AnimationClip bossHitAnimClip;
+    float audioHitCooldown = 0.0f;
+
+    public GameObject DamageText;
 
    
     //public void OnTriggerEnter(Collider other)
@@ -95,6 +98,12 @@ public class EnemyScript : MonoBehaviour
         }
     }
 
+    [Header("Effects")]
+    public bool onFire = false;
+    public float fireTime = 0.0f;
+    public GameObject OnFireEffects;
+    public int FireDamage = 2;
+
 
     public float chargeSpeed = 5f;
     public float flankSpeed = 3f;
@@ -126,6 +135,26 @@ public class EnemyScript : MonoBehaviour
 
 
         if (onTouchCooldown > 0) onTouchCooldown -= Time.deltaTime;
+
+        if (audioHitCooldown > 0) audioHitCooldown -= Time.deltaTime;
+
+        if(fireTime > 0)
+        {
+            onFire = true;
+            OnFireEffects.SetActive(true);
+            fireTime -= Time.deltaTime;
+
+        }
+        else
+        {
+            onFire = false;
+            OnFireEffects.SetActive(false);
+        }
+    }
+
+    public void SetOnFire(float time)
+    {
+        fireTime += time;
     }
 
 
@@ -202,8 +231,19 @@ public class EnemyScript : MonoBehaviour
             Instantiate(Rangedball, transform.position, finalRotation);
         }
     }
-    public void TakeDamage(int damage, bool duplicate = false)
+    public void TakeDamage(int damage, bool duplicate = false,bool fireDamage = false)
     {
+
+        if(DamageText)
+        {
+            GameObject GO = Instantiate(DamageText, transform.position, Quaternion.identity);
+            GO.GetComponentInChildren<TMP_Text>().text = damage.ToString();
+            if(fireDamage)
+            {
+                GO.GetComponentInChildren<TMP_Text>().color = Color.red;
+            }
+        }
+
         if(enemyType == EnemyType.Small)
         {
             Die(duplicate);
@@ -233,7 +273,11 @@ public class EnemyScript : MonoBehaviour
                 else
                     Die(duplicate);
             }
-            if (AS && HitAudio) AS.PlayOneShot(HitAudio);
+            if (AS && HitAudio && audioHitCooldown <= 0)
+            {
+                AS.PlayOneShot(HitAudio);
+                audioHitCooldown = 0.35f;
+            }
        //     HitAnimator.Play(HitAnimClip.name);
         }
     }
