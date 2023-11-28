@@ -20,6 +20,8 @@ public class EnemySpawner : MonoBehaviour
     public Transform player;
     public int maxEnemies = 10;
 
+    public Transform WorldCanvas;
+
     public void CheckForBurnDamage()
     {
         foreach(EnemyScript ES in SpawnedEnemyScripts)

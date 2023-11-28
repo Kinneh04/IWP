@@ -10,6 +10,7 @@ public class HitRing : MonoBehaviour
     {
         if (other.transform.CompareTag("Player") || (other.transform.CompareTag("PlayerHitbox")))
         {
+         //   Debug.Log("OW!!");
             if (ERA.canDamage)
             {
                 FirstPersonController.Instance.TakeDamage(25);

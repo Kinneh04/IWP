@@ -138,17 +138,20 @@ public class EnemyScript : MonoBehaviour
 
         if (audioHitCooldown > 0) audioHitCooldown -= Time.deltaTime;
 
-        if(fireTime > 0)
+        if (enemyType != EnemyType.Boss && OnFireEffects)
         {
-            onFire = true;
-            OnFireEffects.SetActive(true);
-            fireTime -= Time.deltaTime;
+            if (fireTime > 0)
+            {
+                onFire = true;
+                OnFireEffects.SetActive(true);
+                fireTime -= Time.deltaTime;
 
-        }
-        else
-        {
-            onFire = false;
-            OnFireEffects.SetActive(false);
+            }
+            else
+            {
+                onFire = false;
+                OnFireEffects.SetActive(false);
+            }
         }
     }
 

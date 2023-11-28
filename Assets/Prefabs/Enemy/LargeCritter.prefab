@@ -14509,6 +14509,7 @@ MonoBehaviour:
   cooldownBeforeShooting: 2
   BossAnimator: {fileID: 0}
   bossHitAnimClip: {fileID: 7400000, guid: cfe963566e320d047a50be003291f895, type: 2}
+  DamageText: {fileID: 0}
   onFire: 0
   fireTime: 0
   OnFireEffects: {fileID: 4470909918290160858}

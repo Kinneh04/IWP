@@ -11,7 +11,7 @@ public class ShockwaveAbility : Ability
     {
         Transform PlayerTransform = FirstPersonController.Instance.transform;
         GameObject GO = Instantiate(Shockwave, PlayerTransform.position + PlayerTransform.forward, PlayerTransform.rotation);
-
+        GO.transform.SetParent(PlayerTransform);
 
 
         base.UseAbility();
