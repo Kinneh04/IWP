@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class StoreManager : MonoBehaviour
@@ -38,6 +39,7 @@ public class StoreManager : MonoBehaviour
     public GameObject AbilityPrefab, AbilityPrefabParent;
     public int BurstShotCount;
     public GameObject InstantiatedAbility;
+    public Image AbilityImage;
 
     [Header("DontFIll")]
     public List<WeaponSlotPrefab> InstantiatedWeaponSlots = new List<WeaponSlotPrefab>();
@@ -212,6 +214,7 @@ public class StoreManager : MonoBehaviour
 
         ASP.EquipGun();
         CurrentlyEquippedAbilityObject = ASP.HeldAbilityObject;
+        AbilityImage.sprite = ASP.IconImage.sprite;
     }
 
     public void BuyAbility(AbilitySlotPrefab ASP)

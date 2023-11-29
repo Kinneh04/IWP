@@ -8,7 +8,7 @@ public class Ability : MonoBehaviour
     private float currentCooldown;
     public FirstPersonController firstPersonController;
     public AudioClip AbilityAudio;
-    AudioSource AS;
+    public AudioSource AS;
     private void Awake()
     {
        AS = GameObject.FindGameObjectWithTag("SFX").GetComponent<AudioSource>();

@@ -253,7 +253,7 @@ public class ShootingScript : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.R)
                      || Input.GetMouseButtonDown(1))
             {
-                if(CurrentAmmo < maxAmmo || isRevolverReloadType)
+                if(CurrentAmmo < maxAmmo)
                     IncrementReload();
             }
             if (Input.GetMouseButtonDown(0) && !isReloading && FirstPersonController.Instance.canMove && CurrentAmmo > 0)
