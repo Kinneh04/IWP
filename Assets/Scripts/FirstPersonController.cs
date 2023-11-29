@@ -115,6 +115,9 @@ using System.Collections;
 	public GameObject MainGameUI;
 	public bool isTransitioning;
     private static FirstPersonController _instance;
+	float deathtimer = 2.0f;
+	public float IFrameTimer = 0.0f;
+	public float AddToIFrameTimer = 1.0f;
 
 	[Header("EnemyBehindIndicator")]
 	public GameObject BehindIndicator;
@@ -155,6 +158,7 @@ using System.Collections;
 		isDashing = false;
 		isDead = false;
 		dashCooldown = 0;
+		deathtimer = 2.0f;
 		OnAbilityCooldown = false;
 		
     }
@@ -195,7 +199,11 @@ using System.Collections;
 			PlayerRatingController.Instance.AddRating(15, "DASH BLOCK!", Color.green);
 			return;
 		}
-		if (isDead || isTransitioning || MusicController.Instance.isFinished || isDashing) return;
+
+		//Checks for iFrames
+		if (isDead || isTransitioning || MusicController.Instance.isFinished || isDashing || hasPerformedGroundPound || IFrameTimer > 0) return;
+
+
 		Health -= damage;
         float volume = (1.0f - (Health / 100.0f))/2f;
 		HeartbeatAudioSource.volume = volume;
@@ -282,7 +290,7 @@ using System.Collections;
 
 	private void Update()
 	{
-		if (isDead || MusicController.Instance.canExit)
+		if (isDead || MusicController.Instance.canExit && deathtimer <= 0)
 		{
 			if (Input.GetKeyDown(KeyCode.Escape))
 			{
@@ -294,6 +302,10 @@ using System.Collections;
 				MainMenuManager.Instance.RetryLevel();
 			}
 		}
+		else if(isDead && deathtimer > 0)
+        {
+			deathtimer -= Time.deltaTime;
+        }
 		if (isTransitioning || MusicController.Instance.isFinished || isDead || !canMove) return;
 
 			JumpAndGravity();
@@ -302,6 +314,7 @@ using System.Collections;
 			Move();
 			CameraRotation();
 
+		if (IFrameTimer > 0) IFrameTimer -= Time.deltaTime;
 
         if (!CurrentAbility) CurrentAbility = GameObject.FindAnyObjectByType<Ability>();
 
@@ -527,10 +540,10 @@ using System.Collections;
 
 		if (Input.GetKey(KeyCode.LeftControl) && !Grounded && MusicController.Instance.canFire && !hasPerformedGroundPound)
 		{
-            StartCoroutine(PerformGroundPoundPushback());
+			hasPerformedGroundPound = true;
+			StartCoroutine(PerformGroundPoundPushback());
             // Optional: Play ground pound SFX
             SFXAudioSource.PlayOneShot(Jump_1_SFX);
-            hasPerformedGroundPound = true;
 		}
 
     }
@@ -539,6 +552,7 @@ using System.Collections;
 
 	IEnumerator PerformGroundPoundPushback()
 	{
+
 		while(!Grounded && canMove)
 		{
             // Apply ground pound force
