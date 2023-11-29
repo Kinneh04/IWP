@@ -27,16 +27,10 @@ public class SplashscreenManager : MonoBehaviour
        
         if (DropTime <= 0 && !dropped)
         {
-            SplashscreenAS.PlayOneShot(ShootingGun);
             DROPSplashscreen();
             dropped = true;
         }
-        if (DropTime < rackTime && !racked)
-        {
-            racked = true;
-            SplashscreenAS.PlayOneShot(RackingShotgun);
-        }
-            currentTime += Time.deltaTime;
+        currentTime += Time.deltaTime;
         if(currentTime > 60 / (float)BPM)
         {
             currentScale = 1.05f;
@@ -54,7 +48,7 @@ public class SplashscreenManager : MonoBehaviour
 
     IEnumerator DropSplashscreenCoroutine()
     {
-        BackgroundImage.color = Color.white;
+        BackgroundImage.color = Color.black;
         float t = 1.0f;
         BackgroundImage.raycastTarget = false;
         while(t > 0f)
