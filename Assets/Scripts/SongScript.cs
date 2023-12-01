@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Net;
+using UnityEngine.UI;
 
 public class SongScript : MonoBehaviour
 {
@@ -24,4 +25,8 @@ public class SongScript : MonoBehaviour
     public int BPM;
     public List<SongEvent> Events = new List<SongEvent>();
     public int DifficultyOverride;
+    public Button startButton;
+    public bool ContainsBoss;
+    [Header("HighScore")]
+    public LeaderboardEntry LocalScore;
 }

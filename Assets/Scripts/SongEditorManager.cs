@@ -8,6 +8,7 @@ using UnityEngine.UI;
 using System;
 using System.IO;
 using UnityEngine.Rendering;
+using Unity.VisualScripting;
 
 public class SongEditorManager : MonoBehaviour
 {
@@ -85,6 +86,41 @@ public class SongEditorManager : MonoBehaviour
 
     [Header("Exit")]
     public GameObject ExitConfirmationGO;
+
+    [Header("PreviewStuff")]
+    public GameObject SongDetailsGO;
+    public TMP_Text TimeText, BPMText, SongTitleText, DifficultyText, BossText;
+
+    [Header("PR")]
+    public GameObject hasPRGO, DoesntHavePRGO;
+    public TMP_Text RankText, AccText, ScoreText;
+
+    [Header("SongDetails")]
+    public SongScript CurrentlySelectedSong;
+
+    [Header("AudioSources")]
+    public AudioSource MainMenuAudioSource;
+
+    [Header("Tutorial")]
+    public TutorialManager TM;
+
+    public void LoadPR()
+    {
+        if (CurrentlySelectedSong.LocalScore == null || CurrentlySelectedSong.LocalScore.LBScore == "0" || CurrentlySelectedSong.LocalScore.LBScore == "")
+        {
+            hasPRGO.SetActive(false);
+            DoesntHavePRGO.SetActive(true);
+        }
+        else
+        {
+            hasPRGO.SetActive(true);
+            DoesntHavePRGO.SetActive(false);
+
+            RankText.text = CurrentlySelectedSong.LocalScore.LBRanking;
+            AccText.text = "ACC: " + CurrentlySelectedSong.LocalScore.LBAccuracy + "%";
+            ScoreText.text = "SCORE: " + CurrentlySelectedSong.LocalScore.LBScore;
+        }
+    }
 
     public void RenameMapName()
     {
@@ -526,10 +562,68 @@ public class SongEditorManager : MonoBehaviour
                 GO.transform.SetParent(CustomSongPrefabParent.transform);
                 CustomSong = GO.GetComponent<SongScript>();
                 EditSoundtrackMenu.SetActive(true);
+                CustomSong.startButton.onClick.AddListener(delegate { PreviewCustomSong(CustomSong); });
                 //CustomSong.audioData = WavUtility.FromAudioClip(SelectedAudioSource);
 
                 CustomSong.currentSongAudioClip = SelectedAudioSource;
             }
+        }
+    }
+    public void LoadSong()
+    {
+        MusicController musicController = MusicController.Instance;
+        musicController.BPM_Divider = CurrentlySelectedSong.BPM;
+        musicController.MusicAudioSource.clip = CurrentlySelectedSong.currentSongAudioClip;
+        musicController.EndBuffer = CurrentlySelectedSong.currentSongAudioClip.length;
+        musicController.LightColorPalette.Clear();
+        foreach (Color c in CurrentlySelectedSong.colors)
+        {
+            musicController.LightColorPalette.Add(c);
+        }
+        TM.DoTutorialChecking = false;
+        musicController.LoadNewEventsFromOfficialSong(CurrentlySelectedSong);
+        musicController.MusicAudioSource.time = 0;
+    }
+
+    public void PreviewCustomSong(SongScript SS)
+    {
+        StopAllCoroutines();
+        CurrentlySelectedSong = SS;
+        SongDetailsGO.SetActive(true);
+        StartCoroutine(TransitionToNewSong());
+        LoadPR();
+        SongTitleText.text = SS.SongName;
+
+        int length = (int)SS.currentSongAudioClip.length;
+        int minutes = length / 60;
+        int seconds = length % 60;
+
+        string formattedTime = string.Format("{0}:{1:00}", minutes, seconds);
+
+        TimeText.text = "TIME: " + formattedTime;
+        BPMText.text = "BPM: " + SS.BPM.ToString();
+        DifficultyText.text = "DIFFICULTY: " + SS.DifficultyOverride.ToString() + "/10";
+        if (SS.ContainsBoss)
+        {
+            BossText.text = "CONTAINS BOSS";
+        }
+        else BossText.text = "";
+    }
+
+    public IEnumerator TransitionToNewSong()
+    {
+        while (MainMenuAudioSource.volume > 0)
+        {
+            MainMenuAudioSource.volume -= Time.deltaTime;
+            yield return null;
+        }
+        MainMenuAudioSource.clip = CurrentlySelectedSong.currentSongAudioClip;
+        MainMenuAudioSource.time = 0;
+        MainMenuAudioSource.Play();
+        while (MainMenuAudioSource.volume < MainMenuManager.Instance.musicSlider.value)
+        {
+            MainMenuAudioSource.volume += Time.deltaTime;
+            yield return null;
         }
     }
 }

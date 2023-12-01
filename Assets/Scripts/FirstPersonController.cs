@@ -290,7 +290,7 @@ using System.Collections;
 
 	private void Update()
 	{
-		if (isDead || MusicController.Instance.canExit && deathtimer <= 0)
+		if (isDead && deathtimer <= 0 || MusicController.Instance.canExit)
 		{
 			if (Input.GetKeyDown(KeyCode.Escape))
 			{

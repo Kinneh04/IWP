@@ -160,6 +160,21 @@ public class MusicController : MonoBehaviour
 
 
     }
+    public void LoadNewEventsFromOfficialSong(SongScript OSS)
+    {
+        LoadedEvents.Clear();
+        foreach (SongEvent E in OSS.Events)
+        {
+            LoadedEvents.Add(E);
+        }
+        foreach (Light L in PulsingLights)
+        {
+            L.color = OSS.colors[0];
+        }
+        CelingLight.color = OSS.colors[1];
+
+
+    }
 
     //public enum Timing
     //{

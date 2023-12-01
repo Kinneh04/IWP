@@ -11473,6 +11473,8 @@ MonoBehaviour:
   FinishedParticleEffects: {fileID: 9131207411153164205, guid: 07dc850f43065df4485d725d27a474d8,
     type: 3}
   AboutToDieParticles: {fileID: 4676903668627976458}
+  DyingParticles: {fileID: 4058727824660422441, guid: 5c251f66bc75c4f48b98f348aad4b524,
+    type: 3}
   AboutToDieAC: {fileID: 8300000, guid: 05075cb1c3ed2814e901830f97331652, type: 3}
   SpawnedGameobjects: []
 --- !u!114 &8806054703625487222

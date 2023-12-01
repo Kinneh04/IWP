@@ -73,6 +73,7 @@ public class BossScript : MonoBehaviour
     public AnimationClip FinisherAnimation;
     public GameObject FinishedParticleEffects;
     public GameObject AboutToDieParticles;
+    public GameObject DyingParticles;
     public AudioClip AboutToDieAC;
 
     [Header("RecordedProjectiles")]
@@ -252,6 +253,7 @@ public class BossScript : MonoBehaviour
         AS.Stop();
         AS.PlayOneShot(FinishHimAudioClips[finishHimIndex]);
         finishHimIndex++;
+        Instantiate(DyingParticles);
         BossAnimator.Play(FinisherAnimation.name);
         if(finishHimIndex >= FinishHimAudioClips.Count)
         {

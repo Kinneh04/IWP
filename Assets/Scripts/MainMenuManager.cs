@@ -447,7 +447,7 @@ public class MainMenuManager : MonoBehaviour
         StartCoroutine(MusicController.Instance.StartMatch());
     }
 
-    public IEnumerator PlaydemoSequence()
+    public IEnumerator PlaydemoSequence(bool customsong = false)
     {
         BlackscreenController.Instance.FadeOut();
         PreviewSongMenu.SetActive(false);
@@ -479,7 +479,7 @@ public class MainMenuManager : MonoBehaviour
             MusicController.Instance.PulsingLights.Add(light);
         }
         storeManager.LoadAbilityDetails();
-        officialSongManager.LoadSong();
+        if(!customsong) officialSongManager.LoadSong();
         yield return new WaitForSeconds(0.75f);
         LoadingScreen.SetActive(false);
         yield return new WaitForSeconds(1);
