@@ -10,6 +10,7 @@ public class CustomSongBoxprefab : MonoBehaviour
     public GameObject StarRating;
     public GameObject StarRatingParent;
     public SongScript RelatedSong;
+    public Button startButton;
 
     public void OnClickCustomSong()
     {

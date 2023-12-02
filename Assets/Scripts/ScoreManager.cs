@@ -17,7 +17,8 @@ public class ScoreManager : MonoBehaviour
     public GameObject LoginToSaveScoreGO;
     [Header("SongManager")]
     public OfficialSongManager SongManager;
-
+    public SongEditorManager customSongManager;
+    public bool customSong = false;
     private int SavedScore;
     float SavedAcc;
     string SavedRank;
@@ -76,7 +77,9 @@ public class ScoreManager : MonoBehaviour
         SavedRank = Grade;
         //Highscore
         NewHighScore.SetActive(true);
-        TryAddNewPersonalRecord();
+
+        if (!customSong) TryAddNewPersonalRecord();
+        else TryAddNewPersonalRecordToCustomSong();
         if(PlayFabClientAPI.IsClientLoggedIn())
         {
             FetchPlayerNameForLeaderboardEntry(MusicController.Instance.LoggedInPlayerID);
@@ -84,11 +87,18 @@ public class ScoreManager : MonoBehaviour
     }
     public void TryAddNewPersonalRecord()
     {
-        if(string.IsNullOrEmpty(SongManager.CurrentlySelectedSong.LocalScore.LBName) || int.Parse(SongManager.CurrentlySelectedSong.LocalScore.LBScore) < SavedScore)
+        if(SongManager.CurrentlySelectedSong.LocalScore == null  || int.Parse(SongManager.CurrentlySelectedSong.LocalScore.LBScore) < SavedScore)
         {
             // Add new local leaderboard
             SongManager.AddNewLocalLeaderboard(SavedRank, SavedScore, SavedAcc);
         }
     }
-
+    public void TryAddNewPersonalRecordToCustomSong()
+    {
+        if (customSongManager.CurrentlySelectedSong.LocalScore == null || int.Parse(customSongManager.CurrentlySelectedSong.LocalScore.LBScore) < SavedScore)
+        {
+            // Add new local leaderboard
+            customSongManager.AddNewLocalLeaderboard(SavedRank, SavedScore, SavedAcc);
+        }
+    }
 }

@@ -361,6 +361,7 @@ MonoBehaviour:
     type: 3}
   StarRatingParent: {fileID: 588680389997417246}
   RelatedSong: {fileID: 0}
+  startButton: {fileID: 588680390278389099}
 --- !u!95 &4686644266370760702
 Animator:
   serializedVersion: 5

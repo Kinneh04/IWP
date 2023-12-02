@@ -54,6 +54,9 @@ public class MainMenuManager : MonoBehaviour
     public TMP_Text musicAmountText, sfxAmountText;
     public AudioSource SFXAudioSource;
 
+    [Header("Refs")]
+    public ScoreManager SM;
+
     public void ChangeMusicVolume()
     {
         musicAmountText.text = musicSlider.value.ToString("f1");
@@ -173,6 +176,7 @@ public class MainMenuManager : MonoBehaviour
                 GameObject GO = Instantiate(CustomSongBoxPrefab);
                 GO.transform.SetParent(CustomSongBoxPrefabParent.transform, false);
                 CustomSongBoxprefab customSong = GO.GetComponent<CustomSongBoxprefab>();
+                customSong.startButton.onClick.AddListener(delegate { SEM.PreviewCustomSong(SS); });
                 customSong.boxImage.sprite = SS.ImageSprite;
                 customSong.MusicTitleText.text = SS.SongName;
                 customSong.RelatedSong = SS;
@@ -354,9 +358,9 @@ public class MainMenuManager : MonoBehaviour
 
     }
 
-    public void StartDemoGame()
+    public void StartDemoGame(bool custom = false)
     {
-        StartCoroutine(PlaydemoSequence());
+        StartCoroutine(PlaydemoSequence(custom));
     }
 
     public void ReturnToMainMenuFromGame()
@@ -464,6 +468,7 @@ public class MainMenuManager : MonoBehaviour
             }
         }
         storeManager.LoadWeaponDetails();
+        SM.customSong = customsong;
         yield return new WaitForSeconds(0.5f);
    
         foreach (GameObject GO in GameobjectsToEnableForDemo)

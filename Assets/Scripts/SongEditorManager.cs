@@ -562,7 +562,7 @@ public class SongEditorManager : MonoBehaviour
                 GO.transform.SetParent(CustomSongPrefabParent.transform);
                 CustomSong = GO.GetComponent<SongScript>();
                 EditSoundtrackMenu.SetActive(true);
-                CustomSong.startButton.onClick.AddListener(delegate { PreviewCustomSong(CustomSong); });
+               // CustomSong.startButton.onClick.AddListener(delegate { PreviewCustomSong(CustomSong); });
                 //CustomSong.audioData = WavUtility.FromAudioClip(SelectedAudioSource);
 
                 CustomSong.currentSongAudioClip = SelectedAudioSource;
@@ -584,7 +584,14 @@ public class SongEditorManager : MonoBehaviour
         musicController.LoadNewEventsFromOfficialSong(CurrentlySelectedSong);
         musicController.MusicAudioSource.time = 0;
     }
-
+    public void AddNewLocalLeaderboard(string Rank, int score, float acc)
+    {
+        LeaderboardEntry newLBE = new LeaderboardEntry();
+        newLBE.LBScore = score.ToString();
+        newLBE.LBAccuracy = acc.ToString();
+        newLBE.LBRanking = Rank;
+        CurrentlySelectedSong.LocalScore = newLBE;
+    }
     public void PreviewCustomSong(SongScript SS)
     {
         StopAllCoroutines();

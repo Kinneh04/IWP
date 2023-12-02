@@ -44,4 +44,5 @@ public class CustomSongManager : MonoBehaviour
             PR_ScoreText.text = "SCORE: " + CurrentlySelectedSong.LocalScore.LBScore;
         }
     }
+
 }

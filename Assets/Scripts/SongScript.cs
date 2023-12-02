@@ -25,7 +25,7 @@ public class SongScript : MonoBehaviour
     public int BPM;
     public List<SongEvent> Events = new List<SongEvent>();
     public int DifficultyOverride;
-    public Button startButton;
+    //public Button startButton;
     public bool ContainsBoss;
     [Header("HighScore")]
     public LeaderboardEntry LocalScore;
