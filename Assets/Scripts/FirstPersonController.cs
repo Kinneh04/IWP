@@ -145,6 +145,30 @@ using System.Collections;
     bool hasPerformedGroundPound = false;
 	public GameObject GroundPoundEffects;
 
+	[Header("Melee")]
+	public GameObject MeleeObject;
+	public Animator MeleeAnimator;
+	public List<AnimationClip> MeleeAttackClips = new List<AnimationClip>();
+	public bool isMelee;
+	public float MeleeTimer = 0.15f;
+	public MeleeBox meleeBox;
+
+	IEnumerator MeleeCoroutine()
+    {
+		ShootingScript.Instance.weaponMovement.gameObject.SetActive(false);
+		MeleeObject.SetActive(true);
+		MeleeAnimator.Play(MeleeAttackClips[Random.Range(0, MeleeAttackClips.Count)].name);
+		isMelee = true;
+		
+		SFXAudioSource.PlayOneShot(Jump_1_SFX);
+		yield return new WaitForSeconds(MeleeTimer / 2);
+		meleeBox.hasHit = false;
+		yield return new WaitForSeconds(MeleeTimer / 2);
+		MeleeObject.SetActive(false);
+		isMelee = false;
+		ShootingScript.Instance.weaponMovement.gameObject.SetActive(true);
+		meleeBox.hasHit = true;
+	}
 
     public void PopupNotif(string s)
     {
@@ -367,11 +391,16 @@ using System.Collections;
 			{
 				StartCoroutine(Dash());
 			}
-        if (Input.GetKeyDown(KeyCode.E) && MusicController.Instance.canFire && !OnAbilityCooldown)
+        if (Input.GetKeyDown(KeyCode.E) && MusicController.Instance.canFire && !OnAbilityCooldown && !isMelee)
         {
 			CurrentAbility.UseAbility();
         }
-    }
+		else if (Input.GetKeyDown(KeyCode.V) && MusicController.Instance.canFire)
+		{
+			StartCoroutine(MeleeCoroutine());
+			MusicController.Instance.canFire = false;
+		}
+	}
 		IEnumerator Dash()
 		{
 				isDashing = true;

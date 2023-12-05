@@ -44,9 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81fc3a7d53a1ded4eb06296a1beb0488, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  addToCooldown: 0
+  addToCooldown: 5
   firstPersonController: {fileID: 0}
   AbilityAudio: {fileID: 8300000, guid: 6768d738d3f3948499ddc99e5c784a23, type: 3}
+  AS: {fileID: 0}
   Shockwave: {fileID: 3712707503665828137, guid: cd5cd368bfbee404e92eb51edd393ef9,
     type: 3}
   tossbackforce: 25

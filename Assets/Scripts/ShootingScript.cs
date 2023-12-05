@@ -290,7 +290,7 @@ public class ShootingScript : MonoBehaviour
                     LateEarlyRatingText.text = "Missed!";
                     LateEarlyRatingText.color = Color.yellow;
                 }
-                if (CurrentAmmo > 0 && !isReloading && musicController.canFire)
+                if (CurrentAmmo > 0 && !isReloading && musicController.canFire && !FirstPersonController.Instance.isMelee)
                 {
                     //If user taps to the beat
                     if (Input.GetMouseButtonDown(0) && !isReloading && FirstPersonController.Instance.canMove)
