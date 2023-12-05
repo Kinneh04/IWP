@@ -31,6 +31,7 @@ public class StoreManager : MonoBehaviour
     public AudioClip GunFireAudio;
     [Header("Weapory")]
     public ShootingScript shootingScript;
+    public int Damage;
 
     [Header("Abilities")]
     public GameObject CurrentlyEquippedAbilityObject;
@@ -87,6 +88,7 @@ public class StoreManager : MonoBehaviour
         GunFireAudio = W.GunFireAudio;
         NumberOfShotsPerShot = W.NumberOfBulletsPerShot;
         BurstShotCount = W.BurstShotCount;
+        Damage = W.Damage;
 
     }
     public void LoadAbilityDetails()
@@ -115,6 +117,7 @@ public class StoreManager : MonoBehaviour
         shootingScript.NumberOfBulletsPerShot = NumberOfShotsPerShot;
         shootingScript.MaxShotDistance = currentWeaponEquipped.RelatedWeapon.ShootDistance;
         shootingScript.BurstShotCount = BurstShotCount;
+        shootingScript.SetDamage = Damage;
         if(isRevolverReloadType)
         {
             shootingScript.isRevolverReloadType = isRevolverReloadType;
@@ -241,6 +244,7 @@ public class Weapon
     public int NumberOfBulletsPerShot;
     public AudioClip GunFireAudio;
     [Header("ForSelectionChange")]
+    public int Damage;
     public Animator GunAnimator;
     public AnimationClip FireAnimClip;
     public int maxAmmo, currentAmmo;
