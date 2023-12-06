@@ -11449,6 +11449,8 @@ MonoBehaviour:
   RingObject: {fileID: 4284639301828262667, guid: d276da50ad9566746991b9c8fed2c97e,
     type: 3}
   Offset: {x: 0, y: -0.05, z: 0}
+  MeteorPrefab: {fileID: 4284639301828262667, guid: 202a3881820780140bf59832cf574929,
+    type: 3}
   Bosslight: {fileID: 1773035665}
   BeamAudioClip: {fileID: 8300000, guid: c51832daab4fbca46b1fe56ca758ed68, type: 3}
   WarningBeamAudioClip: {fileID: 8300000, guid: efb3aef4c3946ab44bc56ea678da0b2b,

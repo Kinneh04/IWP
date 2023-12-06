@@ -52,6 +52,11 @@ public class BossScript : MonoBehaviour
     public GameObject RingObject;
     public Vector3 Offset;
     Intervals I;
+    bool isOnRingCooldown = false;
+
+    [Header("Attack4 Meteor")]
+    public GameObject MeteorPrefab;
+
     [Header("Lighting")]
     public Light Bosslight;
 
@@ -75,7 +80,7 @@ public class BossScript : MonoBehaviour
     public GameObject AboutToDieParticles;
     public GameObject DyingParticles;
     public AudioClip AboutToDieAC;
-
+   
     [Header("RecordedProjectiles")]
     public List<GameObject> SpawnedGameobjects = new List<GameObject>();
 
@@ -83,7 +88,7 @@ public class BossScript : MonoBehaviour
     public void CastRingAttack()
     {
         RaycastHit hit;
-
+        isOnRingCooldown = true;
         // Raycast downwards from the current position of this GameObject
         if (Physics.Raycast(SpawnFromTransform.position, Vector3.down, out hit))
         {
@@ -112,6 +117,7 @@ public class BossScript : MonoBehaviour
             if(AvailableDashes <= 0)
             {
                 ThreeDash = false;
+                isOnRingCooldown = false;
                 AvailableDashes = 3;
             }
         }
@@ -155,11 +161,16 @@ public class BossScript : MonoBehaviour
                     }
                     else
                     {
-                        int p = Random.Range(1, 3);
+                        int p = Random.Range(1, 4);
                         if (p == 2)
                         {
                             Debug.Log("Attack 3!!!");
                             CastRingAttack();
+                        }
+                        else if(p == 3)
+                        {
+                            Debug.Log("Meteor!!!");
+                            CastMeteorAttack();
                         }
                         else
                         {
@@ -169,11 +180,17 @@ public class BossScript : MonoBehaviour
                         }
                     }
                 }
+                isOnRingCooldown = false;
                 AvailableDashes = 3;
                 return;
             }
         }
 
+    }
+
+    public void CastMeteorAttack()
+    {
+        Instantiate(MeteorPrefab, FirstPersonController.Instance.gameObject.transform.position, Quaternion.identity);
     }
     public IEnumerator BeamAttack()
     {
