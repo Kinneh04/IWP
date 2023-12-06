@@ -227,7 +227,7 @@ using System.Collections;
 		//Checks for iFrames
 		if (isDead || isTransitioning || MusicController.Instance.isFinished || isDashing || hasPerformedGroundPound || IFrameTimer > 0) return;
 
-
+		CameraShakeController.Instance.AddCameraShake(30.0f);
 		Health -= damage;
         float volume = (1.0f - (Health / 100.0f))/2f;
 		HeartbeatAudioSource.volume = volume;
@@ -593,6 +593,7 @@ using System.Collections;
         Debug.Log("Player grounded after ground pound");
         hasPerformedGroundPound = false; // Reset the flag
         GroundPoundEffects.SetActive(true);
+		CameraShakeController.Instance.AddCameraShake(30f);
         foreach (GameObject GO in EnemySpawner.Instance.SpawnedEnemies)
 		{
 			if (GO)
