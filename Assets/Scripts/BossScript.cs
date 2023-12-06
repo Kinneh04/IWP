@@ -190,7 +190,20 @@ public class BossScript : MonoBehaviour
 
     public void CastMeteorAttack()
     {
-        Instantiate(MeteorPrefab, FirstPersonController.Instance.gameObject.transform.position, Quaternion.identity);
+
+        RaycastHit hit;
+        isOnRingCooldown = true;
+        // Raycast downwards from the current position of this GameObject
+        if (Physics.Raycast(FirstPersonController.Instance.transform.position, Vector3.down, out hit))
+        {
+            // Check if the ray hits an object tagged as "floor"
+            if (hit.collider.CompareTag("Floor"))
+            {
+                Instantiate(MeteorPrefab, hit.point, Quaternion.identity);
+            }
+        }
+
+      
     }
     public IEnumerator BeamAttack()
     {
