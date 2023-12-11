@@ -22,6 +22,9 @@ public class ScoreManager : MonoBehaviour
     private int SavedScore;
     float SavedAcc;
     string SavedRank;
+    public ModController MC;
+    public GameObject NuhUhGameobject;
+    public AudioClip ThumpAC;
     
 
     public void FetchPlayerNameForLeaderboardEntry(string playFabId)
@@ -59,7 +62,7 @@ public class ScoreManager : MonoBehaviour
         HighestComboText.text = HighestCombo.ToString();
         MultikillsText.text = Multikills.ToString();
         AccuracyText.text = Accuracy.ToString("F2") + "%";
-        FinalScoreText.text = "SCORE: " + FinalScore.ToString() ;
+        FinalScoreText.text = "SCORE: " + (FinalScore * MC.RealMultiplierScale) .ToString() ;
         if (bosskilled)
         {
             FinalGradeText.text = "B";
@@ -72,33 +75,55 @@ public class ScoreManager : MonoBehaviour
             Grade = "P";
             FinalGradeText.color = Color.yellow;
         }
-        SavedScore = Score;
+        SavedScore = (int)(Score * MC.RealMultiplierScale);
         SavedAcc = Accuracy;
         SavedRank = Grade;
         //Highscore
         NewHighScore.SetActive(true);
 
-        if (!customSong) TryAddNewPersonalRecord();
-        else TryAddNewPersonalRecordToCustomSong();
-        if(PlayFabClientAPI.IsClientLoggedIn())
+        if (MC.MultiplierScale > 0)
         {
-            FetchPlayerNameForLeaderboardEntry(MusicController.Instance.LoggedInPlayerID);
+            if (!customSong) TryAddNewPersonalRecord();
+            else TryAddNewPersonalRecordToCustomSong();
+            if (PlayFabClientAPI.IsClientLoggedIn())
+            {
+                FetchPlayerNameForLeaderboardEntry(MusicController.Instance.LoggedInPlayerID);
+            }
+        }
+        else
+        {
+            NuhUhGameobject.SetActive(true);
+            MusicController.Instance.SFXAudioSource.PlayOneShot(ThumpAC);
         }
     }
     public void TryAddNewPersonalRecord()
     {
-        if(SongManager.CurrentlySelectedSong.LocalScore == null  || int.Parse(SongManager.CurrentlySelectedSong.LocalScore.LBScore) < SavedScore)
+        if (MC.MultiplierScale <= 0)
         {
-            // Add new local leaderboard
-            SongManager.AddNewLocalLeaderboard(SavedRank, SavedScore, SavedAcc);
+            NuhUhGameobject.SetActive(true);
+        }
+        else
+        {
+            if (SongManager.CurrentlySelectedSong.LocalScore == null || int.Parse(SongManager.CurrentlySelectedSong.LocalScore.LBScore) < SavedScore)
+            {
+                // Add new local leaderboard
+                SongManager.AddNewLocalLeaderboard(SavedRank, SavedScore, SavedAcc);
+            }
         }
     }
     public void TryAddNewPersonalRecordToCustomSong()
     {
-        if (customSongManager.CurrentlySelectedSong.LocalScore == null || int.Parse(customSongManager.CurrentlySelectedSong.LocalScore.LBScore) < SavedScore)
+        if (MC.MultiplierScale <= 0)
         {
-            // Add new local leaderboard
-            customSongManager.AddNewLocalLeaderboard(SavedRank, SavedScore, SavedAcc);
+            NuhUhGameobject.SetActive(true);
+        }
+        else
+        {
+            if (customSongManager.CurrentlySelectedSong.LocalScore == null || int.Parse(customSongManager.CurrentlySelectedSong.LocalScore.LBScore) < SavedScore)
+            {
+                // Add new local leaderboard
+                customSongManager.AddNewLocalLeaderboard(SavedRank, SavedScore, SavedAcc);
+            }
         }
     }
 }

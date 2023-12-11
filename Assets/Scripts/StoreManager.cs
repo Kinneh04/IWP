@@ -118,9 +118,10 @@ public class StoreManager : MonoBehaviour
         shootingScript.MaxShotDistance = currentWeaponEquipped.RelatedWeapon.ShootDistance;
         shootingScript.BurstShotCount = BurstShotCount;
         shootingScript.SetDamage = Damage;
-        if(isRevolverReloadType)
+        shootingScript.isRevolverReloadType = isRevolverReloadType;
+        if (isRevolverReloadType)
         {
-            shootingScript.isRevolverReloadType = isRevolverReloadType;
+          
             shootingScript.StartingReloadAnim = StartingReloadAnim;
             shootingScript.EndingReloadAnim = EndingReloadAnim;
             shootingScript.repeatingReloadAnim = repeatingReloadAnim;

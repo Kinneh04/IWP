@@ -187,6 +187,7 @@ public class ShootingScript : MonoBehaviour
     public void IncrementReload()
     {
         musicController.hasFired = true;
+        musicController.canReload = false;
         if (isRevolverReloadType)
         {
 
@@ -293,7 +294,7 @@ public class ShootingScript : MonoBehaviour
                 if (CurrentAmmo > 0 && !isReloading && musicController.canFire && !FirstPersonController.Instance.isMelee)
                 {
                     //If user taps to the beat
-                    if (Input.GetMouseButtonDown(0) && !isReloading && FirstPersonController.Instance.canMove)
+                    if (Input.GetMouseButtonDown(0) && !isReloading && FirstPersonController.Instance.canMove || Input.GetMouseButton(0) && MusicController.Instance.autoFire && !isReloading && FirstPersonController.Instance.canMove && MusicController.Instance.canFire)
                     {
 
                         float currentTime = Time.time;

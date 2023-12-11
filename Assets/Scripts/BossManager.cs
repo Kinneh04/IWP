@@ -188,7 +188,7 @@ public class BossManager : MonoBehaviour
         BossKilledUIElements.SetActive(true);
         
         MusicController.Instance.CastFireworks();
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(2);
 
         StartCoroutine(MusicController.Instance.StartFinishGameSequence(true));
         yield return new WaitForSeconds(3);

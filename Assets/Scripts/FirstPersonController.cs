@@ -111,6 +111,7 @@ using System.Collections;
 	public Slider HealthSlider;
 	public TMP_Text HealthText;
 	public float VisualHealth = 100;
+	public int maxHealth = 100;
 	public GameObject DeathScreen;
 	public GameObject MainGameUI;
 	public bool isTransitioning;
@@ -177,7 +178,8 @@ using System.Collections;
     }
 	public void Cleanup()
     {
-		Health = 100;
+		DeathScreen.SetActive(false);
+		Health = maxHealth;
 		isLow = false;
 		isDashing = false;
 		isDead = false;
@@ -210,10 +212,10 @@ using System.Collections;
 	public void HealPlayer(int damage)
     {
 		Health += damage;
-		if (Health > 100) Health = 100;
-		float volume = (1.0f - (Health / 100.0f)) / 2f;
+		if (Health > maxHealth) Health = maxHealth;
+		float volume = (1.0f - ((float)Health / (float)maxHealth)) / 2f;
 		HeartbeatAudioSource.volume = volume;
-		if (Health <= 80) isLow = true;
+		if (Health <= maxHealth / 2) isLow = true;
 		else isLow = false;
 	}
 	public void TakeDamage(int damage)
@@ -229,12 +231,12 @@ using System.Collections;
 
 		CameraShakeController.Instance.AddCameraShake(30.0f);
 		Health -= damage;
-        float volume = (1.0f - (Health / 100.0f))/2f;
-		HeartbeatAudioSource.volume = volume;
+        float volume = (1.0f - ((float)Health / (float)maxHealth)) / 2f;
+        HeartbeatAudioSource.volume = volume;
 
 		SFXAudioSource.PlayOneShot(HurtAudioClips[Random.Range(0, HurtAudioClips.Count)]);
 
-		if (Health <= 80) isLow = true;
+		if (Health <= maxHealth / 2) isLow = true;
 		else isLow = false;
 
 		if (Health <= 0)
@@ -358,8 +360,10 @@ using System.Collections;
 
 		if(Health != VisualHealth)
 		{
+			
 			VisualHealth = Mathf.Lerp(VisualHealth, Health, 20 * Time.deltaTime);
 			HealthText.text = ((int)VisualHealth).ToString();
+			HealthSlider.maxValue = maxHealth;
 			HealthSlider.value = VisualHealth;
 		}
 

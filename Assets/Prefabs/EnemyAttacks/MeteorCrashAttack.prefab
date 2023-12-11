@@ -92,7 +92,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1461441347799639262}
-  - component: {fileID: 1461441347799639265}
   m_Layer: 0
   m_Name: WarningCircle
   m_TagString: Untagged
@@ -117,27 +116,6 @@ Transform:
   m_Father: {fileID: 4356951936732523472}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1461441347799639265
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1461441347799639264}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7994742634f09eb4a88499d7e511671d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_makeObjs:
-  - {fileID: 5514321952988987512, guid: 63e8dd4e6545e2541b0b3fc31c548509, type: 3}
-  m_startDelay: 0
-  m_makeCount: 10
-  m_makeDelay: 0.25
-  m_randomPos: {x: 15, y: 0, z: 15}
-  m_randomRot: {x: 0, y: 0, z: 0}
-  m_randomScale: {x: 0, y: 0, z: 0}
-  isObjectAttachToParent: 1
 --- !u!1 &2110985046121768640
 GameObject:
   m_ObjectHideFlags: 0
@@ -20183,7 +20161,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7589887044968067017}
-  - component: {fileID: 7124471838790260870}
   - component: {fileID: 65589061465234695}
   m_Layer: 0
   m_Name: Meteor
@@ -20191,7 +20168,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7589887044968067017
 Transform:
   m_ObjectHideFlags: 0
@@ -20211,33 +20188,6 @@ Transform:
   m_Father: {fileID: 4356951936732523472}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
---- !u!114 &7124471838790260870
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7470448913122121213}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56e17d10c4e020147ae8b5e49a85fd67, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_gameObjectMain: {fileID: 7470448913122121213}
-  m_gameObjectTail: {fileID: 0}
-  m_hitObject: {fileID: 6649879810791790798, guid: 41c6cf460272cbc42bac60a67095f27b,
-    type: 3}
-  maxLength: 1
-  isDestroy: 0
-  ObjectDestroyTime: 0
-  TailDestroyTime: 1
-  HitObjectDestroyTime: 2
-  maxTime: 1
-  MoveSpeed: 5
-  isCheckHitTag: 0
-  mtag: 
-  isShieldActive: 0
-  isHitMake: 1
 --- !u!95 &65589061465234695
 Animator:
   serializedVersion: 5

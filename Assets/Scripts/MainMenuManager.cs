@@ -388,7 +388,7 @@ public class MainMenuManager : MonoBehaviour
         MusicController.Instance.Cleanup();
         PlayerRatingController.Instance.Cleanup();
         FirstPersonController.Instance.Cleanup();
-        FirstPersonController.Instance.DeathScreen.SetActive(false);
+        //FirstPersonController.Instance.DeathScreen.SetActive(false);
         EnemySpawner.Instance.Cleanup();
         BossManager.Instance.Cleanup();
         yield return new WaitForSeconds(0.5f);

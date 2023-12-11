@@ -90,6 +90,10 @@ public class MusicController : MonoBehaviour
     public List<ParticleSystem> Fireworks = new List<ParticleSystem>();
     public ShootingScript SS;
     public AudioClip FireworksAC;
+
+    [Header("Mods")]
+    public bool autoFire;
+    public bool ez;
     public void PlaySFX(AudioClip AC)
     {
         SFXAudioSource.PlayOneShot(AC);
@@ -128,6 +132,7 @@ public class MusicController : MonoBehaviour
         MusicAudioSource.Stop();
         MusicProgressionSlider.value = 0;
         scoreManager.FinalScoreGameObject.SetActive(false);
+        scoreManager.NuhUhGameobject.SetActive(false);
 
         foreach(SongEvent SE in LoadedEvents)
         {

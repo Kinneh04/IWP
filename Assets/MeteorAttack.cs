@@ -5,7 +5,7 @@ using UnityEngine;
 public class MeteorAttack : MonoBehaviour
 {
 
-    int secondsBeforeStrike = 3, secondsBeforeDisappear = 3;
+    int secondsBeforeStrike = 5, secondsBeforeDisappear = 3;
     public GameObject Meteor, Warning, Effect;
     public bool canDamage = false;
     Intervals I;
@@ -14,7 +14,7 @@ public class MeteorAttack : MonoBehaviour
     public void Start()
     {
         I = new Intervals();
-        I._steps = 1/2;
+        I._steps = .5f;
         UnityEngine.Events.UnityEvent newEvent = new UnityEngine.Events.UnityEvent();
         newEvent.AddListener(delegate { Countdown(); });
         I._trigger = newEvent;

@@ -39,11 +39,8 @@ public class CameraShakeController : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
-    private void Start()
-    {
-        originalShakeFrequency = CVC.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_FrequencyGain;
-        currentShakeFrequency = originalShakeFrequency;
+        //originalShakeFrequency = CVC.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_FrequencyGain;
+        //currentShakeFrequency = originalShakeFrequency;
     }
 
     private void Update()
@@ -52,6 +49,11 @@ public class CameraShakeController : MonoBehaviour
         {
             currentShakeFrequency = Mathf.Lerp(currentShakeFrequency, originalShakeFrequency, 2.0f * Time.deltaTime);
             CVC.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_FrequencyGain = currentShakeFrequency;
+        }
+        if(originalShakeFrequency <= 0)
+        {
+            originalShakeFrequency = CVC.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_FrequencyGain;
+            currentShakeFrequency = originalShakeFrequency;
         }
     }
 
