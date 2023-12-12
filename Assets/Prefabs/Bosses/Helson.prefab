@@ -11521,7 +11521,8 @@ MonoBehaviour:
   SpreadAngle: 0
   cooldownBeforeShooting: 2
   BossAnimator: {fileID: 8244322662929750985}
-  bossHitAnimClip: {fileID: 7400000, guid: 5d7dafa32fb503a48a9b117961bd808f, type: 2}
+  bossHitAnimClips:
+  - {fileID: 7400000, guid: 5d7dafa32fb503a48a9b117961bd808f, type: 2}
   DamageText: {fileID: 2323798860342904484, guid: 1be91882bd21b714a917f2f08f9bc05c,
     type: 3}
   onFire: 0

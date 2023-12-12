@@ -53,7 +53,7 @@ public class EnemyScript : MonoBehaviour
     public float cooldownBeforeShooting = 2.0f;
     [Header("ForBossOnly")]
     public Animator BossAnimator;
-    public AnimationClip bossHitAnimClip;
+    public AnimationClip[] bossHitAnimClips;
     float audioHitCooldown = 0.0f;
 
     public GameObject DamageText;
@@ -265,7 +265,7 @@ public class EnemyScript : MonoBehaviour
         else if (enemyType == EnemyType.Boss)
         {
             Health -= damage;
-            BossAnimator.Play(bossHitAnimClip.name);
+            if(bossHitAnimClips.Length > 0) BossAnimator.Play(bossHitAnimClips[Random.Range(0, bossHitAnimClips.Length)].name);
             AttachedBossManager.UpdateHealthSlider();
             if (Health <= 0)
             {
