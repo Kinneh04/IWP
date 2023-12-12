@@ -196,7 +196,7 @@ public class EnemyScript : MonoBehaviour
               if (Vector3.Distance(transform.position, player.position) > range)
                 {
                     transform.LookAt(player.transform);
-                    RB.AddForce(transform.forward * chargeSpeed);
+                    RB.AddForce(transform.forward * chargeSpeed * Time.deltaTime);
                 }
                 else
                 {

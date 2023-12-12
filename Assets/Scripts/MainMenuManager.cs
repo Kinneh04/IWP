@@ -224,6 +224,7 @@ public class MainMenuManager : MonoBehaviour
         }
 
         _instance = this;
+        Application.targetFrameRate = 144;
     }
     public IEnumerator FadeOutAudioSource(AudioSource AS)
     {
