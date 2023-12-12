@@ -9,6 +9,7 @@ public class CameraShakeController : MonoBehaviour
     float originalShakeFrequency;
     float currentShakeFrequency;
     private static CameraShakeController _instance;
+    public CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin;
 
     public static CameraShakeController Instance
     {
@@ -41,6 +42,7 @@ public class CameraShakeController : MonoBehaviour
         }
         //originalShakeFrequency = CVC.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_FrequencyGain;
         //currentShakeFrequency = originalShakeFrequency;
+        if (!cinemachineBasicMultiChannelPerlin) cinemachineBasicMultiChannelPerlin =CVC.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
     }
 
     private void Update()
@@ -48,18 +50,19 @@ public class CameraShakeController : MonoBehaviour
         if(currentShakeFrequency != originalShakeFrequency)
         {
             currentShakeFrequency = Mathf.Lerp(currentShakeFrequency, originalShakeFrequency, 2.0f * Time.deltaTime);
-            CVC.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_FrequencyGain = currentShakeFrequency;
+           cinemachineBasicMultiChannelPerlin.m_FrequencyGain = currentShakeFrequency;
         }
         if(originalShakeFrequency <= 0)
         {
-            originalShakeFrequency = CVC.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_FrequencyGain;
+            originalShakeFrequency = cinemachineBasicMultiChannelPerlin.m_FrequencyGain;
             currentShakeFrequency = originalShakeFrequency;
         }
+        if (!cinemachineBasicMultiChannelPerlin) cinemachineBasicMultiChannelPerlin = CVC.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
     }
 
     public void AddCameraShake(float camShake)
     {
         currentShakeFrequency = camShake;
-        CVC.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_FrequencyGain = currentShakeFrequency;
+        cinemachineBasicMultiChannelPerlin.m_FrequencyGain = currentShakeFrequency;
     }
 }

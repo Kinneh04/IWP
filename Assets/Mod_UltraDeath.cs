@@ -4,19 +4,21 @@ using UnityEngine;
 
 public class Mod_UltraDeath : ModPrefab
 {
+    public FirstPersonController FPC;
     public override void ModBaseEffects()
     {
-        FirstPersonController.Instance.maxHealth = 50;
-        FirstPersonController.Instance.Health = 50;
-        FirstPersonController.Instance.HealthSlider.maxValue = 50;
+        
+        FPC.maxHealth = 50;
+        FPC.Health = 50;
+        FPC.HealthSlider.maxValue = 50;
         base.ModBaseEffects();
     }
 
     public override void ModDeselectEffects()
     {
-        FirstPersonController.Instance.maxHealth = 100;
-        FirstPersonController.Instance.Health = 100;
-        FirstPersonController.Instance.HealthSlider.maxValue = 100;
+        FPC.maxHealth = 100;
+        FPC.Health = 100;
+        FPC.HealthSlider.maxValue = 100;
         base.ModDeselectEffects();
     }
 }
