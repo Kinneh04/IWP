@@ -36,6 +36,13 @@ public class OfficialSongScript : MonoBehaviour
     {   
         string s = PlayerPrefs.GetString(SongID.ToString());
         LocalScore = JsonConvert.DeserializeObject<LeaderboardEntry>(s);
+
+        SongEvent[] SEs = GetComponents<SongEvent>();
+        Events.Clear();
+        foreach(SongEvent SE in SEs)
+        {
+            Events.Add(SE);
+        }
     }
 }
 

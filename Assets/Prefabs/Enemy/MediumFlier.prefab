@@ -1377,7 +1377,6 @@ GameObject:
   - component: {fileID: 8934527016483769250}
   - component: {fileID: 8934527016483769251}
   - component: {fileID: 53558880}
-  - component: {fileID: 3290324641559146475}
   m_Layer: 0
   m_Name: MediumFlier
   m_TagString: Enemy
@@ -1445,7 +1444,7 @@ MonoBehaviour:
   enemyBehaviour: 1
   enemyType: 1
   SpawnFrom: {fileID: 3655506410029585673}
-  range: 8
+  range: 15
   Rangedball: {fileID: 4284639301828262667, guid: a7bd9435b6d99b247898acbf8c242d7a,
     type: 3}
   AddToCooldown: 4
@@ -1460,13 +1459,13 @@ MonoBehaviour:
   SpreadAngle: 2
   cooldownBeforeShooting: 2
   BossAnimator: {fileID: 2645860151250765724}
-  bossHitAnimClip: {fileID: 7400000, guid: b7f73100575383549841ad7e4a8325dc, type: 2}
+  bossHitAnimClips: []
   DamageText: {fileID: 0}
   onFire: 0
   fireTime: 0
   OnFireEffects: {fileID: 9040541540744628578}
   FireDamage: 2
-  chargeSpeed: 4
+  chargeSpeed: 2
   flankSpeed: 3
   IntroAudio: {fileID: 0}
   HitAudio: {fileID: 0}
@@ -1507,20 +1506,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 4
   m_CollisionDetection: 0
---- !u!114 &3290324641559146475
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8934527016483769248}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 616a1be8c5f536642a89eff6cb35c61c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SelfDestructAfterSeconds: 12
-  ParticleEffects: {fileID: 0}
 --- !u!1 &9040541540744628578
 GameObject:
   m_ObjectHideFlags: 0

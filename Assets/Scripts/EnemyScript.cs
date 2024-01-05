@@ -166,7 +166,7 @@ public class EnemyScript : MonoBehaviour
         if (enemyBehaviour == EnemyBehaviour.Melee)
         {
             transform.LookAt(player.transform);
-            RB.AddForce(transform.forward * chargeSpeed * Time.deltaTime);
+            transform.Translate(chargeSpeed * Time.deltaTime * transform.forward);
             //if (raycastCooldown > 0)
             //{
             //    raycastCooldown -= Time.deltaTime;
@@ -193,26 +193,27 @@ public class EnemyScript : MonoBehaviour
         }
         else if(enemyBehaviour == EnemyBehaviour.Ranged)
         {
-              if (Vector3.Distance(transform.position, player.position) > range)
-                {
-                    transform.LookAt(player.transform);
-                    RB.AddForce(transform.forward * chargeSpeed * Time.deltaTime);
-                }
-                else
-                {
-                    transform.LookAt(player.transform);
-                }
-            if (cooldownBeforeShooting > 0) cooldownBeforeShooting -= Time.deltaTime;
+            if (Vector3.Distance(transform.position, player.position) > range)
+            {
+                transform.LookAt(player.transform);
+                transform.Translate(chargeSpeed * Time.deltaTime * transform.forward);
+            }
             else
             {
-              
-                if (cooldown <= 0)
+                transform.LookAt(player.transform);
+                if (cooldownBeforeShooting > 0) cooldownBeforeShooting -= Time.deltaTime;
+                else
                 {
-                    cooldown = AddToCooldown;
-                    ShootProjectile();
+
+                    if (cooldown <= 0)
+                    {
+                        cooldown = AddToCooldown;
+                        ShootProjectile();
+                    }
+                    if (cooldown > 0) cooldown -= Time.deltaTime;
                 }
-                if (cooldown > 0) cooldown -= Time.deltaTime;
             }
+           
         }
     }
     public void ShootProjectile()

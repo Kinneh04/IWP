@@ -162,9 +162,9 @@ using System.Collections;
 		isMelee = true;
 		
 		SFXAudioSource.PlayOneShot(Jump_1_SFX);
-		yield return new WaitForSeconds(MeleeTimer / 2);
+		yield return new WaitForSeconds(MeleeTimer / 1.5f);
 		meleeBox.hasHit = false;
-		yield return new WaitForSeconds(MeleeTimer / 2);
+		yield return new WaitForSeconds(MeleeTimer / 1.5f);
 		MeleeObject.SetActive(false);
 		isMelee = false;
 		ShootingScript.Instance.weaponMovement.gameObject.SetActive(true);
@@ -399,10 +399,11 @@ using System.Collections;
         {
 			CurrentAbility.UseAbility();
         }
-		else if (Input.GetKeyDown(KeyCode.V) && MusicController.Instance.canFire)
+		else if (Input.GetKeyDown(KeyCode.V) && MusicController.Instance.canFire && MusicController.Instance.canReload && !isMelee)
 		{
 			StartCoroutine(MeleeCoroutine());
 			MusicController.Instance.canFire = false;
+			MusicController.Instance.canReload = false;
 		}
 	}
 		IEnumerator Dash()
@@ -440,13 +441,23 @@ using System.Collections;
 
 			while (elapsedTime < dashDuration)
 			{
+				// Perform raycast to detect obstacles in the dash direction
+				RaycastHit hit;
+				if (Physics.Raycast(transform.position, dashDirection, out hit, dashDistance))
+				{
+					// If raycast hits a collider, stop at the hit point
+					transform.position = hit.point;
+					break; // Exit the loop
+				}
+
+				// Move the object
 				transform.position += dashDirection * (dashDistance / dashDuration) * Time.deltaTime;
 				elapsedTime += Time.deltaTime;
 				yield return null;
 			}
 
-			//UI
-			DashImage.color = new Color(OriginalColor.r, OriginalColor.g, OriginalColor.b, 0.2f);
+        //UI
+        DashImage.color = new Color(OriginalColor.r, OriginalColor.g, OriginalColor.b, 0.2f);
 			DashCountdownTMPText.gameObject.SetActive(true);
 			//End UI
 				
@@ -555,8 +566,8 @@ using System.Collections;
             {
                 isJumping = true;
                 _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
-                if (_jumpCount == 0) SFXAudioSource.PlayOneShot(Jump_1_SFX);
-                else SFXAudioSource.PlayOneShot(Jump_2_SFX);
+                if (_jumpCount == 0) SFXAudioSource.PlayOneShot(Jump_2_SFX);
+                else SFXAudioSource.PlayOneShot(Jump_1_SFX);
                 _jumpCount++;
 				
                 if (_jumpCount == 2) _canDoubleJump = false;
