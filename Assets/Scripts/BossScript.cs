@@ -85,7 +85,7 @@ public class BossScript : MonoBehaviour
     public List<GameObject> SpawnedGameobjects = new List<GameObject>();
 
 
-    public void CastRingAttack()
+    public virtual void CastRingAttack()
     {
         RaycastHit hit;
         isOnRingCooldown = true;
@@ -108,7 +108,7 @@ public class BossScript : MonoBehaviour
             }
         }
     }
-    public void ChooseRandomAttack()
+    public virtual void ChooseRandomAttack()
     {
         if (!canStartAttacking) return;
         if (ThreeDash)
@@ -169,8 +169,8 @@ public class BossScript : MonoBehaviour
                         }
                         else if(p == 3)
                         {
-                            Debug.Log("Meteor!!!");
-                            CastMeteorAttack();
+                          //  Debug.Log("Meteor!!!");
+                           // CastMeteorAttack();
                         }
                         else
                         {
@@ -188,7 +188,7 @@ public class BossScript : MonoBehaviour
 
     }
 
-    public void CastMeteorAttack()
+    public virtual void CastMeteorAttack()
     {
 
         RaycastHit hit;
@@ -218,7 +218,7 @@ public class BossScript : MonoBehaviour
         isAttackingBeam = false;
     }
 
-    public void TryShootAttack1()
+    public virtual void TryShootAttack1()
     {
         chosenAmountToSpawn = Random.Range(minSpawnAmount, maxSpawnAmount);
 
@@ -252,7 +252,7 @@ public class BossScript : MonoBehaviour
             yield return new WaitForSeconds(SpawnInterval);
         }
     }
-    public void ShootProjectile(Vector3 spawnPosition)
+    public virtual void ShootProjectile(Vector3 spawnPosition)
     {
         AS.PlayOneShot(ProjectileSpawnAudioClip);
        
@@ -266,7 +266,7 @@ public class BossScript : MonoBehaviour
         }
     }
 
-    public void ClearAllProjectiles()
+    public virtual void ClearAllProjectiles()
     {
         Beam.SetActive(false);
         foreach(GameObject GO in SpawnedGameobjects)
@@ -277,13 +277,13 @@ public class BossScript : MonoBehaviour
         MusicController.Instance.SFXAudioSource.PlayOneShot(AboutToDieAC);
     }
 
-    public void FinishHim()
+    public virtual void FinishHim()
     {
 
         AS.Stop();
         AS.PlayOneShot(FinishHimAudioClips[finishHimIndex]);
         finishHimIndex++;
-        Instantiate(DyingParticles);
+        Instantiate(DyingParticles, transform.position, Quaternion.identity);
         BossAnimator.Play(FinisherAnimation.name);
         if(finishHimIndex >= FinishHimAudioClips.Count)
         {
@@ -300,7 +300,7 @@ public class BossScript : MonoBehaviour
         AS.PlayOneShot(IntroAudioClip);
     }
 
-    public void WarnPlayerOnBeam()
+    public virtual void WarnPlayerOnBeam()
     {
         AS.PlayOneShot(WarningBeamAudioClip);
         Bosslight.intensity = WarningEmissionIntensity;
@@ -309,7 +309,7 @@ public class BossScript : MonoBehaviour
         if (CurrentWarningFlashes <= 0) isWarning = false;
     }
 
-    void Update()
+    public virtual void Update()
     {
         if (player != null && !isBeaming)
         {

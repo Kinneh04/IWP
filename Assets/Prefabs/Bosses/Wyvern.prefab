@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 4051880182437411865}
   - component: {fileID: 8806054703625487222}
   - component: {fileID: 5053564004412479194}
+  - component: {fileID: 2986553321885065231}
   m_Layer: 0
   m_Name: Wyvern
   m_TagString: Boss
@@ -87,7 +88,7 @@ MonoBehaviour:
   Health: 1200
   RB: {fileID: 0}
   DeathParticles: {fileID: 0}
-  EnemyMat: {fileID: 2100000, guid: 893a174022b750a4b8a323f23cf4c54b, type: 2}
+  EnemyMat: {fileID: 2100000, guid: f9b044d90696e4d488ec3c3a21f96d70, type: 2}
   enemyIsDead: 0
   HitAnimator: {fileID: 0}
   HitAnimClip: {fileID: 7400000, guid: 5d7dafa32fb503a48a9b117961bd808f, type: 2}
@@ -134,6 +135,18 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 2.01
   m_Center: {x: 0, y: -0.63, z: 0}
+--- !u!114 &2986553321885065231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4051880182437411862}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3888ea3f39c4eb448bca0184450b82b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4676903666989056329
 GameObject:
   m_ObjectHideFlags: 0
@@ -19919,13 +19932,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3852412312265507753, guid: 95aaa7a3b07c8644b823ad0dc0243b72,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.8762252
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852412312265507753, guid: 95aaa7a3b07c8644b823ad0dc0243b72,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.8762252
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852412312265507753, guid: 95aaa7a3b07c8644b823ad0dc0243b72,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.8762252
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852412312265507753, guid: 95aaa7a3b07c8644b823ad0dc0243b72,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3852412312265507753, guid: 95aaa7a3b07c8644b823ad0dc0243b72,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1.81
       objectReference: {fileID: 0}
     - target: {fileID: 3852412312265507753, guid: 95aaa7a3b07c8644b823ad0dc0243b72,
         type: 3}

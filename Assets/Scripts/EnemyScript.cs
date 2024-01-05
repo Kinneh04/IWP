@@ -201,19 +201,19 @@ public class EnemyScript : MonoBehaviour
             else
             {
                 transform.LookAt(player.transform);
-                if (cooldownBeforeShooting > 0) cooldownBeforeShooting -= Time.deltaTime;
-                else
-                {
-
-                    if (cooldown <= 0)
-                    {
-                        cooldown = AddToCooldown;
-                        ShootProjectile();
-                    }
-                    if (cooldown > 0) cooldown -= Time.deltaTime;
-                }
-            }
            
+            }
+            if (cooldownBeforeShooting > 0) cooldownBeforeShooting -= Time.deltaTime;
+            else
+            {
+
+                if (cooldown <= 0)
+                {
+                    cooldown = AddToCooldown;
+                    ShootProjectile();
+                }
+                if (cooldown > 0) cooldown -= Time.deltaTime;
+            }
         }
     }
     public void ShootProjectile()
