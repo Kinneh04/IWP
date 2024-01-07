@@ -266,7 +266,7 @@ public class EnemyScript : MonoBehaviour
         else if (enemyType == EnemyType.Boss)
         {
             Health -= damage;
-            if(bossHitAnimClips.Length > 0) BossAnimator.Play(bossHitAnimClips[Random.Range(0, bossHitAnimClips.Length)].name);
+            if(bossHitAnimClips.Length > 0 && BossAnimator) BossAnimator.Play(bossHitAnimClips[Random.Range(0, bossHitAnimClips.Length)].name);
             AttachedBossManager.UpdateHealthSlider();
             if (Health <= 0)
             {

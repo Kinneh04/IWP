@@ -205,15 +205,17 @@ public class BossManager : MonoBehaviour
         EnemySpawner.Instance.AllowedToSpawn = false;
         OriginalFOV = TargetFOV;
         GameObject GO = Instantiate(B.BossObject, SpawnPosition.position, Quaternion.identity);
+        
         CurrentlyChosenBoss = B;
         BossNameText.text = B.BossName;
         InstantiatedBoss = GO.GetComponent<BossScript>();
+        GameObject G = InstantiatedBoss.TargetLookAt.gameObject;
         AttachedBossEnemyScript = GO.GetComponent<EnemyScript>();
         AttachedBossEnemyScript.AttachedBossManager = this;
         //PlayerRoot.LookAt(GO.transform.position);
         float t = 0;
         Quaternion startRotation = PlayerRoot.rotation;
-        Quaternion targetRotation = Quaternion.LookRotation(GO.transform.position - PlayerRoot.position);
+        Quaternion targetRotation = Quaternion.LookRotation(G.transform.position - PlayerRoot.position);
 
         while (t < 1)
         {

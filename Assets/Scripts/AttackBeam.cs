@@ -5,12 +5,13 @@ public class AttackBeam : MonoBehaviour
 {
     float cooldown = 0.0f;
     public int Damage;
+    public float interval = 0.5f;
     private void OnTriggerStay(Collider other)
     {
         if (cooldown <= 0 && other.CompareTag("Player"))
         {
             other.GetComponent<FirstPersonController>().TakeDamage(Damage);
-            cooldown = 0.5f;
+            cooldown = interval;
         }
 
     }
@@ -19,7 +20,7 @@ public class AttackBeam : MonoBehaviour
         if (cooldown <= 0 && other.CompareTag("Player"))
         {
             other.GetComponent<FirstPersonController>().TakeDamage(Damage);
-            cooldown = 0.5f;
+            cooldown = interval;
         }
     }
 

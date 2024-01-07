@@ -20,7 +20,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &480135964
 Transform:
   m_ObjectHideFlags: 0
@@ -11479,6 +11479,7 @@ MonoBehaviour:
     type: 3}
   AboutToDieAC: {fileID: 8300000, guid: 05075cb1c3ed2814e901830f97331652, type: 3}
   SpawnedGameobjects: []
+  TargetLookAt: {fileID: 4051880182437411865}
 --- !u!114 &8806054703625487222
 MonoBehaviour:
   m_ObjectHideFlags: 0

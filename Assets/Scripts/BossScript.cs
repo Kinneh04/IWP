@@ -84,6 +84,8 @@ public class BossScript : MonoBehaviour
     [Header("RecordedProjectiles")]
     public List<GameObject> SpawnedGameobjects = new List<GameObject>();
 
+    public Transform TargetLookAt;
+
 
     public virtual void CastRingAttack()
     {

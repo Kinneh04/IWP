@@ -63,6 +63,6 @@ public class CameraShakeController : MonoBehaviour
     public void AddCameraShake(float camShake)
     {
         currentShakeFrequency = camShake;
-        cinemachineBasicMultiChannelPerlin.m_FrequencyGain = currentShakeFrequency;
+        cinemachineBasicMultiChannelPerlin.m_FrequencyGain += currentShakeFrequency;
     }
 }
